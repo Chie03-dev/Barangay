@@ -1,0 +1,15 @@
+﻿Fix bottom nav clipping on narrow phone viewports
+
+The dock was centered with left-1/2 + -translate-x-1/2 and had no
+width constraint, so the fifth nav item pushed it past a 320px
+viewport and it overflowed both edges with no way to scroll into view.
+
+- Center with inset-x-0 + flex justify-center px-3 instead of a transform
+- Add w-fit max-w-full so the pill is bounded by the container
+- Tighten padding, gaps, and icon size below the sm breakpoint
+- Hide the brand logo on the narrowest screens to reclaim width
+- Hide hover tooltips on touch and add aria-label to each link
+
+Dock measures ~224px at 320px wide, leaving ~72px of headroom.
+
+Co-Authored-By: Claude Opus 4.8 (1M context) <noreply@anthropic.com>
