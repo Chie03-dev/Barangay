@@ -4,27 +4,28 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Barangay Portal</title>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Source+Sans+3:wght@400;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&family=Barlow+Condensed:wght@600;700&display=swap">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <div id="login">
   <div class="lhero">
+    <aside class="slides" aria-hidden="true"></aside>
     <div class="hb"><div class="logo">LOGO</div><h1>Barangay [Pangalan]<br>Resident Portal</h1></div>
     <div class="tri"><i style="background:var(--pri)"></i><i style="background:var(--red)"></i><i style="background:var(--sun)"></i></div>
     <div class="hr"><p>Request certificates and follow how barangay funds are used, from your phone.</p></div>
     <div class="hg"><p>Your records stay private and protected.</p></div>
   </div>
-  <div class="lform">
+  <form class="lform" id="lform" novalidate>
     <h2>Sign in</h2>
     <p class="mute" style="margin:0">Use your registered mobile number or email.</p>
     <label for="lid">Mobile number or email</label>
-    <input id="lid" type="text" autocomplete="username" placeholder="09xx xxx xxxx">
+    <input id="lid" name="id" type="text" autocomplete="username" placeholder="09xx xxx xxxx">
     <label for="lpw">Password</label>
     <input id="lpw" type="password" autocomplete="current-password" placeholder="Your password">
-    <button class="btn" id="lbtn">Sign in</button>
+    <button class="btn" id="lbtn" type="submit">Sign in</button>
     <div class="links"><a href="#" onclick="return false">Forgot password?</a><a href="#" onclick="return false">Create an account</a></div>
-  </div>
+  </form>
 </div>
 <div id="app" hidden>
 <header><div class="top">
@@ -36,7 +37,7 @@
   <button role="tab" data-t="home" aria-selected="true">Home</button>
   <button role="tab" data-t="cert" aria-selected="false">Certificates</button>
   <button role="tab" data-t="budget" aria-selected="false">Budget</button>
-  <button role="tab" data-t="arch" aria-selected="false">System design</button>
+  <button role="tab" data-t="about" aria-selected="false">About us</button>
 </div></nav>
 <main>
 
@@ -60,17 +61,18 @@
 <section id="cert" hidden>
   <h2 style="margin-bottom:14px">Request a certificate</h2>
   <div class="grid">
-    <div class="card">
+    <form class="card" id="cform" novalidate>
       <label for="ctype">Certificate type</label>
       <select id="ctype"></select>
       <label for="cpurp">Purpose</label>
-      <input id="cpurp" value="Employment" maxlength="40">
+      <input id="cpurp" name="purpose" value="Employment" maxlength="40" required aria-required="true" placeholder="e.g. Employment, school enrollment">
       <label for="cname">Full name</label>
-      <input id="cname" value="Maria Santos" maxlength="40">
+      <input id="cname" name="name" value="Maria Santos" maxlength="40" required aria-required="true" autocomplete="name" placeholder="First and last name">
       <p class="mute" id="cfee"></p>
-      <button class="btn" id="csubmit">Submit request</button>
+      <p class="err" id="cerr" role="alert"></p>
+      <button class="btn" id="csubmit" type="submit">Submit request</button>
       <p class="mute" id="cmsg" role="status"></p>
-    </div>
+    </form>
     <div class="paper" id="prev" aria-label="Certificate preview"></div>
   </div>
 </section>
@@ -87,29 +89,34 @@
   <div class="card" style="margin-top:16px"><h3>Projects</h3><ul class="plain" id="projs"></ul></div>
 </section>
 
-<section id="arch" hidden>
-  <h2 style="margin-bottom:6px">System design (MVP)</h2>
-  <p class="mute" style="margin:0 0 16px">A modular monolith: one deployable app and one database. It is simple to host and maintain, and it can grow module by module.</p>
+<section id="about" hidden>
+  <h2 style="margin-bottom:6px">I build websites for barangays</h2>
+  <p class="mute" style="margin:0 0 18px;max-width:60ch">MCB niga Solutions helps barangays put their services online: simple, secure websites and resident portals that save residents a trip to the hall and give officials less paperwork.</p>
   <div class="grid">
-    <div>
-      <div class="layer"><b>Client</b><br>Resident web portal (responsive, installable on phones)</div>
-      <div class="layer"><b>API and auth</b><br>Login, resident role, request limits, audit log</div>
-      <div class="layer"><b>Modules</b><br>Resident profile · Certificates (templates, PDF, QR) · Budget (read-only view) · Announcements</div>
-      <div class="layer"><b>Data</b><br>PostgreSQL · file storage for generated PDFs · encrypted backups</div>
-      <div class="layer later"><b>Planned next</b><br>Staff, Secretary, Treasurer and Captain accounts · blotter · SMS alerts · online payments</div>
-    </div>
-    <div class="card"><h3>What's included</h3>
+    <div class="card"><h3>Meet the developer</h3>
+      <div class="photo"><span>Your photo</span><img src="assets/niga.png" alt="Portrait of [Your name]"></div>
+      <p style="margin:14px 0 2px;font:700 22px/1.1 'Barlow Condensed',sans-serif">Marben Clyde Maglangit</p>
+      <p class="mute" style="margin:0 0 10px">freelancer, MCB niga Solutions</p>
+      <a class="btn" href="assets/niga.pdf" target="_blank" rel="noopener" style="display:inline-block;text-decoration:none;text-align:center">View resume</a></div>
+    <div class="card"><h3>What we build</h3>
       <ul class="plain">
-        <li>Resident home and request tracking</li>
-        <li>Certificate request with live preview and barangay branding</li>
-        <li>Budget transparency: allocations, spending, projects</li>
-        <li>Announcements</li></ul>
-      <h3 style="margin-top:16px">Safeguards by design</h3>
+        <li>Barangay website with news and announcements</li>
+        <li>Resident portal with sign-in and request tracking</li>
+        <li>Online certificate and clearance requests</li>
+        <li>Budget transparency pages</li>
+        <li>Staff accounts for the Secretary, Treasurer, and Captain</li></ul></div>
+    <div class="card"><h3>How we work</h3>
+      <ol style="margin:0;padding-left:20px;line-height:1.9">
+        <li>I meet your officials and learn how the barangay works</li>
+        <li>I design the site with your name, logo, and officials</li>
+        <li>I build and test it with your staff</li>
+        <li>I launch it and train your team</li>
+        <li>I stay on for support and updates</li></ol></div>
+    <div class="card"><h3>Reach us directly</h3>
       <ul class="plain">
-        <li>HTTPS and hashed passwords</li>
-        <li>Residents see only their own records</li>
-        <li>Every view and edit is logged</li>
-        <li>Built around the Data Privacy Act</li></ul></div>
+        <li><span>Email</span><span>maglangitmarvinc@gmail.com</span></li>
+        <li><span>Mobile</span><span>+63 998 983 5678</span></li>
+        <li><span>Hours</span><span>Mon to Fri, 9 AM to 5 PM</span></li></ul></div>
   </div>
 </section>
 </main>
