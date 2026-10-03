@@ -25,11 +25,11 @@ const PROFILE = {
   name: "Marben Clyde Maglangit",
   role: "Barangay Management Portal",
   title: "Real niga",
-  bio: "Building accessible, fast web tools for public-sector services. Focused on Next.js, TypeScript, and design systems that scale.",
+  bio: "Teacher at jrmsu by day. Freelance developer by night.",
   email: "maglangitmarvinc@gmail.com",
   phone: "+63 998 983 5678",
   location: "071 Amatong Street, Miputak Dipolog City",
-  skills: ["Next.js", "TypeScript", "React", "Tailwind CSS", "Cloudflare"],
+  skills: ["good person", "not bad", "happy", "like french", "dili manglibri"],
 };
 
 const LINKS: { label: string; href: string; icon: LucideIcon }[] = [
