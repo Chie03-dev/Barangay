@@ -79,13 +79,13 @@ src/
 
 ## Theming
 
-Dark mode is class-based (`.dark` on `<html>`) and persists to `localStorage`
-under the `theme` key.
+Dark mode is **the default** for first-time visitors, and is persisted to
+`localStorage` under the `theme` key once the user picks a theme. The portal
+does not follow the OS `prefers-color-scheme` setting.
 
-A blocking script in `layout.tsx` runs **before hydration** to apply the stored
-theme, which prevents a flash of the wrong background. The toggle lives on
-`/profile`. If no preference is stored, the OS `prefers-color-scheme` value is
-used and tracked live.
+A blocking script in `layout.tsx` runs **before hydration** to apply the
+stored theme (or the dark default), which prevents a flash of the wrong
+background. The toggle lives on `/profile`.
 
 > Use the class variant, not a `prefers-color-scheme` media query - the two are
 > configured independently in this project.

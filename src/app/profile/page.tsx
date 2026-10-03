@@ -89,9 +89,9 @@ const rowHover = "transition-colors hover:bg-slate-50/70 dark:hover:bg-slate-800
 
 export default function ProfilePage() {
   const router = useRouter();
-  // Starts false on the server; the mount effect and the inline <head> script
-  // correct it before paint, so there is no flash of the wrong theme.
-  const [isDark, setIsDark] = useState(false);
+  // Starts true so server markup matches the dark-first default; the head
+  // script and the mount effect keep it in sync without a flash.
+  const [isDark, setIsDark] = useState(true);
   const [docAlerts, setDocAlerts] = useState(true);
   const [broadcasts, setBroadcasts] = useState(true);
   const [signedOut, setSignedOut] = useState(false);
@@ -105,16 +105,15 @@ export default function ProfilePage() {
   // OS-driven changes should keep following the system.
   const isUserChoice = useRef(false);
 
-  // Initial theme: stored preference wins, otherwise fall back to the OS.
+  // Initial theme: a stored choice always wins. First-time visitors (no
+  // stored value) get dark mode, which is the portal's primary mode.
   useEffect(() => {
     let initial: boolean;
     try {
       const stored = localStorage.getItem("theme");
-      initial = stored
-        ? stored === "dark"
-        : window.matchMedia("(prefers-color-scheme: dark)").matches;
+      initial = stored ? stored === "dark" : true;
     } catch {
-      initial = false;
+      initial = true;
     }
     setIsDark(initial);
     document.documentElement.classList.toggle("dark", initial);
@@ -132,21 +131,9 @@ export default function ProfilePage() {
     }
   }, [isDark]);
 
-  // Follow OS changes only while the user has no explicit stored preference.
-  useEffect(() => {
-    const media = window.matchMedia("(prefers-color-scheme: dark)");
-    const handleChange = (event: MediaQueryListEvent) => {
-      let hasStored = false;
-      try {
-        hasStored = localStorage.getItem("theme") !== null;
-      } catch {
-        hasStored = false;
-      }
-      if (!hasStored) setIsDark(event.matches);
-    };
-    media.addEventListener("change", handleChange);
-    return () => media.removeEventListener("change", handleChange);
-  }, []);
+  // No OS listener: the default is a deliberate product choice (dark), not
+  // a mirror of the system setting, so OS changes must not override it.
+  // Once the user taps the toggle, the stored value governs from then on.
 
   function handleThemeToggle() {
     isUserChoice.current = true;

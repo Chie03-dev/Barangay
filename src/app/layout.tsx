@@ -10,16 +10,21 @@ export const metadata: Metadata = {
 /**
  * Applies the stored theme before React hydrates so the page never flashes
  * the wrong background. Kept as a string so Next inlines it in <head>.
+ *
+ * First-time visitors get dark mode: it is the portal's primary brand
+ * mode, and we only defer to the OS once the user has actually picked a
+ * theme and we have a stored value to honour.
  */
 const themeScript = `
 (function () {
   try {
     var stored = localStorage.getItem('theme');
-    var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    var isDark = stored ? stored === 'dark' : prefersDark;
+    // No stored preference yet -> dark is the default.
+    var isDark = stored ? stored === 'dark' : true;
     document.documentElement.classList.toggle('dark', isDark);
   } catch (e) {
-    /* localStorage unavailable (private mode) - fall back to light. */
+    /* localStorage unavailable (private mode) - default to dark. */
+    document.documentElement.classList.toggle('dark', true);
   }
 })();
 `;
