@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { Home, FileText, Clock, User, type LucideIcon } from "lucide-react";
+import { Home, FileText, Clock, User, Contact, type LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 type NavItem = {
@@ -17,6 +17,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Services", href: "/services", icon: FileText },
   { label: "Track", href: "/track", icon: Clock },
   { label: "Profile", href: "/profile", icon: User },
+  { label: "Contact", href: "/contact", icon: Contact },
 ];
 
 const HIDDEN_PATHS = ["/", "/login"];
