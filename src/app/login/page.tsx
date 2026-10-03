@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useState, type FormEvent } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   AnimatePresence,
   motion,
@@ -15,6 +15,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { SESSION_COOKIE } from "@/lib/auth";
 
 /* ------------------------------------------------------------------ */
 /*  Slideshow                                                          */
@@ -29,11 +30,20 @@ const SLIDES = [
 
 const SLIDE_MS = 6000;
 
-export default function LoginPage() {
+function LoginForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [slide, setSlide] = useState(0);
+
+  // Only allow same-origin relative paths, so `?next=` can't be used to
+  // redirect a resident to an external site.
+  const rawNext = searchParams.get("next");
+  const nextPath =
+    rawNext && rawNext.startsWith("/") && !rawNext.startsWith("//")
+      ? rawNext
+      : "/dashboard";
 
   // 3D tilt driven by pointer position.
   const rotateX = useSpring(useMotionValue(0), { stiffness: 220, damping: 20 });
@@ -67,7 +77,11 @@ export default function LoginPage() {
     e.preventDefault();
     // Mock auth: there is no backend yet, so any submit goes straight
     // through. Wire a real sign-in call here when the backend lands.
-    router.push("/dashboard");
+    document.cookie = `${SESSION_COOKIE}=1; path=/; max-age=${
+      60 * 60 * 24 * 7
+    }; samesite=lax`;
+    // Return the resident to wherever the middleware bounced them from.
+    router.push(nextPath);
   }
 
   return (
@@ -195,6 +209,25 @@ export default function LoginPage() {
         </p>
       </motion.div>
     </main>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Route entry - Suspense keeps useSearchParams from opting the        */
+/*  page out of static prerendering.                                   */
+/* ------------------------------------------------------------------ */
+
+export default function LoginPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="flex min-h-screen items-center justify-center bg-slate-100 dark:bg-slate-950">
+          <div className="h-10 w-10 animate-spin rounded-full border-2 border-emerald-500/30 border-t-emerald-500" />
+        </main>
+      }
+    >
+      <LoginForm />
+    </Suspense>
   );
 }
 /* ------------------------------------------------------------------ */

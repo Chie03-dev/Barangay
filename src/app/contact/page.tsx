@@ -112,7 +112,7 @@ export default function ContactPage() {
             <div className="relative">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/profile.png"
+                src="/profile.webp"
                 alt={`Portrait of ${PROFILE.name}`}
                 className="h-28 w-28 rounded-2xl object-cover shadow-lg ring-2 ring-emerald-500/30"
               />
