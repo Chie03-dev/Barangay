@@ -31,6 +31,7 @@ import {
   SkeletonCircle,
 } from "@/components/Skeleton";
 import { useAsyncData } from "@/hooks/useAsyncData";
+import { SESSION_COOKIE } from "@/lib/auth";
 
 /* ------------------------------------------------------------------ */
 /*  Static resident data                                               */
@@ -141,8 +142,12 @@ export default function ProfilePage() {
 
   function handleSignOut() {
     setSignedOut(true);
-    // Mock auth teardown - clear the session here.
-    setTimeout(() => router.push("/login"), 700);
+    // Clear the session cookie, otherwise the middleware still sees a signed
+    // in user and bounces /login straight back to /dashboard.
+    document.cookie = `${SESSION_COOKIE}=; path=/; max-age=0; samesite=lax`;
+    // Mock auth teardown - call the real logout endpoint here.
+    router.push("/login");
+    router.refresh();
   }
 
   return (
