@@ -206,10 +206,3 @@ stays the same.
 
 `.clinerules` and everything under `assets/` except the logo are ignored via
 `.gitignore` - local tooling config and private source material.
-
----
-
-## Contact
-
-Built by **Marben Clyde Maglangit** -
-[maglangitmarvinc@gmail.com](mailto:maglangitmarvinc@gmail.com)
