@@ -40,7 +40,7 @@ npx tsc --noEmit
 
 ### Don't run `build` while `dev` is active
 
-Both processes write to `.next/`, and interleaving them corrupts the output —
+Both processes write to `.next/`, and interleaving them corrupts the output -
 symptoms include `Cannot find module './922.js'` and similar missing-chunk
 runtime errors. If you hit one, stop the dev server and delete `.next` before
 rebuilding.
@@ -87,7 +87,7 @@ theme, which prevents a flash of the wrong background. The toggle lives on
 `/profile`. If no preference is stored, the OS `prefers-color-scheme` value is
 used and tracked live.
 
-> Use the class variant, not a `prefers-color-scheme` media query — the two are
+> Use the class variant, not a `prefers-color-scheme` media query - the two are
 > configured independently in this project.
 
 ## Data & API
@@ -98,7 +98,7 @@ request yet.
 `src/hooks/useAsyncData.ts` exists to make the loading UI real in the meantime.
 It returns `{ data, isLoading }` with unmount cancellation. To connect a real
 backend, replace the loader body with your `fetch` call and delete the
-artificial delay — the `isLoading` contract stays the same.
+artificial delay - the `isLoading` contract stays the same.
 
 `/dashboard`, `/track`, and `/profile` render theme-aware skeletons while
 loading. `/services`, `/reports`, and `/login` have no loading state because
@@ -110,5 +110,5 @@ Submit handlers on `/services` and `/reports` simulate network latency with
 ## Local-only files
 
 `.clinerules` and everything under `assets/` except `logo.svg` are ignored via
-`.gitignore` — they are local tooling config and private files, not project
+`.gitignore` - they are local tooling config and private files, not project
 source.
