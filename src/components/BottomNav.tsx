@@ -35,13 +35,28 @@ export default function BottomNav() {
       className="fixed inset-x-0 bottom-6 z-50 flex justify-center px-3"
     >
       <div className="flex w-fit max-w-full items-center justify-center gap-1 rounded-full border border-slate-200/50 bg-white/80 px-2 py-2 shadow-2xl backdrop-blur-xl sm:gap-2 sm:px-4 sm:py-3 dark:border-slate-800/50 dark:bg-slate-900/80">
-        {/* Brand mark - hidden on the narrowest screens to save width */}
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/logo.svg"
-          alt="Barangay seal"
-          className="mr-0.5 hidden h-8 w-8 shrink-0 rounded-full shadow-sm ring-1 ring-slate-200/70 sm:block sm:mr-1 dark:ring-slate-800"
-        />
+        {/* Brand mark - links to the officials directory */}
+        <Link
+          href="/officials"
+          aria-label="Barangay officials directory"
+          aria-current={pathname === "/officials" ? "page" : undefined}
+          className={cn(
+            "group mr-0.5 hidden shrink-0 rounded-full sm:mr-1 sm:block",
+            pathname === "/officials" && "ring-2 ring-emerald-500",
+          )}
+        >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo.png"
+            alt="Barangay seal"
+            className="h-8 w-8 rounded-full shadow-sm ring-1 ring-slate-200/70 dark:ring-slate-800"
+          />
+
+          {/* Hover tooltip */}
+          <span className="pointer-events-none absolute -top-9 left-1/2 hidden -translate-x-1/2 whitespace-nowrap rounded-md bg-slate-900 px-2 py-1 text-[11px] font-medium text-white opacity-0 shadow-lg transition-opacity duration-200 group-hover:opacity-100 sm:block dark:bg-slate-100 dark:text-slate-900">
+            Barangay Officials
+          </span>
+        </Link>
 
         {NAV_ITEMS.map((item) => {
           const isActive = pathname === item.href;

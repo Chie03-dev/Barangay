@@ -49,26 +49,6 @@ export function SkeletonCircle({
   );
 }
 
-/** Multi-line text skeleton. */
-export function SkeletonText({
-  lines = 3,
-  className,
-}: {
-  lines?: number;
-  className?: string;
-}) {
-  return (
-    <div className={cn("space-y-2", className)}>
-      {Array.from({ length: lines }).map((_, i) => (
-        <Skeleton
-          key={i}
-          className={cn("h-3", i === lines - 1 ? "w-2/3" : "w-full")}
-        />
-      ))}
-    </div>
-  );
-}
-
 /** Mirrors the shared glass card token so skeletons sit on the same surface. */
 export function SkeletonCard({
   className,

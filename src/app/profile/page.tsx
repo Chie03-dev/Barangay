@@ -7,7 +7,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   User,
   ShieldCheck,
-  QrCode,
   Download,
   Phone,
   MapPin,
@@ -504,7 +503,7 @@ function ResidentIdCard() {
         <div className="flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/logo.svg"
+            src="/logo.png"
             alt="Barangay crest"
             className="h-11 w-11 rounded-full bg-white/10 p-1 ring-1 ring-white/30"
           />

@@ -15,7 +15,7 @@ export function useAsyncData<T>(
   options?: { delay?: number; deps?: unknown[] },
 ) {
   const delay = options?.delay ?? 700;
-  const deps = options?.deps ?? [];
+  const deps = options?.deps ?? EMPTY_DEPS;
 
   const [data, setData] = useState<T | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -41,3 +41,6 @@ export function useAsyncData<T>(
 
   return { data, isLoading };
 }
+
+/** Stable empty array so the dependency list is constant across renders. */
+const EMPTY_DEPS: unknown[] = [];

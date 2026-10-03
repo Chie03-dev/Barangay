@@ -57,5 +57,5 @@ next-env.d.ts.timestamp
 
 # Private/local assets - do not publish
 /assets/*
-!/assets/logo.svg
+!/assets/logo.png
 

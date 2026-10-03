@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   CalendarDays,
@@ -159,6 +159,24 @@ export default function CommunityCalendar() {
     const d = new Date(year, month + delta, 1);
     setCursor({ y: d.getFullYear(), m: d.getMonth() });
   }
+  // Escape closes the modal; body scroll is locked while it is open.
+  useEffect(() => {
+    if (!selected || selectedEvents.length === 0) return;
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setSelected(null);
+    }
+    window.addEventListener("keydown", onKeyDown);
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [selected, selectedEvents.length]);
+
   return (
     <section className={cn(glass, "flex flex-col p-6")}>
       {/* Header */}

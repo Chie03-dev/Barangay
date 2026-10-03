@@ -109,6 +109,6 @@ Submit handlers on `/services` and `/reports` simulate network latency with
 
 ## Local-only files
 
-`.clinerules` and everything under `assets/` except `logo.svg` are ignored via
+`.clinerules` and everything under `assets/` except `logo.png` are ignored via
 `.gitignore` - they are local tooling config and private files, not project
 source.

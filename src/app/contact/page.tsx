@@ -9,10 +9,9 @@ import {
   Download,
   Send,
   CheckCircle2,
-  Briefcase,
   Globe,
   Code2,
-  Sparkles,
+  MessageSquare,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -91,7 +90,7 @@ export default function ContactPage() {
           transition={{ duration: 0.4 }}
           className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
         >
-          <Sparkles className="h-6 w-6" aria-hidden />
+          <MessageSquare className="h-6 w-6" aria-hidden />
         </motion.div>
         <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
           Contact &amp; Developer Profile

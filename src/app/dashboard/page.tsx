@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
-  AnimatePresence,
   motion,
   useMotionValue,
   useTransform,
@@ -11,11 +10,10 @@ import {
   type MotionValue,
 } from "framer-motion";
 import {
-  Sparkles,
+  Home,
   FileText,
   ShieldAlert,
   Search,
-  User,
   Bell,
   ArrowRight,
   PhoneCall,
@@ -552,7 +550,7 @@ function HeroBanner({ today }: { today: string }) {
                 ease: "easeInOut",
               }}
             >
-              <Sparkles className="h-3.5 w-3.5" aria-hidden />
+              <Home className="h-3.5 w-3.5" aria-hidden />
             </motion.span>
             Resident Portal
           </span>
