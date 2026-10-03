@@ -13,6 +13,36 @@ for shared-element transitions and micro-interactions.
 
 ---
 
+## Live demo
+
+**https://barangay.myappmcb.workers.dev**
+
+Deployed to Cloudflare Workers via OpenNext. Sign in with any email and
+password - the form accepts everything and redirects straight to the
+dashboard.
+
+> Sign-in is a front-end mock (see [Scope](#scope-what-is-and-isnt-real)),
+> so there is no account to create and nothing is submitted anywhere.
+
+---
+
+## Screenshots
+
+| | |
+| --- | --- |
+| ![Login](docs/screenshots/01-login.png) | ![Dashboard](docs/screenshots/02-dashboard.png) |
+| Cinematic login - slideshow, 3D tilt card | Bento dashboard - quick actions, live stats, hotline |
+| ![Officials](docs/screenshots/03-officials.png) | ![Services](docs/screenshots/04-services.png) |
+| Officials directory - org chart | Document request - step 1 of 4 |
+| ![Track](docs/screenshots/05-track.png) | ![Profile](docs/screenshots/07-profile.png) |
+| Request tracking with filters | Resident ID pass and household details |
+| ![Reports](docs/screenshots/06-reports.png) | ![Mobile dashboard](docs/screenshots/09-dashboard-mobile.png) |
+| Incident & blotter reporting | Mobile layout with floating nav dock |
+
+Full-resolution captures live in [`docs/screenshots/`](docs/screenshots).
+
+---
+
 ## Highlights
 
 **Cinematic login** - crossfading Pexels slideshow with a scrim tuned for
