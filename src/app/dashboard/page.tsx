@@ -40,6 +40,8 @@ import {
   SkeletonHeading,
 } from "@/components/Skeleton";
 import { useAsyncData } from "@/hooks/useAsyncData";
+import BarangayMap from "@/components/BarangayMap";
+import CommunityCalendar from "@/components/CommunityCalendar";
 
 /* ------------------------------------------------------------------ */
 /*  Static data                                                        */
@@ -321,11 +323,21 @@ export default function DashboardPage() {
 
         {/* Tile 5 - Hotline dispatcher */}
         <HotlineTile />
+
+        {/* Tile 6 - Barangay map (spans 2 columns on desktop) */}
+        <div className="md:col-span-2">
+          <BarangayMap />
+        </div>
+
+        {/* Tile 7 - Community calendar */}
+        <CommunityCalendar />
       </div>
         </>
       )}
     </main>
   );
+}
+
 /* ------------------------------------------------------------------ */
 /*  Loading skeleton                                                    */
 /* ------------------------------------------------------------------ */
@@ -445,10 +457,49 @@ function DashboardSkeleton() {
           </div>
           <Skeleton className="mt-5 h-11 w-full" rounded="rounded-xl" />
         </SkeletonCard>
+
+        {/* Map (2 columns) */}
+        <div className="md:col-span-2">
+          <SkeletonCard>
+            <SkeletonHeading />
+            <Skeleton className="mt-5 aspect-4/3 w-full" rounded="rounded-2xl" />
+            <div className="mt-4 space-y-1.5">
+              {[0, 1, 2].map((i) => (
+                <Skeleton key={i} className="h-11 w-full" rounded="rounded-xl" />
+              ))}
+            </div>
+          </SkeletonCard>
+        </div>
+
+        {/* Calendar */}
+        <SkeletonCard>
+          <div className="flex items-start justify-between gap-3">
+            <SkeletonHeading />
+            <div className="flex items-center gap-1">
+              <Skeleton className="h-7 w-7" rounded="rounded-lg" />
+              <Skeleton className="h-3 w-24" rounded="rounded-md" />
+              <Skeleton className="h-7 w-7" rounded="rounded-lg" />
+            </div>
+          </div>
+          <div className="mt-5 grid grid-cols-7 gap-1">
+            {Array.from({ length: 7 }).map((_, i) => (
+              <Skeleton key={i} className="h-2.5" rounded="rounded-md" />
+            ))}
+          </div>
+          <div className="mt-2 grid grid-cols-7 gap-1">
+            {Array.from({ length: 35 }).map((_, i) => (
+              <Skeleton
+                key={i}
+                className="aspect-square"
+                rounded="rounded-xl"
+              />
+            ))}
+          </div>
+          <Skeleton className="mt-4 h-3 w-40" rounded="rounded-md" />
+        </SkeletonCard>
       </div>
     </div>
   );
-}
 }
 /* ------------------------------------------------------------------ */
 /*  Hero banner with mouse spotlight                                   */
