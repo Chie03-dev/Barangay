@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="1000" height="1000">
+  <defs>
+    <clipPath id="inner"><circle cx="500" cy="500" r="350"/></clipPath>
+  </defs>
+  <circle cx="500" cy="500" r="480" fill="#064d35" stroke="#f5b91b" stroke-width="18"/>
+  <circle cx="500" cy="500" r="365" fill="#fdf8e9" stroke="#f5b91b" stroke-width="10"/>
+  <g clip-path="url(#inner)">
+    <rect x="145" y="145" width="710" height="710" fill="#fdf8e9"/>
+    <circle cx="500" cy="370" r="105" fill="#f7b719"/>
+    <g fill="#f7b719">
+      <path d="M500 215l-13 85h26zM400 245l35 78 18-10zM600 245l-53 68 18 10z"/>
+      <path d="M350 300l70 42-9 18zM650 300l-61 60 9 18z"/>
+    </g>
+    <path d="M130 520 L280 400 390 450 500 350 620 440 720 390 870 520V610H130Z" fill="#124e3c"/>
+    <path d="M130 535 L300 465 420 500 560 430 700 500 870 450V640H130Z" fill="#257053"/>
+    <path d="M130 600H870V820H130Z" fill="#1688c2"/>
+    <path d="M150 670 Q330 620 510 680 T850 650 V820H150Z" fill="#0f5d48"/>
+    <g fill="#123f32">
+      <path d="M730 580q-10-90 20-150 35 65 18 150z"/>
+      <path d="M805 600q-5-75 25-125 30 60 12 125z"/>
+    </g>
+    <g fill="#f0b35a" stroke="#432f1c" stroke-width="5">
+      <path d="M235 610V500l125-85 150 85v110z"/>
+      <path d="M215 505l145-115 175 115-35 28-140-82-110 82z"/>
+    </g>
+    <g stroke="#432f1c" stroke-width="7"><path d="M265 520v90M300 500v110M335 480v130M390 480v130M435 505v105"/></g>
+    <path d="M150 780Q500 650 850 780" fill="none" stroke="#fff" stroke-width="14"/>
+    <g fill="#f0b51b">
+      <path d="M330 790q-65-30-100-5 45 35 100 20zM370 760q-50-45-85-32 30 45 85 48zM410 735q-40-48-72-43 20 47 70 59z"/>
+      <path d="M670 790q65-30 100-5-45 35-100 20zM630 760q50-45 85-32-30 45-85 48zM590 735q40-48 72-43-20 47-70 59z"/>
+    </g>
+  </g>
+  <g fill="#fff" font-family="Arial, Helvetica, sans-serif" font-weight="700" text-anchor="middle">
+    <text x="500" y="175" font-size="92" letter-spacing="8">BARANGAY</text>
+    <text x="500" y="890" font-size="35" letter-spacing="3">BAYANIHAN • MALASAKIT • PAG-UNLAD</text>
+  </g>
+  <g transform="translate(115 430)">
+    <path d="M0 0h95v190H0z" fill="#064d35"/>
+    <path d="M8 15h79v50H8zM8 75h79v50H8zM8 135h79v40H8z" fill="#fff"/>
+    <path d="M48 5l22 22-22 22-22-22zM48 65l22 22-22 22-22-22zM48 125l22 22-22 22-22-22z" fill="#d9273f" stroke="#f5b91b" stroke-width="5"/>
+  </g>
+  <g transform="translate(790 430)">
+    <path d="M0 0h95v190H0z" fill="#064d35"/>
+    <path d="M8 15h79v50H8zM8 75h79v50H8zM8 135h79v40H8z" fill="#fff"/>
+    <path d="M48 5l22 22-22 22-22-22zM48 65l22 22-22 22-22-22zM48 125l22 22-22 22-22-22z" fill="#d9273f" stroke="#f5b91b" stroke-width="5"/>
+  </g>
+</svg>
