@@ -10,6 +10,10 @@ node_modules/
 /test-results
 
 # Next.js build output
+# NOTE: `next dev` and `next build` both write here. Never run `npm run build`
+# while `npm run dev` is running - it overwrites the files the dev server is
+# serving, which returns HTML for /_next/static/* and breaks the app.
+# If that happens: stop the dev server, delete .next, restart.
 /.next/
 /out/
 
