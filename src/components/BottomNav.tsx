@@ -41,7 +41,9 @@ export default function BottomNav() {
           aria-label="Barangay officials directory"
           aria-current={pathname === "/officials" ? "page" : undefined}
           className={cn(
-            "group mr-0.5 hidden shrink-0 rounded-full sm:mr-1 sm:block",
+            // Visible at every size so /officials is reachable on phones;
+            // just smaller below sm to keep the dock within a 320px viewport.
+            "group mr-0.5 block shrink-0 rounded-full sm:mr-1",
             pathname === "/officials" && "ring-2 ring-emerald-500",
           )}
         >
@@ -49,7 +51,7 @@ export default function BottomNav() {
           <img
             src="/logo.png"
             alt="Barangay seal"
-            className="h-8 w-8 rounded-full shadow-sm ring-1 ring-slate-200/70 dark:ring-slate-800"
+            className="h-7 w-7 rounded-full shadow-sm ring-1 ring-slate-200/70 sm:h-8 sm:w-8 dark:ring-slate-800"
           />
 
           {/* Hover tooltip */}
