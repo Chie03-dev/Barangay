@@ -42,8 +42,15 @@ next-env.d.ts.timestamp
 # Vercel
 .vercel
 
-# Editors
+# Editor
 .vscode/*
 !.vscode/extensions.json
 .idea/
+
+# Local AI agent config (not part of the project)
+/.clinerules
+
+# Private/local assets - do not publish
+/assets/*
+!/assets/logo.svg
 
