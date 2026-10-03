@@ -13,6 +13,11 @@ node_modules/
 /.next/
 /out/
 
+# Cloudflare Workers / OpenNext build output
+/.open-next/
+.wrangler/
+/cloudflare-env.d.ts
+
 # Production
 /build
 
