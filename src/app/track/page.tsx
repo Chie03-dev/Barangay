@@ -11,7 +11,7 @@ import {
   ChevronRight,
   AlertCircle,
   Filter,
-  Sparkles,
+  StickyNote,
   Copy,
   Check,
   Building,
@@ -504,7 +504,10 @@ function Timeline({ item }: { item: RequestItem }) {
       </div>
 
       <div className="mt-2 flex items-start gap-2 rounded-xl bg-amber-500/10 px-3 py-2 text-xs text-amber-800 dark:text-amber-300">
-        <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
+        <StickyNote
+          className="mt-0.5 h-3.5 w-3.5 shrink-0"
+          aria-hidden
+        />
         <span>{item.note}</span>
       </div>
 

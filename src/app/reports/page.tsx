@@ -22,7 +22,7 @@ import {
   Upload,
   UserX,
   ChevronRight,
-  Sparkles,
+  Info,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -567,7 +567,7 @@ export default function ReportsPage() {
 
               {!isComplete && !isSubmitting && (
                 <p className="mt-3 flex items-center justify-center gap-2 text-center text-xs text-slate-500 dark:text-slate-400">
-                  <Sparkles className="h-3.5 w-3.5" aria-hidden />
+                  <Info className="h-3.5 w-3.5" aria-hidden />
                   Complete all required fields and certify your report to
                   submit.
                 </p>

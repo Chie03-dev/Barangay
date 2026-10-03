@@ -13,7 +13,8 @@ import {
   CheckCircle2,
   Clock,
   Upload,
-  Sparkles,
+  Zap,
+  Target,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -361,7 +362,7 @@ Additional Remarks or Specific Details
                   <span className="text-sm">
                     This is urgent - I need the document within 24 hours.
                   </span>
-                  <Sparkles
+                  <Zap
                     className="ml-auto h-4 w-4 shrink-0 text-amber-500"
                     aria-hidden
                   />
@@ -403,7 +404,7 @@ Additional Remarks or Specific Details
                   {RESIDENT_NAME}
                 </SummaryRow>
 
-                <SummaryRow icon={Sparkles} label="Target Purpose">
+                <SummaryRow icon={Target} label="Target Purpose">
                   <p className="font-semibold">{purpose}</p>
                   {remarks && (
                     <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
