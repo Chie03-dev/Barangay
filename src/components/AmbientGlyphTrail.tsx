@@ -66,11 +66,13 @@ const CONTENT_SELECTOR =
 /** How long a single glyph lives before fading out (ms). */
 const LIFETIME = 1400;
 /** Max simultaneous glyphs, so it never becomes a wall of icons. */
-const MAX_GLYPHS = 7;
+const MAX_GLYPHS = 6;
 /** Pointer travel (px) before a new glyph is emitted. */
-const STEP = 90;
-/** Glyph box, in px. Matches the clamp maths below. */
-const BOX = 30;
+const STEP = 130;
+/** Glyph box, in px. Matches the 60px glyph and the clamp maths below. */
+const BOX = 60;
+/** Cursor offset, in px. Scales with BOX so the glyph clears the cursor. */
+const OFFSET = 20;
 
 type Bubble = {
   id: number;
@@ -127,8 +129,16 @@ export default function AmbientGlyphTrail() {
             Icon: glyph.Icon,
             tint: glyph.tint,
             // Offset up-right of the cursor, clamped to stay on screen.
-            x: Math.min(x + 14, window.innerWidth - BOX - 14),
-            y: Math.max(8, Math.min(y - 10, window.innerHeight - BOX - 14)),
+            // Math.max guards the lower bound: on a viewport narrower than
+            // the glyph, the upper clamp would otherwise go negative.
+            x: Math.max(
+              8,
+              Math.min(x + OFFSET, window.innerWidth - BOX - 8),
+            ),
+            y: Math.max(
+              8,
+              Math.min(y - OFFSET, window.innerHeight - BOX - 8),
+            ),
             // Small fixed angle so icons feel hand-scattered, not aligned.
             spin: Math.round(Math.random() * 24 - 12),
           },
@@ -183,19 +193,37 @@ export default function AmbientGlyphTrail() {
           return (
             <motion.span
               key={bubble.id}
-              initial={{ opacity: 0, scale: 0.6, y: 8 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.75, y: -10 }}
-              transition={{ duration: 0.28, ease: "easeOut" }}
+              // Springs past full size then settles, so a glyph reads as
+              // growing into place rather than just fading up. The blur
+              // sharpens over the same spring: the icon resolves out of a
+              // soft blob as it lands.
+              initial={{
+                opacity: 0,
+                scale: 0.2,
+                y: 18,
+                filter: "blur(14px)",
+              }}
+              animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(3px)" }}
+              exit={{
+                opacity: 0,
+                scale: 0.55,
+                y: -18,
+                filter: "blur(12px)",
+              }}
+              transition={{ type: "spring", stiffness: 260, damping: 18 }}
               style={{ left: bubble.x, top: bubble.y, rotate: bubble.spin }}
               className={cn(
-                // No backdrop-blur here: these animate continuously, and a
-                // blurred layer that moves is re-blurred on every frame.
+                // No backdrop-blur: that would re-blur the moving content
+                // behind on every frame. This is a self-blur of the glyph
+                // itself, and it only repaints while the spring runs.
                 "absolute flex items-center justify-center",
                 bubble.tint,
               )}
             >
-              <Icon className="h-5 w-5" strokeWidth={1.75} />
+              <Icon
+                className="h-[60px] w-[60px]"
+                strokeWidth={1.6}
+              />
             </motion.span>
           );
         })}
