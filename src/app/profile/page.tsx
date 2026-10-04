@@ -24,7 +24,7 @@ import {
   Smartphone,
   type LucideIcon,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, glass } from "@/lib/utils";
 import {
   Skeleton,
   SkeletonCard,
@@ -78,9 +78,6 @@ const QR_PATTERN = [
 /* ------------------------------------------------------------------ */
 /*  Style tokens                                                       */
 /* ------------------------------------------------------------------ */
-
-const glass =
-  "rounded-3xl border border-slate-200/80 bg-white/80 shadow-xl shadow-slate-200/50 backdrop-blur-xl dark:border-slate-800/50 dark:bg-slate-900/80 dark:shadow-none";
 
 const rowHover = "transition-colors hover:bg-slate-50/70 dark:hover:bg-slate-800/40";
 /* ------------------------------------------------------------------ */

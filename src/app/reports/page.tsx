@@ -25,7 +25,8 @@ import {
   Info,
   type LucideIcon,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, glass } from "@/lib/utils";
+import { useCalmMotion } from "@/hooks/useCalmMotion";
 
 /* ------------------------------------------------------------------ */
 /*  Types & static data                                                */
@@ -101,9 +102,6 @@ const LOCATIONS = [
 /*  Style tokens                                                       */
 /* ------------------------------------------------------------------ */
 
-const glass =
-  "rounded-3xl border border-slate-200/80 bg-white/80 shadow-xl shadow-slate-200/50 backdrop-blur-xl dark:border-slate-800/50 dark:bg-slate-900/80 dark:shadow-none";
-
 const slide = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
@@ -124,6 +122,7 @@ const sectionTitle = "mb-1 text-lg font-semibold";
 /* ------------------------------------------------------------------ */
 
 export default function ReportsPage() {
+  const calm = useCalmMotion();
   const [incident, setIncident] = useState<IncidentId | null>(null);
   const [location, setLocation] = useState("");
   const [date, setDate] = useState("");
@@ -212,7 +211,7 @@ export default function ReportsPage() {
         )}
       >
         <motion.span
-          animate={{ scale: [1, 1.12, 1] }}
+          animate={calm ? undefined : { scale: [1, 1.12, 1] }}
           transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
           className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400"
         >

@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SESSION_COOKIE } from "@/lib/auth";
+import { useCalmMotion } from "@/hooks/useCalmMotion";
 
 /* ------------------------------------------------------------------ */
 /*  Slideshow                                                          */
@@ -36,6 +37,7 @@ function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [slide, setSlide] = useState(0);
+  const calm = useCalmMotion();
 
   // Only allow same-origin relative paths, so `?next=` can't be used to
   // redirect a resident to an external site.
@@ -60,7 +62,7 @@ function LoginForm() {
   }, []);
 
   function handleMove(event: React.MouseEvent<HTMLDivElement>) {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (calm) return;
     const rect = event.currentTarget.getBoundingClientRect();
     const px = (event.clientX - rect.left) / rect.width - 0.5;
     const py = (event.clientY - rect.top) / rect.height - 0.5;
@@ -93,8 +95,13 @@ function LoginForm() {
             key={slide}
             src={SLIDES[slide]}
             alt=""
+            loading="lazy"
+            decoding="async"
             initial={{ opacity: 0, scale: 1.08 }}
-            animate={{ opacity: 1, scale: 1 }}
+            // The Ken Burns zoom scales a viewport-sized photo for the whole
+            // 6s hold, so the compositor re-rasterises the largest texture
+            // on the site every frame. Cross-fade only on touch devices.
+            animate={{ opacity: 1, scale: calm ? 1.02 : 1 }}
             exit={{ opacity: 0 }}
             transition={{
               opacity: { duration: 1.4, ease: "easeInOut" },
@@ -109,7 +116,7 @@ function LoginForm() {
           so the pale card still reads as sitting on a deliberate surface,
           rather than a white panel floating on near-black.
         */}
-        <div className="absolute inset-0 bg-slate-900/45 backdrop-blur-[2px] dark:bg-slate-950/60" />
+        <div className="absolute inset-0 bg-slate-900/45 backdrop-blur-[2px] max-sm:backdrop-blur-none dark:bg-slate-950/60" />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-slate-900/30 dark:from-slate-950/80 dark:to-slate-950/40" />
       </div>
 

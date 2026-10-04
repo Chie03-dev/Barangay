@@ -14,7 +14,8 @@ import {
   MessageSquare,
   type LucideIcon,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, glass } from "@/lib/utils";
+import { useCalmMotion } from "@/hooks/useCalmMotion";
 
 /* ------------------------------------------------------------------ */
 /*  Profile data                                                       */
@@ -36,9 +37,6 @@ const LINKS: { label: string; href: string; icon: LucideIcon }[] = [
   { label: "Portfolio", href: "https://www.youtube.com/shorts/gsQc4Fkmhgs", icon: Globe },
 ];
 
-const glass =
-  "rounded-3xl border border-slate-200/80 bg-white/80 shadow-xl shadow-slate-200/50 backdrop-blur-xl dark:border-slate-800/50 dark:bg-slate-900/80 dark:shadow-none";
-
 const fieldLabel =
   "mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300";
 
@@ -49,6 +47,7 @@ const inputClass =
 /* ------------------------------------------------------------------ */
 
 export default function ContactPage() {
+  const calm = useCalmMotion();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
@@ -117,7 +116,7 @@ export default function ContactPage() {
                 className="h-28 w-28 rounded-2xl object-cover shadow-lg ring-2 ring-emerald-500/30"
               />
               <motion.span
-                animate={{ scale: [1, 1.12, 1] }}
+                animate={calm ? undefined : { scale: [1, 1.12, 1] }}
                 transition={{
                   duration: 1.8,
                   repeat: Infinity,

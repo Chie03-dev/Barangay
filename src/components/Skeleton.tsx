@@ -27,7 +27,7 @@ export function Skeleton({
         className,
       )}
     >
-      <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/70 to-transparent motion-safe:animate-[shimmer_1.8s_infinite] dark:via-white/15" />
+      <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/70 to-transparent motion-safe:animate-[shimmer_1.8s_infinite] max-sm:hidden dark:via-white/15" />
     </div>
   );
 }

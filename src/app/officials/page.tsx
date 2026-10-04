@@ -16,7 +16,7 @@ import {
   ChevronRight,
   type LucideIcon,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, glass } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
 /*  Officials data                                                     */
@@ -128,9 +128,6 @@ const OFFICIALS: Official[] = [
     icon: Baby,
   },
 ];
-
-const glass =
-  "rounded-3xl border border-slate-200/80 bg-white/80 shadow-xl shadow-slate-200/50 backdrop-blur-xl dark:border-slate-800/50 dark:bg-slate-900/80 dark:shadow-none";
 
 function initials(name: string) {
   return name

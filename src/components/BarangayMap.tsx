@@ -10,7 +10,8 @@ import {
   X,
   Navigation,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, glass } from "@/lib/utils";
+import { useCalmMotion } from "@/hooks/useCalmMotion";
 
 type PlaceId = "hall" | "health" | "evac";
 
@@ -55,15 +56,13 @@ const PLACES: Place[] = [
   },
 ];
 
-const glass =
-  "rounded-3xl border border-slate-200/80 bg-white/80 shadow-xl shadow-slate-200/50 backdrop-blur-xl dark:border-slate-800/50 dark:bg-slate-900/80 dark:shadow-none";
-
 /* ------------------------------------------------------------------ */
 /*  Component                                                          */
 /* ------------------------------------------------------------------ */
 
 export default function BarangayMap() {
   const [activeId, setActiveId] = useState<PlaceId | null>(null);
+  const calm = useCalmMotion();
   const active = PLACES.find((p) => p.id === activeId) ?? null;
 
   return (
@@ -166,7 +165,7 @@ export default function BarangayMap() {
               className="group absolute -translate-x-1/2 -translate-y-full p-1 focus:outline-none"
             >
               {/* Radar pulse on the active pin */}
-              {isActive && (
+              {isActive && !calm && (
                 <motion.span
                   aria-hidden
                   animate={{ scale: [1, 2.4], opacity: [0.45, 0] }}

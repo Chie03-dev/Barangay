@@ -120,8 +120,14 @@ export default function AmbientCodeStream() {
   }, []);
 
   useEffect(() => {
-    // Respect reduced motion: no listeners, nothing pops up.
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    // Respect reduced motion: no listeners, nothing pops up. Also skipped
+    // on coarse pointers - this is a cursor effect, and on touch the
+    // synthetic mousemove stream fires it repeatedly during scroll.
+    if (
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+      window.matchMedia("(pointer: coarse)").matches
+    )
+      return;
 
     const emit = (x: number, y: number) => {
       const snippet = SNIPPETS[snippetIndex.current % SNIPPETS.length];

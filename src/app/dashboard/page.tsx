@@ -30,7 +30,7 @@ import {
   Activity,
   type LucideIcon,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { cn, glass } from "@/lib/utils";
 import {
   Skeleton,
   SkeletonCard,
@@ -38,6 +38,7 @@ import {
   SkeletonHeading,
 } from "@/components/Skeleton";
 import { useAsyncData } from "@/hooks/useAsyncData";
+import { useCalmMotion } from "@/hooks/useCalmMotion";
 import BarangayMap from "@/components/BarangayMap";
 import CommunityCalendar from "@/components/CommunityCalendar";
 
@@ -144,9 +145,6 @@ const ACTIVE_REQUEST = {
 /*  Styling helpers                                                    */
 /* ------------------------------------------------------------------ */
 
-const glass =
-  "rounded-3xl border border-slate-200/80 bg-white/80 shadow-xl shadow-slate-200/50 backdrop-blur-xl dark:border-slate-800/50 dark:bg-slate-900/80 dark:shadow-none";
-
 const GLOW: Record<string, string> = {
   emerald: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
   amber: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
@@ -166,6 +164,7 @@ const RING: Record<string, string> = {
 
 export default function DashboardPage() {
   const [today, setToday] = useState("");
+  const calm = useCalmMotion();
 
   // Aggregated dashboard feed - replace the loader body with a real fetch.
   const { isLoading } = useAsyncData(() => STATS, { delay: 600 });
@@ -231,7 +230,7 @@ export default function DashboardPage() {
             />
             <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-red-500/10 px-2.5 py-1 text-[11px] font-bold text-red-600 dark:text-red-400">
               <motion.span
-                animate={{ opacity: [1, 0.25, 1] }}
+                animate={calm ? undefined : { opacity: [1, 0.25, 1] }}
                 transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
                 className="h-1.5 w-1.5 rounded-full bg-red-500"
               />
@@ -262,7 +261,7 @@ export default function DashboardPage() {
               </div>
               <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1.5 text-[11px] font-semibold text-emerald-700 dark:text-emerald-400">
                 <motion.span
-                  animate={{ scale: [1, 1.2, 1] }}
+                  animate={calm ? undefined : { scale: [1, 1.2, 1] }}
                   transition={{
                     duration: 1.6,
                     repeat: Infinity,
@@ -289,7 +288,9 @@ export default function DashboardPage() {
                   className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-emerald-400"
                 />
                 <motion.div
-                  animate={{ opacity: [0, 0.7, 0] }}
+                  // Shines over the progress bar forever; each frame
+                  // invalidates the glass panel this sits inside.
+                  animate={calm ? undefined : { opacity: [0, 0.7, 0] }}
                   transition={{
                     duration: 1.8,
                     repeat: Infinity,
@@ -506,8 +507,13 @@ function DashboardSkeleton() {
 function HeroBanner({ today }: { today: string }) {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+  const calm = useCalmMotion();
 
   function handleMove(event: React.MouseEvent<HTMLDivElement>) {
+    // Re-sampling a radial gradient repaints the whole panel, so the
+    // spotlight is desktop-pointer only. It also never had a meaningful
+    // touch equivalent - there is no hover position to track.
+    if (calm) return;
     const rect = event.currentTarget.getBoundingClientRect();
     mouseX.set(event.clientX - rect.left);
     mouseY.set(event.clientY - rect.top);
@@ -543,7 +549,7 @@ function HeroBanner({ today }: { today: string }) {
         <div>
           <span className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
             <motion.span
-              animate={{ scale: [1, 1.2, 1], rotate: [0, 12, 0] }}
+              animate={calm ? undefined : { scale: [1, 1.2, 1], rotate: [0, 12, 0] }}
               transition={{
                 duration: 2.4,
                 repeat: Infinity,
@@ -580,7 +586,9 @@ function HeroBanner({ today }: { today: string }) {
           {/* Shimmer sweep */}
           <motion.span
             aria-hidden
-            animate={{ x: ["-120%", "220%"] }}
+            // Sweeps a gradient across the panel forever; held static on
+            // touch devices where it would repaint behind the glass.
+            animate={calm ? undefined : { x: ["-120%", "220%"] }}
             transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
             className="pointer-events-none absolute inset-0 -z-0 bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent"
           />
@@ -648,8 +656,13 @@ function TiltCard({
 }) {
   const rotateX = useSpring(useMotionValue(0), { stiffness: 300, damping: 20 });
   const rotateY = useSpring(useMotionValue(0), { stiffness: 300, damping: 20 });
+  const calm = useCalmMotion();
 
   function handleMove(event: React.MouseEvent<HTMLDivElement>) {
+    // A 3D tilt is a hover affordance. On touch it fires on every scroll
+    // gesture and drives two springs over a blurred surface, which is the
+    // most expensive interaction on the page.
+    if (calm) return;
     const rect = event.currentTarget.getBoundingClientRect();
     const x = (event.clientX - rect.left) / rect.width - 0.5;
     const y = (event.clientY - rect.top) / rect.height - 0.5;
@@ -815,6 +828,7 @@ function StatRow({
 function Marquee() {
   // Duplicated so the -50% translate loops seamlessly.
   const items = [...ANNOUNCEMENTS, ...ANNOUNCEMENTS];
+  const calm = useCalmMotion();
 
   return (
     <div className="relative mt-5 flex-1 overflow-hidden">
@@ -829,7 +843,10 @@ function Marquee() {
       />
 
       <motion.div
-        animate={{ y: ["0%", "-50%"] }}
+        // This loop never stops, so it re-composites the full stack every
+        // frame. On touch devices it is held still and the list simply
+        // scrolls with the page.
+        animate={calm ? undefined : { y: ["0%", "-50%"] }}
         transition={{
           duration: 14,
           repeat: Infinity,
