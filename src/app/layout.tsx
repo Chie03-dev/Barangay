@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import BottomNav from "@/components/BottomNav";
-import AmbientCodeStream from "@/components/AmbientCodeStream";
+import AmbientGlyphTrail from "@/components/AmbientGlyphTrail";
 
 export const metadata: Metadata = {
   title: "Barangay Portal",
@@ -56,8 +56,8 @@ export default function RootLayout({
           <div className="absolute -left-40 top-1/2 h-96 w-96 rounded-full bg-indigo-200/30 blur-2xl sm:blur-3xl dark:bg-indigo-900/10" />
           <div className="absolute -bottom-40 right-1/4 hidden h-96 w-96 rounded-full bg-teal-100/50 blur-2xl sm:block sm:blur-3xl dark:bg-slate-900/30" />
         </div>
-        {/* Edge code stream - fades in when the cursor nears a screen edge. */}
-        <AmbientCodeStream />
+        {/* Faint lucide glyph trail that follows the cursor over empty background. */}
+        <AmbientGlyphTrail />
         {children}
         <BottomNav />
       </body>

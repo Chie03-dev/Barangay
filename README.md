@@ -64,8 +64,8 @@ timestamp capture, evidence upload, and a certification step before filing.
 **Officials directory** - a three-tier organizational chart with connector
 lines, portraits, and per-official detail modals.
 
-**Ambient code stream** - code lines that fade in near the cursor while it
-moves over empty background.
+**Ambient glyph trail** - faint Lucide icons that fade in behind the cursor as
+it moves over empty background.
 
 ### Design system
 
@@ -165,7 +165,7 @@ src/
     globals.css           Tailwind v4 entry, shimmer keyframes
     login|dashboard|services|track|reports|officials|profile|contact/
   components/
-    AmbientCodeStream.tsx Cursor-reactive code lines
+    AmbientGlyphTrail.tsx Cursor-reactive Lucide icon trail
     BarangayMap.tsx       Stylized SVG map with interactive pins
     BottomNav.tsx         Floating dock with shared-element active pill
     CommunityCalendar.tsx Month grid with event modal
