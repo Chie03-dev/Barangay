@@ -199,10 +199,3 @@ in sets a client-side cookie.
 `src/hooks/useAsyncData.ts` exists so the loading states are real and testable
 today. Swap the loader body for a `fetch` call and the `isLoading` contract
 stays the same.
-
----
-
-## Local-only files
-
-`.clinerules` and everything under `assets/` except the logo are ignored via
-`.gitignore` - local tooling config and private source material.
