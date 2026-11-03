@@ -1122,7 +1122,7 @@ function SlidingEventCarousel({
               decoding="async"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/40 to-transparent" />
-            <div className="absolute bottom-0 left-0 p-6 w-full">
+            <div className="absolute bottom-0 left-0 p-6 w-full max-h-[45%] overflow-hidden">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                 <Calendar className="h-3 w-3" aria-hidden />
                 {events[slide].date}
