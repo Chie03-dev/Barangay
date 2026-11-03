@@ -46,7 +46,7 @@ export default function BottomNav() {
           aria-label="Barangay officials directory"
           aria-current={pathname === "/officials" ? "page" : undefined}
           className={cn(
-            "group block shrink-0 rounded-full sm:mr-1",
+            "group relative block shrink-0 rounded-full sm:mr-1",
             pathname === "/officials" && "ring-2 ring-emerald-500"
           )}
         >
