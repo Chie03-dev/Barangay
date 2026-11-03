@@ -1,7 +1,7 @@
-"use client";
-
+"use client";
 import { Suspense, useEffect, useState, type FormEvent } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 import {
   AnimatePresence,
   motion,
@@ -12,45 +12,41 @@ import {
   Mail,
   Lock,
   ArrowRight,
+  ChevronLeft,
+  ChevronRight,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SESSION_COOKIE } from "@/lib/auth";
-import { useCalmMotion } from "@/hooks/useCalmMotion";
-
+import { useCalmMotion } from "@/hooks/useCalmMotion";
 /* ------------------------------------------------------------------ */
 /*  Slideshow                                                          */
-/* ------------------------------------------------------------------ */
-
+/* ------------------------------------------------------------------ */
 const SLIDES = [
   "https://images.pexels.com/photos/4673995/pexels-photo-4673995.jpeg",
   "https://images.pexels.com/photos/27429709/pexels-photo-27429709.jpeg",
   "https://images.pexels.com/photos/35642939/pexels-photo-35642939.jpeg",
   "https://images.pexels.com/photos/33072140/pexels-photo-33072140.jpeg",
-];
-
-const SLIDE_MS = 6000;
-
+];
+const SLIDE_MS = 6000;
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [slide, setSlide] = useState(0);
-  const calm = useCalmMotion();
-
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const calm = useCalmMotion();
   // Only allow same-origin relative paths, so `?next=` can't be used to
   // redirect a resident to an external site.
   const rawNext = searchParams.get("next");
   const nextPath =
     rawNext && rawNext.startsWith("/") && !rawNext.startsWith("//")
       ? rawNext
-      : "/dashboard";
-
+      : "/dashboard";
   // 3D tilt driven by pointer position.
   const rotateX = useSpring(useMotionValue(0), { stiffness: 220, damping: 20 });
-  const rotateY = useSpring(useMotionValue(0), { stiffness: 220, damping: 20 });
-
+  const rotateY = useSpring(useMotionValue(0), { stiffness: 220, damping: 20 });
   // Advance the slideshow.
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -59,8 +55,7 @@ function LoginForm() {
       SLIDE_MS,
     );
     return () => clearInterval(id);
-  }, []);
-
+  }, []);
   function handleMove(event: React.MouseEvent<HTMLDivElement>) {
     if (calm) return;
     const rect = event.currentTarget.getBoundingClientRect();
@@ -68,15 +63,14 @@ function LoginForm() {
     const py = (event.clientY - rect.top) / rect.height - 0.5;
     rotateY.set(px * 10);
     rotateX.set(-py * 10);
-  }
-
+  }
   function handleLeave() {
     rotateX.set(0);
     rotateY.set(0);
-  }
-
+  }
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    setIsAuthenticating(true);
     // Mock auth: there is no backend yet, so any submit goes straight
     // through. Wire a real sign-in call here when the backend lands.
     document.cookie = `${SESSION_COOKIE}=1; path=/; max-age=${
@@ -84,8 +78,7 @@ function LoginForm() {
     }; samesite=lax`;
     // Return the resident to wherever the middleware bounced them from.
     router.push(nextPath);
-  }
-
+  }
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-12">
       {/* Cinematic slideshow */}
@@ -97,10 +90,9 @@ function LoginForm() {
             alt=""
             loading="lazy"
             decoding="async"
-            initial={{ opacity: 0, scale: 1.08 }}
-            // The Ken Burns zoom scales a viewport-sized photo for the whole
-            // 6s hold, so the compositor re-rasterises the largest texture
-            // on the site every frame. Cross-fade only on touch devices.
+            // Cross-fade only; the Ken Burns scale is driven by the 6s
+            // transition below so new slides don't "pop" in at 1.08x.
+            initial={{ opacity: 0 }}
             animate={{ opacity: 1, scale: calm ? 1.02 : 1 }}
             exit={{ opacity: 0 }}
             transition={{
@@ -109,8 +101,7 @@ function LoginForm() {
             }}
             className="absolute inset-0 h-full w-full object-cover motion-reduce:transition-none"
           />
-        </AnimatePresence>
-
+        </AnimatePresence>
         {/*
           Scrim. In light mode the photography is dimmed less and tinted warm
           so the pale card still reads as sitting on a deliberate surface,
@@ -118,8 +109,7 @@ function LoginForm() {
         */}
         <div className="absolute inset-0 bg-slate-900/45 backdrop-blur-[2px] max-sm:backdrop-blur-none dark:bg-slate-950/60" />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-slate-900/30 dark:from-slate-950/80 dark:to-slate-950/40" />
-      </div>
-
+      </div>
       {/* Slide indicators */}
       <div
         aria-hidden
@@ -128,11 +118,13 @@ function LoginForm() {
         {SLIDES.map((_, i) => (
           <button
             key={i}
-            type="button"
-            tabIndex={-1}
+            type="button"
             onClick={() => setSlide(i)}
             aria-label={`Show background ${i + 1}`}
-            className="group relative h-1 w-8 overflow-hidden rounded-full bg-white/45 transition-all dark:bg-white/25"
+            className={cn(
+                "group relative h-1 w-8 overflow-hidden rounded-full bg-white/45 transition-all focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 dark:bg-white/25",
+                i === slide && "bg-white/60 dark:bg-white/40"
+              )}
           >
             <motion.span
               className="absolute inset-y-0 left-0 rounded-full bg-emerald-400"
@@ -142,8 +134,24 @@ function LoginForm() {
             />
           </button>
         ))}
-      </div>
-
+      </div>
+      {/* Slideshow prev / next */}
+      <button
+        type="button"
+        className="absolute left-6 top-1/2 -translate-y-1/2 z-20 h-10 w-10 rounded-full flex items-center justify-center border border-white/30 bg-black/20 text-white hover:bg-white/40 transition-colors backdrop-blur-sm"
+        onClick={() => setSlide((s) => (s - 1 + SLIDES.length) % SLIDES.length)}
+        aria-label="Previous background"
+      >
+        <ChevronLeft className="h-5 w-5" aria-hidden />
+      </button>
+      <button
+        type="button"
+        className="absolute right-6 top-1/2 -translate-y-1/2 z-20 h-10 w-10 rounded-full flex items-center justify-center border border-white/30 bg-black/20 text-white hover:bg-white/40 transition-colors backdrop-blur-sm"
+        onClick={() => setSlide((s) => (s + 1) % SLIDES.length)}
+        aria-label="Next background"
+      >
+        <ChevronRight className="h-5 w-5" aria-hidden />
+      </button>
       <motion.div
         onMouseMove={handleMove}
         onMouseLeave={handleLeave}
@@ -174,8 +182,7 @@ function LoginForm() {
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             Access your barangay resident portal
           </p>
-        </div>
-
+        </div>
         <form onSubmit={handleSubmit} className="space-y-6" noValidate>
           <FloatingField
             id="email"
@@ -186,8 +193,7 @@ function LoginForm() {
             icon={Mail}
             value={email}
             onChange={setEmail}
-          />
-
+          />
           <FloatingField
             id="password"
             name="password"
@@ -197,33 +203,48 @@ function LoginForm() {
             icon={Lock}
             value={password}
             onChange={setPassword}
-          />
-
+          />
           <motion.button
             type="submit"
-            whileHover={{ scale: 1.02 }}
+            disabled={isAuthenticating}
+            whileHover={isAuthenticating ? undefined : { scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition-colors hover:bg-emerald-500"
+            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition-colors hover:bg-emerald-500 disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            Sign In
-            <ArrowRight className="h-4 w-4" aria-hidden />
+            {isAuthenticating ? (
+              <>
+                <motion.span
+                  animate={{ rotate: 360 }}
+                  transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                  className="h-4 w-4 rounded-full border-2 border-white/40 border-t-white"
+                />
+                Signing in…
+              </>
+            ) : (
+              <>
+                Sign In
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </>
+            )}
           </motion.button>
-        </form>
-
+        </form>
+        <p className="mt-4 text-center text-xs text-slate-500 dark:text-slate-400">
+          <Link href="/forgot-password" className="text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300 underline underline-offset-4">
+            Forgot password?
+          </Link>
+        </p>
         <p className="mt-6 text-center text-xs text-slate-500 dark:text-slate-400">
           Protected by the Barangay&apos;s data privacy policy.
         </p>
       </motion.div>
     </main>
   );
-}
-
+}
 /* ------------------------------------------------------------------ */
 /*  Route entry - Suspense keeps useSearchParams from opting the        */
 /*  page out of static prerendering.                                   */
-/* ------------------------------------------------------------------ */
-
+/* ------------------------------------------------------------------ */
 export default function LoginPage() {
   return (
     <Suspense
@@ -239,8 +260,7 @@ export default function LoginPage() {
 }
 /* ------------------------------------------------------------------ */
 /*  Floating-label input with validation state                         */
-/* ------------------------------------------------------------------ */
-
+/* ------------------------------------------------------------------ */
 function FloatingField({
   id,
   name,
@@ -260,8 +280,7 @@ function FloatingField({
   value: string;
   onChange: (v: string) => void;
 }) {
-  const isFloating = value.length > 0;
-
+  const isFloating = value.length > 0;
   return (
     <div>
       <div
@@ -275,8 +294,7 @@ function FloatingField({
         <Icon
           className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
           aria-hidden
-        />
-
+        />
         <label
           htmlFor={id}
           className={cn(
@@ -289,8 +307,7 @@ function FloatingField({
           )}
         >
           {label}
-        </label>
-
+        </label>
         <input
           id={id}
           name={name}
