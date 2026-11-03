@@ -318,7 +318,7 @@ function FloatingField({
           onChange={(e) => onChange(e.target.value)}
           aria-label={label}
           className={cn(
-            "w-full rounded-xl bg-transparent pb-2 pt-6 pl-11 pr-4 text-sm outline-none transition-colors",
+            "w-full rounded-xl bg-transparent pb-2 pt-10 pl-11 pr-4 text-sm outline-none transition-colors",
             "text-slate-900 dark:text-slate-100",
           )}
         />
