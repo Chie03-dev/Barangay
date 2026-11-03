@@ -26,6 +26,7 @@ import {
   AlertCircle,
   QrCode,
   ChevronRight,
+  ChevronLeft,
   Command,
   Zap,
   Activity,
@@ -233,13 +234,15 @@ export default function DashboardPage() {
           <HeroBanner today={today} />
 
           {/* Sliding event carousel */}
-          <SlidingEventCarousel
-            events={EVENT_SLIDES}
-            onEventClick={(event) => {
-              setSelectedEvent(event);
-              setIsEventModalOpen(true);
-            }}
-          />
+          <div className="mt-6">
+            <SlidingEventCarousel
+              events={EVENT_SLIDES}
+              onEventClick={(event) => {
+                setSelectedEvent(event);
+                setIsEventModalOpen(true);
+              }}
+            />
+          </div>
 
           {isEventModalOpen && selectedEvent && (
             <EventModal
@@ -251,7 +254,7 @@ export default function DashboardPage() {
             />
           )}
 
-      <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-3">
+          <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-3">
         {/* Tile 1 - Quick Action Hub */}
         <section className={cn(glass, "p-6 md:col-span-2")}>
           <TileHeading
@@ -1143,6 +1146,24 @@ function SlidingEventCarousel({
               onClick={() => onEventClick(events[slide])}
               aria-label={`View details for ${events[slide].title}`}
             />
+            {/* Previous slide button */}
+            <button
+              type="button"
+              className="absolute left-3 top-1/2 -translate-y-1/2 z-20 h-10 w-10 rounded-full bg-white/90 backdrop-blur-sm text-slate-700 hover:bg-white transition-colors shadow-sm"
+              onClick={() => setSlide((s) => (s - 1 + events.length) % events.length)}
+              aria-label="Previous event"
+            >
+              <ChevronLeft className="h-5 w-5" aria-hidden />
+            </button>
+            {/* Next slide button */}
+            <button
+              type="button"
+              className="absolute right-3 top-1/2 -translate-y-1/2 z-20 h-10 w-10 rounded-full bg-white/90 backdrop-blur-sm text-slate-700 hover:bg-white transition-colors shadow-sm"
+              onClick={() => setSlide((s) => (s + 1) % events.length)}
+              aria-label="Next event"
+            >
+              <ChevronRight className="h-5 w-5" aria-hidden />
+            </button>
           </motion.div>
         </AnimatePresence>
       </div>
