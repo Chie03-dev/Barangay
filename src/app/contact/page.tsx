@@ -22,19 +22,27 @@ import { useCalmMotion } from "@/hooks/useCalmMotion";
 /* ------------------------------------------------------------------ */
 
 const PROFILE = {
-  name: "Marben Clyde Maglangit",
-  role: "Barangay Management Portal",
-  title: "Real niga",
-  bio: "Teacher at jrmsu by day. Freelance developer by night.",
-  email: "maglangitmarvinc@gmail.com",
-  phone: "+63 998 983 5678",
-  location: "071 Amatong Street, Miputak Dipolog City",
-  skills: ["good person", "not bad", "happy", "like french", "dili manglibri"],
+  name: "Alchie O. Andilab",
+  role: "Freelance Developer & Computer Science Graduate",
+  title: "Freelance Developer",
+  bio: "Computer Science graduate with experience in application development.",
+  email: "alchieandilab2003@gmail.com",
+  phone: "+1 602-793-5042",
+  location: "Glendale, AZ",
+  skills: [
+    "React, Next.js, TypeScript, JavaScript",
+    "Node.js, Django, FastAPI, PHP, Python",
+    "Android (Kotlin, Java)",
+    "PostgreSQL, MySQL, SQLite",
+    "Git/GitHub, Agile/Scrum",
+    "Cloudflare Workers, AWS",
+    "IT Support & Hardware Troubleshooting",
+  ],
 };
 
 const LINKS: { label: string; href: string; icon: LucideIcon }[] = [
-  { label: "Source code", href: "https://www.youtube.com/shorts/UAl9MyjJevY", icon: Code2 },
-  { label: "Portfolio", href: "https://www.youtube.com/shorts/gsQc4Fkmhgs", icon: Globe },
+  { label: "GitHub", href: "https://github.com/Chie03-dev", icon: Code2 },
+  { label: "LinkedIn", href: "https://linkedin.com/in/alchieandilab", icon: Globe },
 ];
 
 const fieldLabel =
@@ -111,7 +119,7 @@ export default function ContactPage() {
             <div className="relative">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/profile.webp"
+                src="/Portrait_Placeholder.png"
                 alt={`Portrait of ${PROFILE.name}`}
                 className="h-28 w-28 rounded-2xl object-cover shadow-lg ring-2 ring-emerald-500/30"
               />
@@ -194,8 +202,8 @@ export default function ContactPage() {
 
           {/* Download resume */}
           <a
-            href="/resume.pdf"
-            download="giganiga.pdf"
+            href="/ResumE.pdf"
+            download="ResumE.pdf"
             className="mt-6 block"
           >
             <motion.span

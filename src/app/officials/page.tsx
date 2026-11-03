@@ -38,8 +38,8 @@ type Official = {
   icon: LucideIcon;
 };
 
-const P1 = "/officials/test1.webp";
-const P2 = "/officials/test2.webp";
+const P1 = "/Portrait_Placeholder.png";
+const P2 = "/Portrait_Placeholder.png";
 
 const OFFICIALS: Official[] = [
   {
