@@ -1110,12 +1110,12 @@ function SlidingEventCarousel({
 
       <div className="mt-5 relative h-64 overflow-hidden rounded-2xl border border-slate-200/60 bg-white/50 dark:border-slate-800/60 dark:bg-slate-900/40 shadow-sm group">
         <AnimatePresence initial={false}>
-          <motion.div key={slide} className="absolute inset-0">
+          <motion.div className="absolute inset-0">
             <motion.img
+              key={slide}
               src={events[slide].src}
               alt={events[slide].title}
               className="w-full h-full object-cover transition-opacity duration-500 ease-in-out group-hover:scale-105 duration-700"
-              initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               loading="lazy"
