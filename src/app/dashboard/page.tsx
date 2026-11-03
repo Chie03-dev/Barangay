@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
+  AnimatePresence,
   motion,
   useMotionValue,
   useTransform,
@@ -28,6 +29,7 @@ import {
   Command,
   Zap,
   Activity,
+  X,
   type LucideIcon,
 } from "lucide-react";
 import { cn, glass } from "@/lib/utils";
@@ -141,6 +143,43 @@ const ACTIVE_REQUEST = {
   total: 4,
 };
 
+const EVENT_SLIDES: {
+  src: string;
+  title: string;
+  desc: string;
+  date: string;
+  location: string;
+}[] = [
+  {
+    src: "https://images.pexels.com/photos/4673995/pexels-photo-4673995.jpeg",
+    title: "Community Health & Dental Mission",
+    desc: "Free check-ups, dental cleaning, and health consultations for all residents.",
+    date: "Oct 10, 2026",
+    location: "Barangay Hall",
+  },
+  {
+    src: "https://images.pexels.com/photos/27429709/pexels-photo-27429709.jpeg",
+    title: "Youth Sports League Registration",
+    desc: "Basketball, volleyball, and badminton leagues open for ages 13-25.",
+    date: "Oct 5, 2026",
+    location: "Court A",
+  },
+  {
+    src: "https://images.pexels.com/photos/35642939/pexels-photo-35642939.jpeg",
+    title: "Water Main Maintenance",
+    desc: "Scheduled maintenance for Purok 3 water system. Please store water.",
+    date: "Oct 3, 2026",
+    location: "Purok 3",
+  },
+  {
+    src: "https://images.pexels.com/photos/33072140/pexels-photo-33072140.jpeg",
+    title: "Barangay Clean-Up Drive",
+    desc: "Community-wide clean-up and tree planting activity.",
+    date: "Oct 12, 2026",
+    location: "Main Avenue",
+  },
+];
+
 /* ------------------------------------------------------------------ */
 /*  Styling helpers                                                    */
 /* ------------------------------------------------------------------ */
@@ -164,6 +203,10 @@ const RING: Record<string, string> = {
 
 export default function DashboardPage() {
   const [today, setToday] = useState("");
+  const [isEventModalOpen, setIsEventModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<
+    typeof EVENT_SLIDES[number] | null
+  >(null);
   const calm = useCalmMotion();
 
   // Aggregated dashboard feed - replace the loader body with a real fetch.
@@ -188,6 +231,25 @@ export default function DashboardPage() {
       ) : (
         <>
           <HeroBanner today={today} />
+
+          {/* Sliding event carousel */}
+          <SlidingEventCarousel
+            events={EVENT_SLIDES}
+            onEventClick={(event) => {
+              setSelectedEvent(event);
+              setIsEventModalOpen(true);
+            }}
+          />
+
+          {isEventModalOpen && selectedEvent && (
+            <EventModal
+              event={selectedEvent}
+              onClose={() => {
+                setIsEventModalOpen(false);
+                setSelectedEvent(null);
+              }}
+            />
+          )}
 
       <div className="mt-5 grid grid-cols-1 gap-5 md:grid-cols-3">
         {/* Tile 1 - Quick Action Hub */}
@@ -991,5 +1053,216 @@ function HotlineLink({
         aria-hidden
       />
     </motion.a>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Sliding event carousel                                            */
+/* ------------------------------------------------------------------ */
+
+function SlidingEventCarousel({
+  events,
+  onEventClick,
+}: {
+  events: typeof EVENT_SLIDES;
+  onEventClick: (event: typeof EVENT_SLIDES[number]) => void;
+}) {
+  const [slide, setSlide] = useState(0);
+  const SLIDE_MS = 6000;
+
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const id = setInterval(
+      () => setSlide((s) => (s + 1) % events.length),
+      SLIDE_MS
+    );
+    return () => clearInterval(id);
+  }, [events.length]);
+
+  return (
+    <section className={cn(glass, "relative overflow-hidden p-6")}>
+      <div className="flex items-start justify-between gap-3">
+        <TileHeading
+          icon={Calendar}
+          title="Barangay Events"
+          hint="Upcoming community activities"
+        />
+        <div className="flex gap-1">
+          {events.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              aria-label={`Go to slide ${i + 1}`}
+              className={cn(
+                "h-2 w-2 rounded-full transition-colors",
+                i === slide
+                  ? "bg-emerald-600 dark:bg-emerald-400"
+                  : "bg-slate-400/50 dark:bg-slate-600/50 hover:bg-emerald-400/50 dark:hover:bg-emerald-400/50"
+              )}
+              onClick={() => setSlide(i)}
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className="mt-5 relative h-64 overflow-hidden rounded-2xl border border-slate-200/60 bg-slate-50 dark:border-slate-800/60 dark:bg-slate-900">
+        <AnimatePresence initial={false}>
+          <motion.div key={slide} className="absolute inset-0">
+            <motion.img
+              src={events[slide].src}
+              alt={events[slide].title}
+              className="w-full h-full object-cover transition-opacity duration-500 ease-in-out"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              loading="lazy"
+              decoding="async"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent" />
+            <div className="absolute bottom-0 left-0 p-6 w-full">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+                <Calendar className="h-3 w-3" aria-hidden />
+                {events[slide].date}
+              </span>
+              <h3 className="mt-2 text-xl font-bold tracking-tight text-white">
+                {events[slide].title}
+              </h3>
+              <p className="mt-1 text-sm text-slate-200">
+                {events[slide].desc}
+              </p>
+              <div className="mt-4 flex items-center gap-3">
+                <MapPin className="h-4 w-4 text-emerald-400" aria-hidden />
+                <span className="text-sm text-slate-200">
+                  {events[slide].location}
+                </span>
+              </div>
+            </div>
+            <button
+              type="button"
+              className="absolute inset-0 z-10"
+              onClick={() => onEventClick(events[slide])}
+              aria-label={`View details for ${events[slide].title}`}
+            />
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      <p className="mt-4 text-xs text-center text-slate-500 dark:text-slate-400">
+        Tap an event card to view full details.
+      </p>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Event detail modal                                                */
+/* ------------------------------------------------------------------ */
+
+function EventModal({
+  event,
+  onClose,
+}: {
+  event: typeof EVENT_SLIDES[number];
+  onClose: () => void;
+}) {
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="fixed inset-0 z-50 flex items-center justify-center p-4"
+        onClick={onClose}
+      >
+        {/* Backdrop */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm dark:bg-slate-900/80"
+          onClick={(e) => e.stopPropagation()}
+        />
+        {/* Modal panel */}
+        <motion.div
+          initial={{ scale: 0.95, opacity: 0, y: 20 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          exit={{ scale: 0.95, opacity: 0, y: 20 }}
+          transition={{ type: "spring", stiffness: 400, damping: 25 }}
+          onClick={(e) => e.stopPropagation()}
+          className="relative w-full max-w-2xl rounded-2xl border border-slate-200/60 bg-white shadow-2xl dark:border-slate-800/60 dark:bg-slate-900 overflow-hidden"
+        >
+          {/* Header image */}
+          <div className="relative h-64 overflow-hidden">
+            <img
+              src={event.src}
+              alt={event.title}
+              className="w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent" />
+            <div className="absolute bottom-6 left-6 right-6">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+                <Calendar className="h-3 w-3" aria-hidden />
+                {event.date}
+              </span>
+              <h2 className="mt-2 text-2xl font-bold tracking-tight text-white">
+                {event.title}
+              </h2>
+            </div>
+            <button
+              type="button"
+              className="absolute top-6 right-6 z-20 h-10 w-10 rounded-full bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 transition-colors"
+              onClick={onClose}
+              aria-label="Close modal"
+            >
+              <span className="absolute inset-0 flex items-center justify-center">
+                <motion.span whileTap={{ scale: 0.9 }} className="h-5 w-5">
+                  <X className="h-5 w-5" aria-hidden />
+                </motion.span>
+              </span>
+            </button>
+          </div>
+
+          {/* Content */}
+          <div className="p-8">
+            <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+              {event.desc}
+            </p>
+
+            <div className="mt-8 grid grid-cols-2 gap-6">
+              <div className="flex items-center gap-3 p-4 rounded-xl border border-slate-200/60 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/50">
+                <Calendar className="h-5 w-5 text-emerald-600 dark:text-emerald-400" aria-hidden />
+                <div>
+                  <p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                    Date
+                  </p>
+                  <p className="text-sm font-semibold">{event.date}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-4 rounded-xl border border-slate-200/60 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/50">
+                <MapPin className="h-5 w-5 text-emerald-600 dark:text-emerald-400" aria-hidden />
+                <div>
+                  <p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                    Location
+                  </p>
+                  <p className="text-sm font-semibold">{event.location}</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-8 flex justify-end">
+              <button
+                type="button"
+                onClick={onClose}
+                className="h-11 px-5 rounded-xl border border-slate-300 bg-white text-slate-700 font-medium transition-colors hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
+    </AnimatePresence>
   );
 }
