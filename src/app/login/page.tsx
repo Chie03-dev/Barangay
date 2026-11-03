@@ -229,14 +229,6 @@ function LoginForm() {
             )}
           </motion.button>
         </form>
-        <p className="mt-4 text-center text-xs text-slate-500 dark:text-slate-400">
-          <Link href="/forgot-password" className="text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300 underline underline-offset-4">
-            Forgot password?
-          </Link>
-        </p>
-        <p className="mt-6 text-center text-xs text-slate-500 dark:text-slate-400">
-          Protected by the Barangay&apos;s data privacy policy.
-        </p>
       </motion.div>
     </main>
   );
