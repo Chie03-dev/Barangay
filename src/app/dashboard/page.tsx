@@ -1150,7 +1150,7 @@ function SlidingEventCarousel({
             <button
               type="button"
               className={cn(
-                "absolute left-3 top-1/2 -translate-y-1/2 z-20 h-10 w-10 rounded-full border border-slate-200/60 bg-white/60 text-slate-600",
+                "absolute left-3 top-1/2 -translate-y-1/2 z-20 h-10 w-10 rounded-full flex items-center justify-center border border-slate-200/60 bg-white/60 text-slate-600",
                 "hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-400",
                 "dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300",
                 "dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400 dark:hover:border-emerald-500",
@@ -1165,7 +1165,7 @@ function SlidingEventCarousel({
             <button
               type="button"
               className={cn(
-                "absolute right-3 top-1/2 -translate-y-1/2 z-20 h-10 w-10 rounded-full border border-slate-200/60 bg-white/60 text-slate-600",
+                "absolute right-3 top-1/2 -translate-y-1/2 z-20 h-10 w-10 rounded-full flex items-center justify-center border border-slate-200/60 bg-white/60 text-slate-600",
                 "hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-400",
                 "dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300",
                 "dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400 dark:hover:border-emerald-500",
