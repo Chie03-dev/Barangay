@@ -1099,7 +1099,7 @@ function SlidingEventCarousel({
               className={cn(
                 "h-2 w-2 rounded-full transition-colors",
                 i === slide
-                  ? "bg-emerald-600 dark:bg-emerald-400"
+                  ? "bg-emerald-600 dark:bg-emerald-400 shadow-sm"
                   : "bg-slate-400/50 dark:bg-slate-600/50 hover:bg-emerald-400/50 dark:hover:bg-emerald-400/50"
               )}
               onClick={() => setSlide(i)}
@@ -1108,20 +1108,20 @@ function SlidingEventCarousel({
         </div>
       </div>
 
-      <div className="mt-5 relative h-64 overflow-hidden rounded-2xl border border-slate-200/60 bg-slate-50 dark:border-slate-800/60 dark:bg-slate-900">
+      <div className="mt-5 relative h-64 overflow-hidden rounded-2xl border border-slate-200/60 bg-white/50 dark:border-slate-800/60 dark:bg-slate-900/40 shadow-sm group">
         <AnimatePresence initial={false}>
           <motion.div key={slide} className="absolute inset-0">
             <motion.img
               src={events[slide].src}
               alt={events[slide].title}
-              className="w-full h-full object-cover transition-opacity duration-500 ease-in-out"
+              className="w-full h-full object-cover transition-opacity duration-500 ease-in-out group-hover:scale-105 duration-700"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               loading="lazy"
               decoding="async"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/40 to-transparent" />
             <div className="absolute bottom-0 left-0 p-6 w-full">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
                 <Calendar className="h-3 w-3" aria-hidden />
@@ -1149,7 +1149,13 @@ function SlidingEventCarousel({
             {/* Previous slide button */}
             <button
               type="button"
-              className="absolute left-3 top-1/2 -translate-y-1/2 z-20 h-10 w-10 rounded-full bg-white/90 backdrop-blur-sm text-slate-700 hover:bg-white transition-colors shadow-sm"
+              className={cn(
+                "absolute left-3 top-1/2 -translate-y-1/2 z-20 h-10 w-10 rounded-full border border-slate-200/60 bg-white/60 text-slate-600",
+                "hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-400",
+                "dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300",
+                "dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400 dark:hover:border-emerald-500",
+                "transition-colors shadow-sm"
+              )}
               onClick={() => setSlide((s) => (s - 1 + events.length) % events.length)}
               aria-label="Previous event"
             >
@@ -1158,7 +1164,13 @@ function SlidingEventCarousel({
             {/* Next slide button */}
             <button
               type="button"
-              className="absolute right-3 top-1/2 -translate-y-1/2 z-20 h-10 w-10 rounded-full bg-white/90 backdrop-blur-sm text-slate-700 hover:bg-white transition-colors shadow-sm"
+              className={cn(
+                "absolute right-3 top-1/2 -translate-y-1/2 z-20 h-10 w-10 rounded-full border border-slate-200/60 bg-white/60 text-slate-600",
+                "hover:bg-emerald-50 hover:text-emerald-700 hover:border-emerald-400",
+                "dark:border-slate-700 dark:bg-slate-800/60 dark:text-slate-300",
+                "dark:hover:bg-emerald-900/20 dark:hover:text-emerald-400 dark:hover:border-emerald-500",
+                "transition-colors shadow-sm"
+              )}
               onClick={() => setSlide((s) => (s + 1) % events.length)}
               aria-label="Next event"
             >
