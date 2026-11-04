@@ -341,7 +341,7 @@ export default function DashboardPage() {
 
             {/* Progress bar */}
             <div className="mt-6">
-              <div className="relative h-2 overflow-hidden rounded-full bg-slate-200 dark:bg-slate-800">
+              <div className="relative h-2 overflow-hidden rounded-full bg-slate-200 dark:border-slate-800/60 dark:bg-slate-900/80 slate-800">
                 <motion.div
                   initial={{ width: 0 }}
                   animate={{ width: "100%" }}
