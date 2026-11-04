@@ -22,7 +22,7 @@ export function Skeleton({
       aria-hidden
       style={style}
       className={cn(
-        "relative overflow-hidden bg-slate-200/70 dark:bg-slate-800/70",
+        "relative overflow-hidden bg-slate-300/50 dark:bg-slate-800/70",
         rounded,
         className,
       )}
@@ -60,7 +60,7 @@ export function SkeletonCard({
   return (
     <div
       className={cn(
-        "rounded-3xl border border-slate-200/80 bg-white/80 p-6 shadow-xl shadow-slate-200/50 backdrop-blur-xl",
+        "rounded-3xl border border-slate-300 bg-slate-50/90 p-6 shadow-xl shadow-slate-200/50 backdrop-blur-xl",
         "dark:border-slate-800/50 dark:bg-slate-900/80 dark:shadow-none",
         className,
       )}

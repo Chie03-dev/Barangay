@@ -363,10 +363,10 @@ export default function DashboardPage() {
                     ease: "easeInOut",
                   }}
                   style={{ left: "100%" }}
-                  className="absolute inset-y-0 w-8 -translate-x-full rounded-full bg-white/60"
+                  className="absolute inset-y-0 w-8 -translate-x-full rounded-full bg-slate-200/50"
                 />
               </div>
-              <div className="mt-2 flex justify-between text-[11px] text-slate-500 dark:text-slate-400">
+              <div className="mt-2 flex justify-between text-[11px] text-slate-500 dark:text-slate-600">
                 <span>Stage {ACTIVE_REQUEST.stage} of {ACTIVE_REQUEST.total}</span>
                 <span>{ACTIVE_REQUEST.window}</span>
               </div>
@@ -631,7 +631,7 @@ function HeroBanner({ today }: { today: string }) {
             Mabuhay, {RESIDENT.name}
           </h1>
 
-          <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-slate-500 dark:text-slate-400">
+          <div className="mt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-slate-500 dark:text-slate-600">
             <span className="inline-flex items-center gap-1.5">
               <Calendar className="h-4 w-4" aria-hidden />
               {/* Empty on the server render, filled after mount. */}
@@ -647,7 +647,7 @@ function HeroBanner({ today }: { today: string }) {
         {/* Cmd+K search trigger */}
         <button
           type="button"
-          className="group relative w-full overflow-hidden rounded-2xl border border-slate-200/70 bg-white/70 px-5 py-4 text-left shadow-sm transition-colors hover:border-emerald-400 dark:border-slate-800 dark:bg-slate-900/60 lg:w-80"
+          className="group relative w-full overflow-hidden rounded-2xl border border-slate-200/70 bg-slate-50/80 px-5 py-4 text-left shadow-sm transition-colors hover:border-emerald-400 dark:border-slate-800 dark:bg-slate-900/60 lg:w-80"
         >
           {/* Shimmer sweep */}
           <motion.span
@@ -659,8 +659,8 @@ function HeroBanner({ today }: { today: string }) {
             className="pointer-events-none absolute inset-0 -z-0 bg-gradient-to-r from-transparent via-emerald-500/10 to-transparent"
           />
           <span className="relative flex items-center gap-3">
-            <Search className="h-4 w-4 text-slate-400" aria-hidden />
-            <span className="flex-1 text-sm text-slate-400">
+            <Search className="h-4 w-4 text-slate-600" aria-hidden />
+            <span className="flex-1 text-sm text-slate-600">
               Search services, requests...
             </span>
             <kbd className="inline-flex items-center gap-1 rounded-lg border border-slate-200/70 bg-slate-50 px-2 py-1 text-[11px] font-semibold text-slate-500 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300">
@@ -688,13 +688,13 @@ function TileHeading({
 }) {
   return (
     <div className="flex items-start gap-2.5">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-600">
         <Icon className="h-4 w-4" aria-hidden />
       </span>
       <div>
         <h2 className="text-sm font-semibold">{title}</h2>
         {hint && (
-          <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+          <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-600">
             {hint}
           </p>
         )}
@@ -756,7 +756,7 @@ function TiltCard({
           whileTap={{ scale: 0.98 }}
           transition={{ type: "spring", stiffness: 400, damping: 20 }}
           className={cn(
-            "flex h-full items-center gap-4 rounded-2xl border border-slate-200/60 bg-white/60 p-4 transition-shadow duration-300 group-hover:shadow-xl dark:border-slate-800 dark:bg-slate-900/50",
+            "flex h-full items-center gap-4 rounded-2xl border border-slate-200/60 bg-slate-50/70 p-4 transition-shadow duration-300 group-hover:shadow-xl dark:border-slate-800 dark:bg-slate-900/50",
             RING[glow],
           )}
         >
@@ -771,13 +771,13 @@ function TiltCard({
 
           <span className="min-w-0 flex-1">
             <span className="block text-sm font-semibold">{label}</span>
-            <span className="mt-0.5 block truncate text-xs text-slate-500 dark:text-slate-400">
+            <span className="mt-0.5 block truncate text-xs text-slate-500 dark:text-slate-600">
               {desc}
             </span>
           </span>
 
           <ChevronRight
-            className="h-4 w-4 shrink-0 text-slate-400 transition-transform duration-300 group-hover:translate-x-1"
+            className="h-4 w-4 shrink-0 text-slate-600 transition-transform duration-300 group-hover:translate-x-1"
             aria-hidden
           />
         </motion.div>
@@ -880,7 +880,7 @@ function StatRow({
             suffix={stat.suffix}
           />
         </p>
-        <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+        <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-600">
           {stat.label}
         </p>
       </div>
@@ -925,14 +925,14 @@ function Marquee() {
             key={`${item.text}-${index}`}
             whileHover={{ x: 4 }}
             transition={{ type: "spring", stiffness: 400, damping: 20 }}
-            className="mb-3 flex items-start gap-3 rounded-2xl border border-slate-200/60 bg-white/50 p-4 dark:border-slate-800/60 dark:bg-slate-900/40"
+            className="mb-3 flex items-start gap-3 rounded-2xl border border-slate-200/60 bg-slate-50/60 p-4 dark:border-slate-800/60 dark:bg-slate-900/40"
           >
             <span className="mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
               <Bell className="h-4 w-4" aria-hidden />
             </span>
             <div className="min-w-0">
               <p className="text-sm font-medium leading-snug">{item.text}</p>
-              <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+              <p className="mt-1 text-xs text-slate-500 dark:text-slate-600">
                 {item.place}
               </p>
             </div>
@@ -967,7 +967,7 @@ function HotlineTile() {
           </span>
           <div>
             <h2 className="text-sm font-semibold">Hotline &amp; Desk</h2>
-            <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
+            <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-600">
               Emergency dispatch
             </p>
           </div>
@@ -1109,7 +1109,7 @@ function SlidingEventCarousel({
         </div>
       </div>
 
-      <div className="mt-5 relative h-64 overflow-hidden rounded-2xl border border-slate-200/60 bg-white/50 dark:border-slate-800/60 dark:bg-slate-900/40 shadow-sm group">
+      <div className="mt-5 relative h-64 overflow-hidden rounded-2xl border border-slate-200/60 bg-slate-50/60 dark:border-slate-800/60 dark:bg-slate-900/40 shadow-sm group">
         <AnimatePresence initial={false}>
           <motion.div className="absolute inset-0">
             <motion.img
@@ -1181,7 +1181,7 @@ function SlidingEventCarousel({
         </AnimatePresence>
       </div>
 
-      <p className="mt-4 text-xs text-center text-slate-500 dark:text-slate-400">
+      <p className="mt-4 text-xs text-center text-slate-500 dark:text-slate-600">
         Tap an event card to view full details.
       </p>
     </section>
@@ -1223,7 +1223,7 @@ function EventModal({
           exit={{ scale: 0.95, opacity: 0, y: 20 }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
           onClick={(e) => e.stopPropagation()}
-          className="relative w-full max-w-2xl rounded-2xl border border-slate-200/60 bg-white shadow-2xl dark:border-slate-800/60 dark:bg-slate-900 overflow-hidden"
+          className="relative w-full max-w-2xl rounded-2xl border border-slate-200/60 bg-slate-50 shadow-2xl dark:border-slate-800/60 dark:bg-slate-900 overflow-hidden"
         >
           {/* Header image */}
           <div className="relative h-64 overflow-hidden">
@@ -1236,7 +1236,7 @@ function EventModal({
             />
             <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent" />
             <div className="absolute bottom-6 left-6 right-6">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-slate-200/10 px-3 py-1 text-xs font-semibold text-white backdrop-blur-sm">
                 <Calendar className="h-3 w-3" aria-hidden />
                 {event.date}
               </span>
@@ -1246,7 +1246,7 @@ function EventModal({
             </div>
             <button
               type="button"
-              className="absolute top-6 right-6 z-20 h-10 w-10 rounded-full bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 transition-colors"
+              className="absolute top-6 right-6 z-20 h-10 w-10 rounded-full bg-slate-200/10 backdrop-blur-sm text-white hover:bg-slate-200/20 transition-colors"
               onClick={onClose}
               aria-label="Close modal"
             >
@@ -1268,7 +1268,7 @@ function EventModal({
               <div className="flex items-center gap-3 p-4 rounded-xl border border-slate-200/60 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/50">
                 <Calendar className="h-5 w-5 text-emerald-600 dark:text-emerald-400" aria-hidden />
                 <div>
-                  <p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                  <p className="text-xs font-medium text-slate-500 dark:text-slate-600 uppercase tracking-wide">
                     Date
                   </p>
                   <p className="text-sm font-semibold">{event.date}</p>
@@ -1277,7 +1277,7 @@ function EventModal({
               <div className="flex items-center gap-3 p-4 rounded-xl border border-slate-200/60 bg-slate-50 dark:border-slate-800 dark:bg-slate-900/50">
                 <MapPin className="h-5 w-5 text-emerald-600 dark:text-emerald-400" aria-hidden />
                 <div>
-                  <p className="text-xs font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wide">
+                  <p className="text-xs font-medium text-slate-500 dark:text-slate-600 uppercase tracking-wide">
                     Location
                   </p>
                   <p className="text-sm font-semibold">{event.location}</p>

@@ -79,7 +79,7 @@ const QR_PATTERN = [
 /*  Style tokens                                                       */
 /* ------------------------------------------------------------------ */
 
-const rowHover = "transition-colors hover:bg-slate-50/70 dark:hover:bg-slate-800/40";
+const rowHover = "transition-colors hover:bg-slate-200/50 dark:hover:bg-slate-800/40";
 /* ------------------------------------------------------------------ */
 /*  Page                                                               */
 /* ------------------------------------------------------------------ */
@@ -651,7 +651,7 @@ function DetailRow({
 }) {
   return (
     <div className={cn("flex items-center gap-4 rounded-xl px-3 py-3", rowHover)}>
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
         <Icon className="h-4 w-4" aria-hidden />
       </span>
       <div className="min-w-0 flex-1">

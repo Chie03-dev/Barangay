@@ -49,7 +49,7 @@ const fieldLabel =
   "mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300";
 
 const inputClass =
-  "w-full rounded-xl border border-slate-200/70 bg-white/80 px-4 py-3 text-sm outline-none transition-colors placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-800 dark:border-slate-800/60 dark:bg-slate-900/80 slate-900/60 dark:focus:border-emerald-500";
+  "w-full rounded-xl border border-slate-300 bg-slate-50/90 px-4 py-3 text-sm outline-none transition-colors placeholder:text-slate-600 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-800 dark:border-slate-800/60 dark:bg-slate-900/80 slate-900/60 dark:focus:border-emerald-500";
 /* ------------------------------------------------------------------ */
 /*  Page                                                               */
 /* ------------------------------------------------------------------ */
@@ -389,11 +389,11 @@ function ContactRow({
 }) {
   const content = (
     <>
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-200 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
         <Icon className="h-4 w-4" aria-hidden />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block text-xs uppercase tracking-wide text-slate-400">
+        <span className="block text-xs uppercase tracking-wide text-slate-600">
           {label}
         </span>
         <span className="mt-0.5 block truncate text-sm font-medium">
@@ -404,7 +404,7 @@ function ContactRow({
   );
 
   const className =
-    "flex items-center gap-4 rounded-xl px-3 py-3 transition-colors hover:bg-slate-50/70 dark:hover:bg-slate-800/40";
+    "flex items-center gap-4 rounded-xl px-3 py-3 transition-colors hover:bg-slate-200/50 dark:hover:bg-slate-800/40";
 
   return href ? (
     <a href={href} className={className}>

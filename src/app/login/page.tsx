@@ -277,8 +277,8 @@ function FloatingField({
     <div>
       <div
         className={cn(
-          "relative rounded-xl border bg-white transition-all duration-200 dark:bg-slate-900/50",
-          "border-slate-200/80 dark:border-slate-800",
+          "relative rounded-xl border bg-slate-50 transition-all duration-200 dark:bg-slate-900/50",
+          "border-slate-300 dark:border-slate-800",
           "focus-within:border-emerald-500 focus-within:ring-4 focus-within:ring-emerald-500/15",
           "focus-within:shadow-lg focus-within:shadow-emerald-500/10",
         )}
@@ -294,7 +294,7 @@ function FloatingField({
             "dark:text-slate-400",
             // Float up when the field is focused or has content.
             isFloating
-              ? "top-2 text-xs font-medium text-slate-600 dark:text-slate-300"
+              ? "top-2 text-xs font-medium text-slate-700 dark:text-slate-300"
               : "top-1/2 -translate-y-1/2 text-sm",
           )}
         >
