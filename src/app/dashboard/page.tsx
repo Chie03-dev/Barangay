@@ -254,7 +254,8 @@ export default function DashboardPage() {
             />
           )}
 
-          <div className="mt-6 grid grid-cols-1 gap-5 md:grid-cols-3">
+          {/* Stats grid - stacks on mobile, 3 columns on desktop */}
+          <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {/* Tile 1 - Quick Action Hub */}
         <section className={cn(glass, "p-6 md:col-span-2")}>
           <TileHeading
