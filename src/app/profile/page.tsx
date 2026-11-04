@@ -175,34 +175,37 @@ export default function ProfilePage() {
         <motion.button
           type="button"
           onClick={handleThemeToggle}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
           transition={{ type: "spring", stiffness: 400, damping: 17 }}
           aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
           aria-pressed={isDark}
           className={cn(
-          "glass",
-          "relative flex h-11 w-20 items-center p-1.5",
-          "border border-slate-300/50 dark:border-slate-700/80"
-        )}
+            "relative flex items-center justify-between w-16 h-8 rounded-full",
+            "border border-slate-300/50 px-2 py-1",
+            isDark
+              ? "bg-slate-900 dark:bg-slate-800 border-slate-700/80"
+              : "bg-white dark:bg-slate-950 border-slate-300/70",
+            "shadow-sm transition-colors duration-200"
+          )}
         >
           <motion.span
             layout
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
             className={cn(
-              "flex h-8 w-8 items-center justify-center rounded-full shadow-sm",
+              "absolute top-1 rounded-full shadow-sm transition-all duration-300",
+              "w-6 h-6 flex items-center justify-center",
               isDark
-                ? "ml-auto bg-slate-800 text-emerald-400"
-                : "bg-emerald-500 text-white",
+                ? "right-1 bg-slate-800 text-emerald-400 border border-slate-600"
+                : "left-1 bg-white text-emerald-400 border border-slate-300"
             )}
           >
             {isDark ? (
-              <Moon className="h-4 w-4" aria-hidden />
+              <Moon className="h-3 w-3" aria-hidden />
             ) : (
-              <Sun className="h-4 w-4" aria-hidden />
+              <Sun className="h-3 w-3" aria-hidden />
             )}
           </motion.span>
-          <span className="sr-only">{isDark ? "Dark" : "Light"} mode</span>
         </motion.button>
       </header>
 
