@@ -37,7 +37,7 @@ export default function BottomNav() {
       <div
         className={cn(
           "flex w-fit max-w-full items-center justify-center gap-2 rounded-full border bg-white/80 px-3 py-2.5 shadow-2xl backdrop-blur-xl sm:gap-3 sm:px-5 sm:py-3",
-          "border-slate-200/60 dark:border-slate-800/60 dark:bg-slate-900/80"
+          "border-slate-200/60 dark:border-slate-800/60 dark:border-slate-800/60 dark:bg-slate-900/80 slate-900/80"
         )}
       >
         {/* Brand mark - links to the officials directory */}
