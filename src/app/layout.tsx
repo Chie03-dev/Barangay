@@ -39,6 +39,7 @@ export default function RootLayout({
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="relative min-h-screen overflow-x-hidden bg-slate-50 font-sans text-slate-900 transition-colors duration-300 antialiased dark:bg-slate-950 dark:text-slate-100">
+        <a href="#main-content" className="skip-link">Skip to main content</a>
         {/*
           Ambient mesh orbs sit behind all page content.
 

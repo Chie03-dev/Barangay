@@ -152,7 +152,7 @@ export default function TrackPage() {
   }
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-5xl px-4 py-10 pb-32">
+    <main className="mx-auto min-h-screen w-full max-w-5xl px-4 py-10 pb-32" id="main-content">
       {isLoading ? (
         <TrackSkeleton />
       ) : (

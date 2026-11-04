@@ -148,7 +148,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-4xl px-4 py-10 pb-32">
+    <main className="mx-auto min-h-screen w-full max-w-4xl px-4 py-10 pb-32" id="main-content">
       {isLoading ? (
         <ProfileSkeleton />
       ) : (

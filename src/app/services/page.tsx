@@ -181,7 +181,7 @@ export default function ServicesPage() {
   }
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-4xl px-4 py-10 pb-32">
+    <main className="mx-auto min-h-screen w-full max-w-4xl px-4 py-10 pb-32" id="main-content">
       {/* Page header */}
       <header className="mb-8 text-center">
         <motion.div

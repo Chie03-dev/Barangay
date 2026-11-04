@@ -62,6 +62,7 @@ export default function ContactPage() {
   const [message, setMessage] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [submitAttempted, setSubmitAttempted] = useState(false);
 
   const canSend =
     name.trim().length > 0 &&
@@ -69,8 +70,14 @@ export default function ContactPage() {
     subject.trim().length > 0 &&
     message.trim().length > 0;
 
+  const nameError = submitAttempted && !name.trim().length;
+  const emailError = submitAttempted && !email.includes("@");
+  const subjectError = submitAttempted && !subject.trim().length;
+  const messageError = submitAttempted && !message.trim().length;
+
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    setSubmitAttempted(true);
     if (!canSend) return;
     setIsSending(true);
     // Simulated send - replace with the real API/mail endpoint.
@@ -88,7 +95,7 @@ export default function ContactPage() {
   }
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-5xl px-4 py-10 pb-32">
+    <main className="mx-auto min-h-screen w-full max-w-5xl px-4 py-10 pb-32" id="main-content">
       {/* Header */}
       <header className="mb-8 text-center">
         <motion.div
@@ -289,8 +296,22 @@ export default function ContactPage() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Your full name"
-                      className={inputClass}
+                      aria-invalid={nameError}
+                      aria-describedby={nameError ? "name-error" : undefined}
+                      className={cn(
+                        inputClass,
+                        nameError && "border-red-500 focus:border-red-500",
+                      )}
                     />
+                    {nameError && (
+                      <p
+                        id="name-error"
+                        role="alert"
+                        className="mt-1 text-sm text-red-600 dark:text-red-400"
+                      >
+                        Name is required
+                      </p>
+                    )}
                   </div>
                   <div>
                     <label htmlFor="email" className={fieldLabel}>
@@ -302,8 +323,22 @@ export default function ContactPage() {
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@example.com"
-                      className={inputClass}
+                      aria-invalid={emailError}
+                      aria-describedby={emailError ? "email-error" : undefined}
+                      className={cn(
+                        inputClass,
+                        emailError && "border-red-500 focus:border-red-500",
+                      )}
                     />
+                    {emailError && (
+                      <p
+                        id="email-error"
+                        role="alert"
+                        className="mt-1 text-sm text-red-600 dark:text-red-400"
+                      >
+                        Enter a valid email address
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -317,8 +352,22 @@ export default function ContactPage() {
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
                     placeholder="What is this about?"
-                    className={inputClass}
+                    aria-invalid={subjectError}
+                    aria-describedby={subjectError ? "subject-error" : undefined}
+                    className={cn(
+                      inputClass,
+                      subjectError && "border-red-500 focus:border-red-500",
+                    )}
                   />
+                  {subjectError && (
+                    <p
+                      id="subject-error"
+                      role="alert"
+                      className="mt-1 text-sm text-red-600 dark:text-red-400"
+                    >
+                      Subject is required
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -331,8 +380,23 @@ export default function ContactPage() {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Tell me a little about your project or question..."
-                    className={cn(inputClass, "resize-none")}
+                    aria-invalid={messageError}
+                    aria-describedby={messageError ? "message-error" : undefined}
+                    className={cn(
+                      inputClass,
+                      "resize-none",
+                      messageError && "border-red-500 focus:border-red-500",
+                    )}
                   />
+                  {messageError && (
+                    <p
+                      id="message-error"
+                      role="alert"
+                      className="mt-1 text-sm text-red-600 dark:text-red-400"
+                    >
+                      Message is required
+                    </p>
+                  )}
                 </div>
 
                 <motion.button

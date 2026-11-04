@@ -149,7 +149,7 @@ export default function OfficialsPage() {
   const staff = OFFICIALS.filter((o) => o.tier === "staff");
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-6xl px-4 py-10 pb-32">
+    <main className="mx-auto min-h-screen w-full max-w-6xl px-4 py-10 pb-32" id="main-content">
       {/* Header */}
       <header className="mb-10 text-center">
         <motion.div

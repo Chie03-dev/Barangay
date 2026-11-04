@@ -136,6 +136,7 @@ export default function ReportsPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [reference, setReference] = useState("");
+  const [submitAttempted, setSubmitAttempted] = useState(false);
 
   const isComplete =
     Boolean(incident) &&
@@ -145,6 +146,15 @@ export default function ReportsPage() {
     narrative.trim().length >= 10 &&
     (respondentUnknown || respondent.trim().length > 0) &&
     certified;
+
+  const incidentError = submitAttempted && !incident;
+  const locationError = submitAttempted && !location;
+  const dateError = submitAttempted && !date;
+  const timeError = submitAttempted && !time;
+  const narrativeError = submitAttempted && narrative.trim().length < 10;
+  const respondentError =
+    submitAttempted && !respondentUnknown && !respondent.trim().length;
+  const certifiedError = submitAttempted && !certified;
 
   function addEvidence() {
     setEvidence((prev) => [
@@ -170,6 +180,7 @@ export default function ReportsPage() {
   }
 
   async function handleSubmit() {
+    setSubmitAttempted(true);
     setIsSubmitting(true);
     // Mock submission - replace with the real API call.
     await new Promise((resolve) => setTimeout(resolve, 1600));
@@ -179,7 +190,7 @@ export default function ReportsPage() {
   }
 
   return (
-    <main className="mx-auto min-h-screen w-full max-w-4xl px-4 py-10 pb-32">
+    <main className="mx-auto min-h-screen w-full max-w-4xl px-4 py-10 pb-32" id="main-content">
       {/* Header */}
       <header className="mb-6 text-center">
         <motion.div
@@ -262,6 +273,15 @@ export default function ReportsPage() {
                   />
                 ))}
               </div>
+              {incidentError && (
+                <p
+                  id="incident-error"
+                  role="alert"
+                  className="mt-3 text-sm text-red-600 dark:text-red-400"
+                >
+                  Select an incident category
+                </p>
+              )}
             </section>
 {/* ---------------- Section 2: Location & timestamp ---------------- */}
             <section className={cn(glass, "mb-6 p-6")}>
@@ -272,88 +292,133 @@ export default function ReportsPage() {
               />
 
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-                <div>
-                  <label htmlFor="location" className={fieldLabel}>
-                    Zone / Purok <span className="text-red-500">*</span>
-                  </label>
-                  <div className="relative">
-                    <MapPin
-                      className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
-                      aria-hidden
-                    />
-                    <select
-                      id="location"
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      className={cn(inputClass, "appearance-none pl-11")}
-                    >
-                      <option value="">Select a location...</option>
-                      {LOCATIONS.map((loc) => (
-                        <option key={loc} value={loc}>
-                          {loc}
-                        </option>
-                      ))}
-                    </select>
+                  <div>
+                    <label htmlFor="location" className={fieldLabel}>
+                      Zone / Purok <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <MapPin
+                        className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+                        aria-hidden
+                      />
+                      <select
+                        id="location"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                        aria-invalid={locationError}
+                        aria-describedby={locationError ? "location-error" : undefined}
+                        className={cn(
+                          inputClass,
+                          "appearance-none pl-11",
+                          locationError && "border-red-500 focus:border-red-500",
+                        )}
+                      >
+                        <option value="">Select a location...</option>
+                        {LOCATIONS.map((loc) => (
+                          <option key={loc} value={loc}>
+                            {loc}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                    {locationError && (
+                      <p
+                        id="location-error"
+                        role="alert"
+                        className="mt-1 text-sm text-red-600 dark:text-red-400"
+                      >
+                        Select a zone or purok
+                      </p>
+                    )}
                   </div>
-                </div>
 
-                <div>
-                  <label htmlFor="landmark" className={fieldLabel}>
-                    Specific Landmark / Location Details
-                  </label>
-                  <div className="relative">
-                    <MapPin
-                      className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
-                      aria-hidden
-                    />
-                    <input
-                      id="landmark"
-                      type="text"
-                      value={landmark}
-                      onChange={(e) => setLandmark(e.target.value)}
-                      placeholder="e.g. Beside the covered court"
-                      className={cn(inputClass, "pl-11")}
-                    />
+                  <div>
+                    <label htmlFor="landmark" className={fieldLabel}>
+                      Specific Landmark / Location Details
+                    </label>
+                    <div className="relative">
+                      <MapPin
+                        className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+                        aria-hidden
+                      />
+                      <input
+                        id="landmark"
+                        type="text"
+                        value={landmark}
+                        onChange={(e) => setLandmark(e.target.value)}
+                        placeholder="e.g. Beside the covered court"
+                        className={cn(inputClass, "pl-11")}
+                      />
+                    </div>
                   </div>
-                </div>
 
-                <div>
-                  <label htmlFor="date" className={fieldLabel}>
-                    Date <span className="text-red-500">*</span>
-                  </label>
-                  <div className="relative">
-                    <Calendar
-                      className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
-                      aria-hidden
-                    />
-                    <input
-                      id="date"
-                      type="date"
-                      value={date}
-                      onChange={(e) => setDate(e.target.value)}
-                      className={cn(inputClass, "pl-11")}
-                    />
+                  <div>
+                    <label htmlFor="date" className={fieldLabel}>
+                      Date <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <Calendar
+                        className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+                        aria-hidden
+                      />
+                      <input
+                        id="date"
+                        type="date"
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
+                        aria-invalid={dateError}
+                        aria-describedby={dateError ? "date-error" : undefined}
+                        className={cn(
+                          inputClass,
+                          "pl-11",
+                          dateError && "border-red-500 focus:border-red-500",
+                        )}
+                      />
+                    </div>
+                    {dateError && (
+                      <p
+                        id="date-error"
+                        role="alert"
+                        className="mt-1 text-sm text-red-600 dark:text-red-400"
+                      >
+                        Select a date
+                      </p>
+                    )}
                   </div>
-                </div>
 
-                <div>
-                  <label htmlFor="time" className={fieldLabel}>
-                    Time <span className="text-red-500">*</span>
-                  </label>
-                  <div className="relative">
-                    <Clock
-                      className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
-                      aria-hidden
-                    />
-                    <input
-                      id="time"
-                      type="time"
-                      value={time}
-                      onChange={(e) => setTime(e.target.value)}
-                      className={cn(inputClass, "pl-11")}
-                    />
+                  <div>
+                    <label htmlFor="time" className={fieldLabel}>
+                      Time <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <Clock
+                        className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400"
+                        aria-hidden
+                      />
+                      <input
+                        id="time"
+                        type="time"
+                        value={time}
+                        onChange={(e) => setTime(e.target.value)}
+                        aria-invalid={timeError}
+                        aria-describedby={timeError ? "time-error" : undefined}
+                        className={cn(
+                          inputClass,
+                          "pl-11",
+                          timeError && "border-red-500 focus:border-red-500",
+                        )}
+                      />
+                    </div>
+                    {timeError && (
+                      <p
+                        id="time-error"
+                        role="alert"
+                        className="mt-1 text-sm text-red-600 dark:text-red-400"
+                      >
+                        Select a time
+                      </p>
+                    )}
                   </div>
-                </div>
               </div>
             </section>
 {/* ------------- Section 3: Narrative & respondent info ------------- */}
@@ -365,59 +430,88 @@ export default function ReportsPage() {
               />
 
               <div className="space-y-5">
-                <div>
-                  <label htmlFor="narrative" className={fieldLabel}>
-                    Detailed Description of Event{" "}
-                    <span className="text-red-500">*</span>
-                  </label>
-                  <textarea
-                    id="narrative"
-                    rows={5}
-                    value={narrative}
-                    onChange={(e) => setNarrative(e.target.value)}
-                    placeholder="Describe what happened, who was involved, and any details that can help the officer..."
-                    className={cn(inputClass, "resize-none")}
-                  />
-                  <p className="mt-1 text-right text-xs text-slate-400">
-                    {narrative.trim().length} characters (min. 10)
-                  </p>
-                </div>
-
-                <div>
-                  <span className={fieldLabel}>Respondent Information</span>
-                  <div className="space-y-3">
-                    <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200/70 px-4 py-3 dark:border-slate-800">
-                      <input
-                        type="checkbox"
-                        checked={respondentUnknown}
-                        onChange={(e) => setRespondentUnknown(e.target.checked)}
-                        className="h-4 w-4 rounded border-slate-300 accent-emerald-600"
-                      />
-                      <UserX
-                        className="h-4 w-4 shrink-0 text-slate-400"
-                        aria-hidden
-                      />
-                      <span className="text-sm">Unknown / Unidentified</span>
+                  <div>
+                    <label htmlFor="narrative" className={fieldLabel}>
+                      Detailed Description of Event{" "}
+                      <span className="text-red-500">*</span>
                     </label>
-
-                    {!respondentUnknown && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        transition={{ duration: 0.25 }}
-                        className="overflow-hidden"
+                    <textarea
+                      id="narrative"
+                      rows={5}
+                      value={narrative}
+                      onChange={(e) => setNarrative(e.target.value)}
+                      placeholder="Describe what happened, who was involved, and any details that can help the officer..."
+                      aria-invalid={narrativeError}
+                      aria-describedby={narrativeError ? "narrative-error" : undefined}
+                      className={cn(
+                        inputClass,
+                        "resize-none",
+                        narrativeError && "border-red-500 focus:border-red-500",
+                      )}
+                    />
+                    <p className="mt-1 text-right text-xs text-slate-400">
+                      {narrative.trim().length} characters (min. 10)
+                    </p>
+                    {narrativeError && (
+                      <p
+                        id="narrative-error"
+                        role="alert"
+                        className="mt-1 text-sm text-red-600 dark:text-red-400"
                       >
-                        <input
-                          type="text"
-                          value={respondent}
-                          onChange={(e) => setRespondent(e.target.value)}
-                          placeholder="Name or Alias of Person Involved"
-                          className={inputClass}
-                        />
-                      </motion.div>
+                        Please describe the event (minimum 10 characters)
+                      </p>
                     )}
                   </div>
-                </div>
+
+                  <div>
+                    <span className={fieldLabel}>Respondent Information</span>
+                    <div className="space-y-3">
+                      <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-slate-200/70 px-4 py-3 dark:border-slate-800">
+                        <input
+                          type="checkbox"
+                          checked={respondentUnknown}
+                          onChange={(e) => setRespondentUnknown(e.target.checked)}
+                          className="h-4 w-4 rounded border-slate-300 accent-emerald-600"
+                        />
+                        <UserX
+                          className="h-4 w-4 shrink-0 text-slate-400"
+                          aria-hidden
+                        />
+                        <span className="text-sm">Unknown / Unidentified</span>
+                      </label>
+
+                      {!respondentUnknown && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          transition={{ duration: 0.25 }}
+                          className="overflow-hidden"
+                        >
+                          <input
+                            type="text"
+                            value={respondent}
+                            onChange={(e) => setRespondent(e.target.value)}
+                            placeholder="Name or Alias of Person Involved"
+                            aria-invalid={respondentError}
+                            aria-describedby={respondentError ? "respondent-error" : undefined}
+                            className={cn(
+                              inputClass,
+                              respondentError && "border-red-500 focus:border-red-500",
+                            )}
+                          />
+                          {respondentError && (
+                            <p
+                              id="respondent-error"
+                              role="alert"
+                              className="mt-1 text-sm text-red-600 dark:text-red-400"
+                            >
+                              Enter the person involved
+                            </p>
+                          )}
+                        </motion.div>
+                      )}
+                    </div>
+                  </div>
 {/* Evidence dropzone */}
                 <div>
                   <span className={fieldLabel}>
@@ -513,6 +607,8 @@ export default function ReportsPage() {
                   type="checkbox"
                   checked={certified}
                   onChange={(e) => setCertified(e.target.checked)}
+                  aria-invalid={certifiedError}
+                  aria-describedby={certifiedError ? "certified-error" : undefined}
                   className="mt-0.5 h-4 w-4 shrink-0 rounded border-slate-300 accent-emerald-600"
                 />
                 <Lock
@@ -527,6 +623,14 @@ export default function ReportsPage() {
                     local ordinances.
                   </span>
                 </span>
+                {certifiedError && (
+                  <span
+                    id="certified-error"
+                    className="mt-1 block text-sm text-red-600 dark:text-red-400"
+                  >
+                    Please certify your report before submitting
+                  </span>
+                )}
               </motion.label>
 
               <motion.button
