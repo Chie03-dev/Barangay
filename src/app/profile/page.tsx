@@ -180,7 +180,11 @@ export default function ProfilePage() {
           transition={{ type: "spring", stiffness: 400, damping: 17 }}
           aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
           aria-pressed={isDark}
-          className={cn(glass, "relative flex h-11 w-20 items-center p-1.5")}
+          className={cn(
+          "glass",
+          "relative flex h-11 w-20 items-center p-1.5",
+          "border border-slate-300/50 dark:border-slate-700/80"
+        )}
         >
           <motion.span
             layout
