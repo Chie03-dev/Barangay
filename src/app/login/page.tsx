@@ -99,7 +99,7 @@ function LoginForm() {
               opacity: { duration: 1.4, ease: "easeInOut" },
               scale: { duration: SLIDE_MS / 1000, ease: "linear" },
             }}
-            className="absolute inset-0 h-full w-full object-cover motion-reduce:transition-none"
+            className="absolute inset-0 h-full w-full object-cover motion-reduce:transition-none fetchPriority=high"
           />
         </AnimatePresence>
         {/*
