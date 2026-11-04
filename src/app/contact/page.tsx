@@ -49,7 +49,7 @@ const fieldLabel =
   "mb-2 block text-sm font-medium text-slate-700 dark:text-slate-300";
 
 const inputClass =
-  "w-full rounded-xl border border-slate-200/70 bg-white/80 px-4 py-3 text-sm outline-none transition-colors placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-800 dark:bg-slate-900/60 dark:focus:border-emerald-500";
+  "w-full rounded-xl border border-slate-200/70 bg-white/80 px-4 py-3 text-sm outline-none transition-colors placeholder:text-slate-400 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 dark:border-slate-800 dark:border-slate-800/60 dark:bg-slate-900/80 slate-900/60 dark:focus:border-emerald-500";
 /* ------------------------------------------------------------------ */
 /*  Page                                                               */
 /* ------------------------------------------------------------------ */
