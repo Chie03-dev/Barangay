@@ -120,7 +120,7 @@ function LoginForm() {
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
         transition={{ type: "spring", stiffness: 400, damping: 17 }}
-        className="absolute top-6 right-6 z-20 flex items-center justify-center rounded-xl border border-slate-200/70 bg-white/80 p-2 px-3 text-slate-600 transition-colors hover:bg-white backdrop-blur-sm shadow-sm dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-300 dark:hover:bg-slate-800/60"
+        className="absolute bottom-6 right-6 z-20 flex items-center justify-center rounded-xl border border-slate-200/70 bg-white/80 p-2 px-3 text-slate-600 transition-colors hover:bg-white backdrop-blur-sm shadow-sm dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-300 dark:hover:bg-slate-800/60"
         aria-label={isFlipped ? "Back to resident login" : "Go to official login"}
       >
         {isFlipped ? (
@@ -221,6 +221,7 @@ function LoginForm() {
               {item.text}
             </span>
           ))}
+          <span className="h-1 w-1 shrink-0 rounded-full bg-emerald-400 dark:bg-emerald-500" aria-hidden />
           {LOGIN_ANNOUNCEMENTS.map((item) => (
             <span
               key={`dup-${item.text}`}
@@ -230,6 +231,7 @@ function LoginForm() {
               {item.text}
             </span>
           ))}
+          <span className="h-1 w-1 shrink-0 rounded-full bg-emerald-400 dark:bg-emerald-500" aria-hidden />
         </motion.div>
       </div>
 
