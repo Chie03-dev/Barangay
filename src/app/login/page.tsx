@@ -163,7 +163,7 @@ function LoginForm() {
           "w-full max-w-md rounded-3xl border p-8 shadow-2xl backdrop-blur-2xl motion-reduce:transform-none",
           // Light: nearly opaque with a defined edge, so it reads as a solid
           // card instead of a washed-out translucent panel.
-          "border-slate-200/90 bg-slate-50/95 shadow-slate-900/20",
+          "border-slate-200 bg-white shadow-sm shadow-slate-200/40",
           // Dark: keeps the glassy translucency.
           "dark:border-slate-700/80 dark:bg-slate-900/70 dark:shadow-black/40",
         )}
