@@ -97,6 +97,18 @@ function LoginForm() {
   }
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-12">
+      {/* Link to official login page */}
+      <motion.a
+        href="#"
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ type: "spring", stiffness: 400, damping: 17 }}
+        className="absolute top-6 right-6 z-20 flex items-center justify-center rounded-xl border border-slate-200/70 bg-white/80 p-2 px-3 text-slate-600 transition-colors hover:bg-white backdrop-blur-sm shadow-sm dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-300 dark:hover:bg-slate-800/60"
+        aria-label="Go to official login"
+      >
+        <ArrowRight className="h-5 w-5" aria-hidden />
+      </motion.a>
+
       {/* Cinematic slideshow */}
       <div aria-hidden className="absolute inset-0 -z-20">
         <AnimatePresence initial={false}>
@@ -278,18 +290,6 @@ function LoginForm() {
             )}
           </motion.button>
         </form>
-
-        {/* Link to official login page */}
-        <motion.a
-          href="#"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-          transition={{ type: "spring", stiffness: 400, damping: 17 }}
-          className="mt-6 inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200/70 px-5 py-3 text-sm font-semibold text-slate-600 transition-colors hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-300 dark:hover:bg-slate-800/60"
-        >
-          Go to Official Login
-          <ArrowRight className="h-4 w-4" aria-hidden />
-        </motion.a>
 
       </motion.div>
     </main>
