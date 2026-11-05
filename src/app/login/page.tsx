@@ -14,6 +14,7 @@ import {
   ArrowRight,
   ChevronLeft,
   ChevronRight,
+  Bell,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -28,7 +29,22 @@ const SLIDES = [
   "https://images.pexels.com/photos/35642939/pexels-photo-35642939.jpeg",
   "https://images.pexels.com/photos/33072140/pexels-photo-33072140.jpeg",
 ];
-const SLIDE_MS = 6000;
+const SLIDE_MS = 6000;
+
+const LOGIN_ANNOUNCEMENTS = [
+  {
+    text: "Free Community Health Check & Dental Mission on Oct 10",
+    place: "Barangay Hall",
+  },
+  {
+    text: "Purok 3 Water Main Maintenance Scheduled for Oct 5",
+    place: "Purok 3",
+  },
+  {
+    text: "Barangay Youth Sports League Registration Open",
+    place: "Court A",
+  },
+];
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -197,6 +213,31 @@ function LoginForm() {
               className="h-full w-1/3 bg-emerald-500 dark:bg-emerald-400 shadow-[0_0_16px_rgba(16,185,129,0.6)] dark:shadow-[0_0_16px_rgba(16,185,129,0.4)]"
             />
           </motion.div>
+
+          {/* Announcements */}
+          <div className="mt-6 w-full overflow-hidden rounded-xl border border-slate-200/70 bg-slate-50/60 dark:border-slate-800 dark:bg-slate-900/40">
+            <div className="flex items-center gap-2 px-4 py-2 border-b border-slate-200/50 dark:border-slate-800/50">
+              <Bell className="h-4 w-4 text-amber-600 dark:text-amber-400" aria-hidden />
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
+                Announcements
+              </span>
+            </div>
+            <div className="px-4 py-2 space-y-1">
+              {LOGIN_ANNOUNCEMENTS.map((item) => (
+                <div
+                  key={item.text}
+                  className="flex items-start gap-2"
+                >
+                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                    <Bell className="h-3 w-3" aria-hidden />
+                  </span>
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-snug">
+                    {item.text}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6" noValidate>
