@@ -202,7 +202,7 @@ function LoginForm() {
         <ChevronRight className="h-5 w-5" aria-hidden />
       </button>
       {/* Horizontal announcements banner */}
-      <div className="relative z-10 mx-auto mb-4 w-full max-w-5xl overflow-hidden rounded-full bg-emerald-50/80 dark:bg-slate-800/60 px-4 py-2 border border-emerald-100/50 dark:border-emerald-900/20 backdrop-blur-sm shadow-sm shadow-slate-200/20 dark:shadow-black/20">
+      <div className="absolute top-0 left-0 right-0 z-20 overflow-hidden rounded-none bg-emerald-50/80 dark:bg-slate-800/60 px-4 py-2 border-b border-emerald-100/50 dark:border-emerald-900/20 backdrop-blur-sm shadow-sm shadow-slate-200/20 dark:shadow-black/20">
         <motion.div
           animate={{ x: ["0%", "-50%"] }}
           transition={{
