@@ -199,44 +199,36 @@ function LoginForm() {
             Access your barangay resident portal
           </p>
 
-          {/* Sliding thin line accent */}
-          <motion.div
-            animate={{ x: ["-100%", "100%"] }}
-            transition={{
-              duration: 2.5,
-              repeat: Infinity,
-              ease: "linear",
-            }}
-            className="mt-6 w-full h-2 rounded-full overflow-hidden bg-slate-200/60 dark:bg-slate-800/50"
-          >
+          {/* Horizontal announcements banner */}
+          <div className="mt-6 w-full overflow-hidden rounded-full bg-emerald-50 dark:bg-slate-800/40 px-4 py-2 border border-emerald-100/50 dark:border-emerald-900/20">
             <motion.div
-              className="h-full w-1/3 bg-emerald-500 dark:bg-emerald-400 shadow-[0_0_16px_rgba(16,185,129,0.6)] dark:shadow-[0_0_16px_rgba(16,185,129,0.4)]"
-            />
-          </motion.div>
-
-          {/* Announcements */}
-          <div className="mt-6 w-full overflow-hidden rounded-xl border border-slate-200/70 bg-slate-50/60 dark:border-slate-800 dark:bg-slate-900/40">
-            <div className="flex items-center gap-2 px-4 py-2 border-b border-slate-200/50 dark:border-slate-800/50">
-              <Bell className="h-4 w-4 text-amber-600 dark:text-amber-400" aria-hidden />
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
-                Announcements
-              </span>
-            </div>
-            <div className="px-4 py-2 space-y-1">
+              animate={{ x: ["0%", "-100%"] }}
+              transition={{
+                duration: 12,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+              className="flex items-center gap-8 whitespace-nowrap"
+            >
               {LOGIN_ANNOUNCEMENTS.map((item) => (
-                <div
+                <span
                   key={item.text}
-                  className="flex items-start gap-2"
+                  className="flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800/50 bg-emerald-50 dark:bg-emerald-900/20 text-xs font-medium text-emerald-700 dark:text-emerald-300"
                 >
-                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                    <Bell className="h-3 w-3" aria-hidden />
-                  </span>
-                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-snug">
-                    {item.text}
-                  </p>
-                </div>
+                  <Bell className="h-3 w-3 shrink-0" aria-hidden />
+                  {item.text}
+                </span>
               ))}
-            </div>
+              {LOGIN_ANNOUNCEMENTS.map((item) => (
+                <span
+                  key={`dup-${item.text}`}
+                  className="flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800/50 bg-emerald-50 dark:bg-emerald-900/20 text-xs font-medium text-emerald-700 dark:text-emerald-300"
+                >
+                  <Bell className="h-3 w-3 shrink-0" aria-hidden />
+                  {item.text}
+                </span>
+              ))}
+            </motion.div>
           </div>
         </div>
 
