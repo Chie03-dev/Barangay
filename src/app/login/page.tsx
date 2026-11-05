@@ -15,7 +15,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Bell,
-  Shield,
   User,
   X,
   type LucideIcon,
@@ -346,9 +345,12 @@ function LoginForm() {
               )}
             >
               <div className="mb-8 flex flex-col items-center text-center">
-                <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
-                  <Shield className="h-6 w-6" aria-hidden />
-                </div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src="/logo.png"
+                  alt="Barangay seal"
+                  className="mb-5 h-28 w-28 rounded-3xl bg-white/80 p-1.5 shadow-xl ring-1 ring-amber-200/70 dark:bg-white/10 dark:ring-amber-700/60"
+                />
                 <h2 className="text-2xl font-bold tracking-tight">
                   Official Login
                 </h2>
