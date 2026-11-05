@@ -203,29 +203,21 @@ function LoginForm() {
       </button>
       {/* 3D flip container: resident login front, officials login back */}
       <div className="relative perspective-1000 w-full max-w-md flex items-center justify-center">
-        <motion.div
-          animate={{ rotateY: isFlipped ? 180 : 0 }}
-          transition={{ type: "spring", stiffness: 400, damping: 25 }}
-          className="relative preserve-3d"
-        >
-          {/* FRONT: Resident login */}
-          <motion.div
-            initial={{ opacity: 0, y: 25 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: "easeOut" }}
-            className="absolute inset-0 backface-hidden"
-            aria-hidden={isFlipped}
-            inert={isFlipped}
-          >
+        <AnimatePresence mode="wait" initial={false}>
+          {!isFlipped ? (
             <motion.div
-              onMouseMove={!isFlipped ? handleMove : undefined}
-              onMouseLeave={!isFlipped ? handleLeave : undefined}
-              style={
-                !isFlipped
-                  ? { rotateX, rotateY, transformPerspective: 1200 }
-                  : undefined
-              }
-              className={cn(
+              key="front"
+              initial={{ opacity: 0, rotateY: -90 }}
+              animate={{ opacity: 1, rotateY: 0 }}
+              exit={{ opacity: 0, rotateY: 90 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              className="w-full"
+            >
+              <motion.div
+                onMouseMove={handleMove}
+                onMouseLeave={handleLeave}
+                style={{ rotateX, rotateY, transformPerspective: 1200 }}
+                className={cn(
                 "w-full max-w-md rounded-3xl border p-8 shadow-2xl backdrop-blur-2xl motion-reduce:transform-none",
                 // Light: nearly opaque with a defined edge, so it reads as a solid
                 // card instead of a washed-out translucent panel.
@@ -332,14 +324,15 @@ function LoginForm() {
               </form>
             </motion.div>
           </motion.div>
-
-          {/* BACK: Officials login */}
-          <motion.div
-            initial={{ rotateY: 180 }}
-            className="absolute inset-0 backface-hidden"
-            aria-hidden={!isFlipped}
-            inert={!isFlipped}
-          >
+          ) : (
+            <motion.div
+              key="back"
+              initial={{ opacity: 0, rotateY: 90 }}
+              animate={{ opacity: 1, rotateY: 0 }}
+              exit={{ opacity: 0, rotateY: -90 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              className="w-full"
+            >
             <motion.div
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
@@ -412,7 +405,8 @@ function LoginForm() {
               </form>
             </motion.div>
           </motion.div>
-        </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </main>
   );
