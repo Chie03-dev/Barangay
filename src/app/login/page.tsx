@@ -244,7 +244,7 @@ function LoginForm() {
                 {/* Horizontal announcements banner */}
                 <div className="mt-6 w-full overflow-hidden rounded-full bg-emerald-50 dark:bg-slate-800/40 px-4 py-2 border border-emerald-100/50 dark:border-emerald-900/20">
                   <motion.div
-                    animate={{ x: ["0%", "-100%"] }}
+                    animate={{ x: ["0%", "-50%"] }}
                     transition={{
                       duration: 12,
                       repeat: Infinity,
