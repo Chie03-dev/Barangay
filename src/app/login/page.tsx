@@ -182,7 +182,23 @@ function LoginForm() {
           <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
             Access your barangay resident portal
           </p>
-        </div>
+
+          {/* Sliding thin line accent */}
+          <motion.div
+            animate={{ x: ["-100%", "100%"] }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+            className="mt-6 w-full h-[2px] rounded-full overflow-hidden bg-slate-200 dark:bg-slate-800/60"
+          >
+            <motion.div
+              className="h-full w-1/3 bg-emerald-600 dark:bg-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.6)] dark:shadow-[0_0_10px_rgba(16,185,129,0.4)]"
+            />
+          </motion.div>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-6" noValidate>
           <FloatingField
             id="email"
