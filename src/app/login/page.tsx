@@ -201,6 +201,38 @@ function LoginForm() {
       >
         <ChevronRight className="h-5 w-5" aria-hidden />
       </button>
+      {/* Horizontal announcements banner */}
+      <div className="relative z-10 mx-auto mb-4 w-full max-w-5xl overflow-hidden rounded-full bg-emerald-50/80 dark:bg-slate-800/60 px-4 py-2 border border-emerald-100/50 dark:border-emerald-900/20 backdrop-blur-sm shadow-sm shadow-slate-200/20 dark:shadow-black/20">
+        <motion.div
+          animate={{ x: ["0%", "-50%"] }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="flex items-center gap-8 whitespace-nowrap"
+        >
+          {LOGIN_ANNOUNCEMENTS.map((item) => (
+            <span
+              key={item.text}
+              className="flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800/50 bg-emerald-50 dark:bg-emerald-900/20 text-xs font-medium text-emerald-700 dark:text-emerald-300"
+            >
+              <Bell className="h-3 w-3 shrink-0" aria-hidden />
+              {item.text}
+            </span>
+          ))}
+          {LOGIN_ANNOUNCEMENTS.map((item) => (
+            <span
+              key={`dup-${item.text}`}
+              className="flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800/50 bg-emerald-50 dark:bg-emerald-900/20 text-xs font-medium text-emerald-700 dark:text-emerald-300"
+            >
+              <Bell className="h-3 w-3 shrink-0" aria-hidden />
+              {item.text}
+            </span>
+          ))}
+        </motion.div>
+      </div>
+
       {/* 3D flip container: resident login front, officials login back */}
       <div className="relative perspective-1000 w-full max-w-md flex items-center justify-center">
         <AnimatePresence mode="wait" initial={false}>
@@ -240,38 +272,6 @@ function LoginForm() {
                 <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
                   Access your barangay resident portal
                 </p>
-
-                {/* Horizontal announcements banner */}
-                <div className="mt-6 w-full overflow-hidden rounded-full bg-emerald-50 dark:bg-slate-800/40 px-4 py-2 border border-emerald-100/50 dark:border-emerald-900/20">
-                  <motion.div
-                    animate={{ x: ["0%", "-50%"] }}
-                    transition={{
-                      duration: 12,
-                      repeat: Infinity,
-                      ease: "linear",
-                    }}
-                    className="flex items-center gap-8 whitespace-nowrap"
-                  >
-                    {LOGIN_ANNOUNCEMENTS.map((item) => (
-                      <span
-                        key={item.text}
-                        className="flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800/50 bg-emerald-50 dark:bg-emerald-900/20 text-xs font-medium text-emerald-700 dark:text-emerald-300"
-                      >
-                        <Bell className="h-3 w-3 shrink-0" aria-hidden />
-                        {item.text}
-                      </span>
-                    ))}
-                    {LOGIN_ANNOUNCEMENTS.map((item) => (
-                      <span
-                        key={`dup-${item.text}`}
-                        className="flex items-center gap-2 px-3 py-1 rounded-full border border-emerald-200 dark:border-emerald-800/50 bg-emerald-50 dark:bg-emerald-900/20 text-xs font-medium text-emerald-700 dark:text-emerald-300"
-                      >
-                        <Bell className="h-3 w-3 shrink-0" aria-hidden />
-                        {item.text}
-                      </span>
-                    ))}
-                  </motion.div>
-                </div>
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-6" noValidate>
