@@ -110,11 +110,13 @@ export default function CommunityCalendar() {
     y: number;
   } | null>(null);
 
-  if (today === null && cursor === null) {
+  // Initialise once, after mount. Doing this inside the render body would
+  // call setState during render and force a re-render on every cycle.
+  useEffect(() => {
     const now = new Date();
     setToday(now);
     setCursor({ y: now.getFullYear(), m: now.getMonth() });
-  }
+  }, []);
 
   const year = cursor?.y ?? 1970;
   const month = cursor?.m ?? 0;
