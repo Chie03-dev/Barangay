@@ -202,7 +202,7 @@ function LoginForm() {
         <ChevronRight className="h-5 w-5" aria-hidden />
       </button>
       {/* 3D flip container: resident login front, officials login back */}
-      <div className="relative perspective-1000 w-full max-w-md">
+      <div className="relative perspective-1000 w-full max-w-md h-full flex items-center justify-center">
         <motion.div
           animate={{ rotateY: isFlipped ? 180 : 0 }}
           transition={{ type: "spring", stiffness: 400, damping: 25 }}
