@@ -228,7 +228,7 @@ export default function OfficialsPage() {
       {/* Quick actions */}
       <div className="mb-10 flex flex-wrap items-center justify-center gap-3">
         <a
-          href="/officials/login"
+          href="/login"
           className={cn(
             "inline-flex items-center gap-2 rounded-full border border-amber-500/40 bg-amber-500/10 px-4 py-2 text-xs font-semibold text-amber-700 transition-colors hover:bg-amber-500/20 dark:border-amber-900/30 dark:bg-amber-900/20 dark:text-amber-300 dark:hover:bg-amber-900/40",
           )}

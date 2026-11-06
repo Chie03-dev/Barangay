@@ -1,17 +1,19 @@
 "use client";
 import { Suspense, useEffect, useState, type FormEvent } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import Link from "next/link";
-import { AnimatePresence, motion, useMotionValue, useSpring } from "framer-motion";
+  import { useRouter, useSearchParams } from "next/navigation";
+  import { AnimatePresence, motion, useMotionValue, useSpring } from "framer-motion";
   import {
-  Mail,
-  Lock,
-  ArrowRight,
-  ChevronLeft,
-  ChevronRight,
-  Bell,
-  type LucideIcon,
-} from "lucide-react";
+    Mail,
+    Lock,
+    ArrowRight,
+    ChevronLeft,
+    ChevronRight,
+    Bell,
+    Shield,
+    User,
+    X,
+    type LucideIcon,
+  } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SESSION_COOKIE } from "@/lib/auth";
 import { useCalmMotion } from "@/hooks/useCalmMotion";
@@ -47,6 +49,10 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [slide, setSlide] = useState(0);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [officialId, setOfficialId] = useState("");
+  const [officialPassword, setOfficialPassword] = useState("");
+  const [isOfficialAuthenticating, setIsOfficialAuthenticating] = useState(false);
   const calm = useCalmMotion();
   // Only allow same-origin relative paths, so `?next=` can't be used to
   // redirect a resident to an external site.
@@ -91,16 +97,36 @@ function LoginForm() {
     router.push(nextPath);
   }
 
+  function handleOfficialSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setIsOfficialAuthenticating(true);
+    // Mock auth for officials - wire a real sign-in call here.
+    setTimeout(() => {
+      setIsOfficialAuthenticating(false);
+      document.cookie = `${SESSION_COOKIE}=1; path=/; max-age=${
+        60 * 60 * 24 * 7
+      }; samesite=lax`;
+      router.push("/officials");
+    }, 1200);
+  }
+
   return (
     <main className="relative flex min-h-screen items-center justify-center overflow-hidden px-4 py-12">
-      {/* Link to official login page */}
-      <Link
-        href="/officials/login"
-        aria-label="Go to official login"
+      {/* Flip to official login */}
+      <motion.button
+        onClick={() => setIsFlipped(!isFlipped)}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ type: "spring", stiffness: 400, damping: 17 }}
         className="absolute bottom-6 right-6 z-20 flex items-center justify-center rounded-xl border border-slate-200/70 bg-white/80 p-2 px-3 text-slate-600 transition-colors hover:bg-white backdrop-blur-sm shadow-sm dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-300 dark:hover:bg-slate-800/60"
+        aria-label={isFlipped ? "Back to resident login" : "Go to official login"}
       >
-        <ArrowRight className="h-5 w-5" aria-hidden />
-      </Link>
+        {isFlipped ? (
+          <X className="h-5 w-5" aria-hidden />
+        ) : (
+          <ArrowRight className="h-5 w-5" aria-hidden />
+        )}
+      </motion.button>
 
       {/* Cinematic slideshow */}
       <div aria-hidden className="absolute inset-0 -z-20">
@@ -207,88 +233,184 @@ function LoginForm() {
         </motion.div>
       </div>
 
-      {/* Resident login card */}
-      <motion.div
-        onMouseMove={handleMove}
-        onMouseLeave={handleLeave}
-        style={{ rotateX, rotateY, transformPerspective: 1200 }}
-        initial={{ opacity: 0, y: 25 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className={cn(
-          "w-full max-w-md rounded-3xl border p-8 shadow-2xl backdrop-blur-2xl motion-reduce:transform-none",
-          // Light: nearly opaque with a defined edge, so it reads as a solid
-          // card instead of a washed-out translucent panel.
-          "border-slate-200 bg-white shadow-sm shadow-slate-200/40",
-          // Dark: keeps the glassy translucency.
-          "dark:border-slate-700/80 dark:bg-slate-900/70 dark:shadow-black/40",
-        )}
-      >
-        <div className="mb-8 flex flex-col items-center text-center">
-          {/* Barangay crest, served from public/logo.png */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/logo.png"
-            alt="Barangay seal"
-            className="mb-5 h-28 w-28 rounded-3xl bg-white/80 p-1.5 shadow-xl ring-1 ring-slate-200/70 dark:bg-white/10 dark:ring-slate-700"
-          />
-          <h1 className="text-2xl font-bold tracking-tight">
-            Sign in to your account
-          </h1>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            Access your barangay resident portal
-          </p>
-        </div>
+      {/* 3D flip container: resident login front, officials login back */}
+      <div className="relative perspective-1000 w-full max-w-md flex items-center justify-center">
+        <AnimatePresence mode="wait" initial={false}>
+          {!isFlipped ? (
+            <motion.div
+              key="front"
+              initial={{ opacity: 0, rotateY: -90 }}
+              animate={{ opacity: 1, rotateY: 0 }}
+              exit={{ opacity: 0, rotateY: 90 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              className="w-full"
+            >
+              <motion.div
+                onMouseMove={handleMove}
+                onMouseLeave={handleLeave}
+                style={{ rotateX, rotateY, transformPerspective: 1200 }}
+                className={cn(
+                  "w-full max-w-md rounded-3xl border p-8 shadow-2xl backdrop-blur-2xl motion-reduce:transform-none",
+                  // Light: nearly opaque with a defined edge, so it reads as a solid
+                  // card instead of a washed-out translucent panel.
+                  "border-slate-200 bg-white shadow-sm shadow-slate-200/40",
+                  // Dark: keeps the glassy translucency.
+                  "dark:border-slate-700/80 dark:bg-slate-900/70 dark:shadow-black/40",
+                )}
+              >
+                <div className="mb-8 flex flex-col items-center text-center">
+                  {/* Barangay crest, served from public/logo.png */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/logo.png"
+                    alt="Barangay seal"
+                    className="mb-5 h-28 w-28 rounded-3xl bg-white/80 p-1.5 shadow-xl ring-1 ring-slate-200/70 dark:bg-white/10 dark:ring-slate-700"
+                  />
+                  <h1 className="text-2xl font-bold tracking-tight">
+                    Sign in to your account
+                  </h1>
+                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                    Access your barangay resident portal
+                  </p>
+                </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6" noValidate>
-          <FloatingField
-            id="email"
-            name="email"
-            type="email"
-            label="Email"
-            autoComplete="email"
-            icon={Mail}
-            value={email}
-            onChange={setEmail}
-          />
+                <form onSubmit={handleSubmit} className="space-y-6" noValidate>
+                  <FloatingField
+                    id="email"
+                    name="email"
+                    type="email"
+                    label="Email"
+                    autoComplete="email"
+                    icon={Mail}
+                    value={email}
+                    onChange={setEmail}
+                  />
 
-          <FloatingField
-            id="password"
-            name="password"
-            type="password"
-            label="Password"
-            autoComplete="current-password"
-            icon={Lock}
-            value={password}
-            onChange={setPassword}
-          />
+                  <FloatingField
+                    id="password"
+                    name="password"
+                    type="password"
+                    label="Password"
+                    autoComplete="current-password"
+                    icon={Lock}
+                    value={password}
+                    onChange={setPassword}
+                  />
 
-          <motion.button
-            type="submit"
-            disabled={isAuthenticating}
-            whileHover={isAuthenticating ? undefined : { scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition-colors hover:bg-emerald-500 disabled:opacity-70 disabled:cursor-not-allowed"
-          >
-            {isAuthenticating ? (
-              <>
-                <motion.span
-                  animate={{ rotate: 360 }}
-                  transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                  className="h-4 w-4 rounded-full border-2 border-white/40 border-t-white"
-                />
-                Signing in…
-              </>
-            ) : (
-              <>
-                Sign In
-                <ArrowRight className="h-4 w-4" aria-hidden />
-              </>
-            )}
-          </motion.button>
-        </form>
-      </motion.div>
+                  <motion.button
+                    type="submit"
+                    disabled={isAuthenticating}
+                    whileHover={isAuthenticating ? undefined : { scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                    className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 text-sm font-semibold text-white shadow-lg shadow-emerald-600/25 transition-colors hover:bg-emerald-500 disabled:opacity-70 disabled:cursor-not-allowed"
+                  >
+                    {isAuthenticating ? (
+                      <>
+                        <motion.span
+                          animate={{ rotate: 360 }}
+                          transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                          className="h-4 w-4 rounded-full border-2 border-white/40 border-t-white"
+                        />
+                        Signing in…
+                      </>
+                    ) : (
+                      <>
+                        Sign In
+                        <ArrowRight className="h-4 w-4" aria-hidden />
+                      </>
+                    )}
+                  </motion.button>
+                </form>
+              </motion.div>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="back"
+              initial={{ opacity: 0, rotateY: 90 }}
+              animate={{ opacity: 1, rotateY: 0 }}
+              exit={{ opacity: 0, rotateY: -90 }}
+              transition={{ type: "spring", stiffness: 400, damping: 25 }}
+              className="w-full"
+            >
+              <motion.div
+                className={cn(
+                  "w-full max-w-md rounded-3xl border p-8 shadow-2xl backdrop-blur-2xl motion-reduce:transform-none",
+                  "border-amber-500/40 bg-amber-50/90 shadow-amber-900/30",
+                  "dark:border-amber-900/30 dark:bg-amber-950/40 dark:shadow-black/50",
+                )}
+              >
+                <div className="mb-8 flex flex-col items-center text-center">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/logo.png"
+                    alt="Barangay seal"
+                    className="mb-5 h-28 w-28 rounded-3xl bg-white/80 p-1.5 shadow-xl ring-1 ring-amber-200/70 dark:bg-white/10 dark:ring-amber-700/60"
+                  />
+                  <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
+                    <Shield className="h-6 w-6" aria-hidden />
+                  </div>
+                  <h1 className="text-2xl font-bold tracking-tight">
+                    Official Login
+                  </h1>
+                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                    Barangay personnel access
+                  </p>
+                </div>
+
+                <form onSubmit={handleOfficialSubmit} className="space-y-6" noValidate>
+                  <FloatingField
+                    id="official-id"
+                    name="officialId"
+                    type="text"
+                    label="Official ID"
+                    autoComplete="username"
+                    icon={User}
+                    value={officialId}
+                    onChange={setOfficialId}
+                  />
+
+                  <FloatingField
+                    id="official-password"
+                    name="officialPassword"
+                    type="password"
+                    label="Password"
+                    autoComplete="current-password"
+                    icon={Lock}
+                    value={officialPassword}
+                    onChange={setOfficialPassword}
+                  />
+
+                  <motion.button
+                    type="submit"
+                    disabled={isOfficialAuthenticating}
+                    whileHover={isOfficialAuthenticating ? undefined : { scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                    className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-amber-600 text-sm font-semibold text-white shadow-lg shadow-amber-600/25 transition-colors hover:bg-amber-500 disabled:opacity-70 disabled:cursor-not-allowed"
+                  >
+                    {isOfficialAuthenticating ? (
+                      <>
+                        <motion.span
+                          animate={{ rotate: 360 }}
+                          transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                          className="h-4 w-4 rounded-full border-2 border-white/40 border-t-white"
+                        />
+                        Signing in…
+                      </>
+                    ) : (
+                      <>
+                        Official Sign In
+                        <ArrowRight className="h-4 w-4" aria-hidden />
+                      </>
+                    )}
+                  </motion.button>
+                </form>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
     </main>
   );
 }
