@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import BottomNav from "@/components/BottomNav";
+import RouteNav from "@/components/RouteNav";
 import AmbientGlyphTrail from "@/components/AmbientGlyphTrail";
 
 export const metadata: Metadata = {
@@ -60,7 +60,7 @@ export default function RootLayout({
         {/* Faint lucide glyph trail that follows the cursor over empty background. */}
         <AmbientGlyphTrail />
         {children}
-        <BottomNav />
+        <RouteNav />
       </body>
     </html>
   );

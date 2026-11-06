@@ -15,7 +15,7 @@ import { Suspense, useEffect, useState, type FormEvent } from "react";
     type LucideIcon,
   } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { SESSION_COOKIE } from "@/lib/auth";
+import { RESIDENT_SESSION_COOKIE, OFFICIAL_SESSION_COOKIE } from "@/lib/auth";
 import { useCalmMotion } from "@/hooks/useCalmMotion";
 /* ------------------------------------------------------------------ */
 /*  Slideshow                                                          */
@@ -49,7 +49,6 @@ function LoginForm() {
   const [password, setPassword] = useState("");
   const [slide, setSlide] = useState(0);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
-  const [isFlipped, setIsFlipped] = useState(false);
   const [officialId, setOfficialId] = useState("");
   const [officialPassword, setOfficialPassword] = useState("");
   const [isOfficialAuthenticating, setIsOfficialAuthenticating] = useState(false);
@@ -60,15 +59,30 @@ function LoginForm() {
   const nextPath =
     rawNext && rawNext.startsWith("/") && !rawNext.startsWith("//")
       ? rawNext
-      : "/dashboard";
+      : "/dashboard";
+
+  // When middleware bounced an official here from /own, open the official
+  // form of the flip card straight away.
+  const [isFlipped, setIsFlipped] = useState(nextPath === "/own");
   // 3D tilt driven by pointer position.
   const rotateX = useSpring(useMotionValue(0), { stiffness: 220, damping: 20 });
   const rotateY = useSpring(useMotionValue(0), { stiffness: 220, damping: 20 });
   // Advance the slideshow.
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+
+
+
+
     const id = setInterval(
       () => setSlide((s) => (s + 1) % SLIDES.length),
+
+
+
+
+
+
       SLIDE_MS,
     );
     return () => clearInterval(id);
@@ -90,7 +104,7 @@ function LoginForm() {
     setIsAuthenticating(true);
     // Mock auth: there is no backend yet, so any submit goes straight
     // through. Wire a real sign-in call here when the backend lands.
-    document.cookie = `${SESSION_COOKIE}=1; path=/; max-age=${
+    document.cookie = `${RESIDENT_SESSION_COOKIE}=1; path=/; max-age=${
       60 * 60 * 24 * 7
     }; samesite=lax`;
     // Return the resident to wherever the middleware bounced them from.
@@ -103,10 +117,11 @@ function LoginForm() {
     // Mock auth for officials - wire a real sign-in call here.
     setTimeout(() => {
       setIsOfficialAuthenticating(false);
-      document.cookie = `${SESSION_COOKIE}=1; path=/; max-age=${
+      document.cookie = `${OFFICIAL_SESSION_COOKIE}=1; path=/; max-age=${
         60 * 60 * 24 * 7
       }; samesite=lax`;
-      router.push("/officials");
+      // Officials land on their own dashboard, not the resident one.
+      router.push("/own");
     }, 1200);
   }
 
