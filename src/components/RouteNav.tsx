@@ -2,7 +2,19 @@
 
 import { usePathname } from "next/navigation";
 import BottomNav from "@/components/BottomNav";
-import OfficialTopNav from "@/components/OfficialTopNav";
+import {
+  Home,
+  Users,
+  AlertCircle,
+  FileText,
+} from "lucide-react";
+
+const OFFICIAL_NAV_ITEMS = [
+  { label: "Dashboard", href: "/own", icon: Home },
+  { label: "Directory", href: "/officials", icon: Users },
+  { label: "Reports", href: "/reports", icon: AlertCircle },
+  { label: "Services", href: "/services", icon: FileText },
+];
 
 export default function RouteNav() {
   const pathname = usePathname();
@@ -11,9 +23,10 @@ export default function RouteNav() {
   return (
     <>
       {isOwn ? (
-        <OfficialTopNav
-          officialName="Marben Clyde Maglangit"
-          officialRole="Punong Barangay"
+        <BottomNav
+          items={OFFICIAL_NAV_ITEMS}
+          brandHref="/officials"
+          brandLabel="Barangay Officials Directory"
         />
       ) : (
         <BottomNav />

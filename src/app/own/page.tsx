@@ -304,40 +304,61 @@ export default function OfficialsDashboard() {
 
   if (loading) {
     return (
-      <main className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
-        <nav className={cn(glass, "sticky top-0 z-20 border-b border-slate-200/80 dark:border-slate-800/50 px-6 py-4")}>
-          <h1 className="text-lg font-bold">Officials Dashboard</h1>
-        </nav>
-        <div className="flex-1 p-6 grid gap-6 max-w-6xl mx-auto">
+      <main className="mx-auto min-h-screen w-full max-w-6xl px-4 py-10 pb-32">
+        <div className="mb-8">
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="mt-2 h-4 w-64" />
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
             <SkeletonCard key={i} className="h-24">
               <SkeletonHeading />
             </SkeletonCard>
           ))}
-          <div className="col-span-2 grid gap-4">
-            {[1, 2, 3, 4, 5, 6].map((i) => (
-              <SkeletonCard key={i} className="h-64">
-                <div className="h-12 w-full mb-4">
-                  <Skeleton className="h-full w-3/4" />
-                </div>
-                <div className="space-y-3">
-                  <Skeleton className="h-4 w-48" />
-                  <Skeleton className="h-4 w-32" />
-                  <Skeleton className="h-4 w-full" />
-                </div>
-              </SkeletonCard>
-            ))}
-          </div>
         </div>
       </main>
     );
   }
 
   return (
-    <main className="flex min-h-screen flex-col bg-slate-50 dark:bg-slate-950">
-      <div className="flex-1 px-6 py-8 grid max-w-6xl mx-auto gap-6">
-        {/* Stats */}
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
+    <main className="mx-auto min-h-screen w-full max-w-6xl px-4 py-10 pb-32" id="main-content">
+      {/* Hero banner */}
+      <section className={cn(glass, "relative overflow-hidden p-8 mb-6")}>
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-amber-500/10 blur-3xl"
+        />
+        <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <span className="inline-flex items-center gap-2 rounded-full border border-amber-500/30 bg-amber-500/10 px-3 py-1.5 text-xs font-semibold text-amber-700 dark:text-amber-400">
+              <Shield className="h-3.5 w-3.5" aria-hidden />
+              Officials Portal
+            </span>
+            <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
+              Officials Dashboard
+            </h1>
+            <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
+              Review resident-created forms and act on them from one place.
+            </p>
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400">
+              <Shield className="h-7 w-7" aria-hidden />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                Punong Barangay
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Marben Clyde Maglangit
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Stats */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
           <StatCard
             icon={Clock}
             label="Pending submissions"
@@ -484,7 +505,6 @@ export default function OfficialsDashboard() {
             )}
           </div>
         </section>
-      </div>
 
       {/* Submission detail dialog */}
       <AnimatePresence>

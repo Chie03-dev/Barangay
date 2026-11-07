@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
-import { Home, FileText, Clock, User, Contact, type LucideIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+  import { usePathname } from "next/navigation";
+  import { motion } from "framer-motion";
+  import { Home, FileText, Clock, User, Contact, Users, AlertCircle, type LucideIcon } from "lucide-react";
+  import { cn } from "@/lib/utils";
 
 type NavItem = {
   label: string;
@@ -12,7 +12,7 @@ type NavItem = {
   icon: LucideIcon;
 };
 
-const NAV_ITEMS: NavItem[] = [
+const DEFAULT_NAV_ITEMS: NavItem[] = [
   { label: "Dashboard", href: "/dashboard", icon: Home },
   { label: "Services", href: "/services", icon: FileText },
   { label: "Track", href: "/track", icon: Clock },
@@ -20,10 +20,26 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Contact", href: "/contact", icon: Contact },
 ];
 
+const OFFICIAL_NAV_ITEMS: NavItem[] = [
+  { label: "Dashboard", href: "/own", icon: Home },
+  { label: "Directory", href: "/officials", icon: Users },
+  { label: "Reports", href: "/reports", icon: AlertCircle },
+  { label: "Services", href: "/services", icon: FileText },
+];
+
 const HIDDEN_PATHS = ["/login"];
 
-export default function BottomNav() {
+export default function BottomNav({
+  items,
+  brandHref = "/officials",
+  brandLabel = "Barangay Officials Directory",
+}: {
+  items?: NavItem[];
+  brandHref?: string;
+  brandLabel?: string;
+}) {
   const pathname = usePathname();
+  const navItems = items ?? DEFAULT_NAV_ITEMS;
 
   if (!pathname || HIDDEN_PATHS.includes(pathname)) return null;
 
@@ -37,17 +53,17 @@ export default function BottomNav() {
       <div
         className={cn(
           "flex w-fit max-w-full items-center justify-center gap-2 rounded-full border bg-slate-50/90 px-3 py-2.5 shadow-2xl backdrop-blur-xl sm:gap-3 sm:px-5 sm:py-3",
-          "border-slate-300 dark:border-slate-800/60 dark:border-slate-800/60 dark:bg-slate-900/80 slate-900/80"
+          "border-slate-300 dark:border-slate-800/60 dark:bg-slate-900/80",
         )}
       >
         {/* Brand mark - links to the officials directory */}
         <Link
-          href="/officials"
-          aria-label="Barangay officials directory"
-          aria-current={pathname === "/officials" ? "page" : undefined}
+          href={brandHref}
+          aria-label={brandLabel}
+          aria-current={pathname === brandHref ? "page" : undefined}
           className={cn(
             "group relative block shrink-0 rounded-full sm:mr-1",
-            pathname === "/officials" && "ring-2 ring-emerald-500"
+            pathname === brandHref && "ring-2 ring-emerald-500"
           )}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -64,11 +80,11 @@ export default function BottomNav() {
               "dark:bg-slate-100 dark:text-slate-900"
             )}
           >
-            Barangay Officials Directory
+            {brandLabel}
           </span>
         </Link>
 
-        {NAV_ITEMS.map((item) => {
+        {navItems.map((item) => {
           const isActive = pathname === item.href;
           const Icon = item.icon;
 
