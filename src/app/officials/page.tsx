@@ -163,7 +163,10 @@ const QUICK_ACTIONS: {
     label: "Issue Certificate",
     desc: "Clearances, indigency, residency",
     icon: FileCheck,
-    href: "/services",
+    onClick: () => {
+      const el = document.getElementById("submissions");
+      if (el) el.scrollIntoView({ behavior: "smooth" });
+    },
     glow: "emerald",
   },
   {
