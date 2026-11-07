@@ -151,6 +151,7 @@ server, delete `.next`, restart.
 | `/track` | Request list, stage timeline, QR pick-up pass |
 | `/reports` | Incident and blotter reporting form |
 | `/officials` | Barangay officials directory |
+| `/officials/profile` | Barangay official profile page (`?id=` selects an official) |
 | `/profile` | Digital ID card, preferences, sign out |
 | `/contact` | Developer profile and contact form |
 

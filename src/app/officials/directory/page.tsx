@@ -3,11 +3,8 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  Crown,
   Users,
   FileText,
-  Wallet,
-  Baby,
   Briefcase,
   Clock,
   Phone,
@@ -15,129 +12,16 @@ import {
   X,
   ChevronRight,
   Shield,
-  type LucideIcon,
 } from "lucide-react";
 import { cn, glass } from "@/lib/utils";
+import { OFFICIALS, type Official, initials } from "@/lib/officials";
 
 /* ------------------------------------------------------------------ */
 /*  Officials data                                                     */
 /* ------------------------------------------------------------------ */
 
-type Tier = "captain" | "councilors" | "staff";
+/* Shared mock data lives in @/lib/officials and is imported above. */
 
-type Official = {
-  id: string;
-  name: string;
-  role: string;
-  tier: Tier;
-  photo: string;
-  committees: string[];
-  contact: string;
-  email: string;
-  hours: string;
-  tenure?: string;
-  icon: LucideIcon;
-};
-
-const P1 = "/Portrait_Placeholder.png";
-const P2 = "/Portrait_Placeholder.png";
-
-const OFFICIALS: Official[] = [
-  {
-    id: "captain",
-    name: "Marben Clyde Maglangit",
-    role: "Punong Barangay",
-    tier: "captain",
-    photo: P1,
-    committees: ["General Administration", "Peace & Order"],
-    contact: "+63 917 123 4567",
-    email: "captain@barangay.gov.ph",
-    hours: "Mon-Fri, 8:00 AM - 5:00 PM",
-    tenure: "2022 - 2025",
-    icon: Crown,
-  },
-  {
-    id: "kagawad-1",
-    name: "Ana Rebecca Santos",
-    role: "Barangay Kagawad",
-    tier: "councilors",
-    photo: P2,
-    committees: ["Health & Sanitation", "Youth & Sports"],
-    contact: "+63 917 555 0101",
-    email: "kagawad.santos@barangay.gov.ph",
-    hours: "Mon, Wed, Fri, 9:00 AM - 12:00 NN",
-    icon: Users,
-  },
-  {
-    id: "kagawad-2",
-    name: "Jose Allan Rivera",
-    role: "Barangay Kagawad",
-    tier: "councilors",
-    photo: P1,
-    committees: ["Infrastructure", "Utilities"],
-    contact: "+63 917 555 0102",
-    email: "kagawad.rivera@barangay.gov.ph",
-    hours: "Tue, Thu, Sat, 9:00 AM - 12:00 NN",
-    icon: Users,
-  },
-  {
-    id: "kagawad-3",
-    name: "Liezl Mae Navarro",
-    role: "Barangay Kagawad",
-    tier: "councilors",
-    photo: P2,
-    committees: ["Women & Children", "Education"],
-    contact: "+63 917 555 0103",
-    email: "kagawad.navarro@barangay.gov.ph",
-    hours: "Mon, Wed, 1:00 PM - 4:00 PM",
-    icon: Users,
-  },
-  {
-    id: "secretary",
-    name: "Rodel P. Abella",
-    role: "Barangay Secretary",
-    tier: "staff",
-    photo: P2,
-    committees: ["Records & Documentation"],
-    contact: "+63 917 555 0201",
-    email: "secretary@barangay.gov.ph",
-    hours: "Mon-Fri, 8:00 AM - 5:00 PM",
-    icon: FileText,
-  },
-  {
-    id: "treasurer",
-    name: "Grace T. Lim",
-    role: "Barangay Treasurer",
-    tier: "staff",
-    photo: P1,
-    committees: ["Finance & Budget"],
-    contact: "+63 917 555 0202",
-    email: "treasurer@barangay.gov.ph",
-    hours: "Mon-Fri, 8:00 AM - 5:00 PM",
-    icon: Wallet,
-  },
-  {
-    id: "sk-chair",
-    name: "Miguel D. Aquino",
-    role: "SK Chairperson",
-    tier: "staff",
-    photo: P2,
-    committees: ["Sangguniang Kabataan", "Programs"],
-    contact: "+63 917 555 0203",
-    email: "skchair@barangay.gov.ph",
-    hours: "Mon-Sat, 4:00 PM - 6:00 PM",
-    icon: Baby,
-  },
-];
-
-function initials(name: string) {
-  return name
-    .split(" ")
-    .slice(0, 2)
-    .map((part) => part[0])
-    .join("")
-    .toUpperCase();
-}
 /* ------------------------------------------------------------------ */
 /*  Page                                                               */
 /* ------------------------------------------------------------------ */

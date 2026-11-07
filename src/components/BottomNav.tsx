@@ -10,6 +10,8 @@ type NavItem = {
   label: string;
   href: string;
   icon: LucideIcon;
+  /** Match by prefix instead of exact equality (for routes carrying query strings). */
+  prefix?: boolean;
 };
 
 const DEFAULT_NAV_ITEMS: NavItem[] = [
@@ -85,7 +87,9 @@ export default function BottomNav({
         </Link>
 
         {navItems.map((item) => {
-          const isActive = pathname === item.href;
+          const isActive = item.prefix
+            ? pathname?.startsWith(item.href)
+            : pathname === item.href;
           const Icon = item.icon;
 
           return (

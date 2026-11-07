@@ -2,14 +2,12 @@
 
 import { usePathname } from "next/navigation";
 import BottomNav from "@/components/BottomNav";
-import {
-  Home,
-  Users,
-} from "lucide-react";
+import { Home, Users, User } from "lucide-react";
 
 const OFFICIAL_NAV_ITEMS = [
   { label: "Dashboard", href: "/officials", icon: Home },
   { label: "Directory", href: "/officials/directory", icon: Users },
+  { label: "Profile", href: "/officials/profile", icon: User, prefix: true },
 ];
 
 export default function RouteNav() {
