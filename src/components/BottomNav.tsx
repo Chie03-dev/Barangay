@@ -13,7 +13,7 @@ type NavItem = {
 };
 
 const DEFAULT_NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard", href: "/dashboard", icon: Home },
+  { label: "Resident", href: "/resident", icon: Home },
   { label: "Services", href: "/services", icon: FileText },
   { label: "Track", href: "/track", icon: Clock },
   { label: "Profile", href: "/profile", icon: User },
@@ -21,8 +21,8 @@ const DEFAULT_NAV_ITEMS: NavItem[] = [
 ];
 
 const OFFICIAL_NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard", href: "/own", icon: Home },
-  { label: "Directory", href: "/officials", icon: Users },
+  { label: "Dashboard", href: "/officials", icon: Home },
+  { label: "Directory", href: "/officials/directory", icon: Users },
   { label: "Reports", href: "/reports", icon: AlertCircle },
   { label: "Services", href: "/services", icon: FileText },
 ];

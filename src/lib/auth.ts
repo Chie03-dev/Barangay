@@ -10,8 +10,8 @@ import { NextResponse, type NextRequest } from "next/server";
  *
  * Residents and barangay officials now get separate session cookies, and each
  * role lands on its own dashboard after sign-in:
- *   - resident  -> /dashboard
- *   - official  -> /own
+ *   - resident  -> /resident
+ *   - official  -> /officials
  *
  * When a real backend lands, replace these cookie checks with a server-side
  * session check and drop the cookie writes in the login routes.
@@ -21,7 +21,7 @@ import { NextResponse, type NextRequest } from "next/server";
 const PUBLIC_PATHS = ["/", "/login"];
 
 /** Routes restricted to authenticated barangay officials. */
-const OFFICIAL_PATHS = ["/own"];
+const OFFICIAL_PATHS = ["/officials"];
 
 /** Resident session cookie, set by the resident form on /login. */
 const RESIDENT_SESSION_COOKIE = "barangay_session";
@@ -55,20 +55,20 @@ export function middleware(request: NextRequest) {
   // Signed-in visitors hitting /login go straight to their own dashboard.
   if (pathname === "/login") {
     if (officialSession) {
-      return NextResponse.redirect(new URL("/own", request.url));
+      return NextResponse.redirect(new URL("/officials", request.url));
     }
     if (residentSession) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+      return NextResponse.redirect(new URL("/resident", request.url));
     }
     return NextResponse.next();
   }
 
-  // /own is the officials' dashboard - officials only.
+  // /officials is the officials' dashboard - officials only.
   if (OFFICIAL_PATHS.includes(pathname)) {
     if (officialSession) return NextResponse.next();
     // A resident with a session belongs on the resident dashboard.
     if (residentSession) {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+      return NextResponse.redirect(new URL("/resident", request.url));
     }
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("next", pathname);

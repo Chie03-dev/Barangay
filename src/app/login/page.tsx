@@ -59,11 +59,11 @@ function LoginForm() {
   const nextPath =
     rawNext && rawNext.startsWith("/") && !rawNext.startsWith("//")
       ? rawNext
-      : "/dashboard";
+      : "/resident";
 
-  // When middleware bounced an official here from /own, open the official
+  // When middleware bounced an official here from /officials, open the official
   // form of the flip card straight away.
-  const [isFlipped, setIsFlipped] = useState(nextPath === "/own");
+  const [isFlipped, setIsFlipped] = useState(nextPath === "/officials");
   // 3D tilt driven by pointer position.
   const rotateX = useSpring(useMotionValue(0), { stiffness: 220, damping: 20 });
   const rotateY = useSpring(useMotionValue(0), { stiffness: 220, damping: 20 });
@@ -121,7 +121,7 @@ function LoginForm() {
         60 * 60 * 24 * 7
       }; samesite=lax`;
       // Officials land on their own dashboard, not the resident one.
-      router.push("/own");
+      router.push("/officials");
     }, 1200);
   }
 

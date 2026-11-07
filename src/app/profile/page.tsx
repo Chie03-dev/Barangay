@@ -140,7 +140,7 @@ export default function ProfilePage() {
   function handleSignOut() {
     setSignedOut(true);
     // Clear the session cookie, otherwise the middleware still sees a signed
-    // in user and bounces /login straight back to /dashboard.
+    // in user and bounces /login straight back to /resident.
     document.cookie = `${RESIDENT_SESSION_COOKIE}=; path=/; max-age=0; samesite=lax`;
     // Mock auth teardown - call the real logout endpoint here.
     router.push("/login");
