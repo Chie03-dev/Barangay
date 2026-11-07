@@ -358,39 +358,39 @@ export default function OfficialsDashboard() {
       </section>
 
       {/* Stats */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
-          <StatCard
-            icon={Clock}
-            label="Pending submissions"
-            value={stats.pending}
-            hint="Awaiting your action"
-            glow="amber"
-          />
-          <StatCard
-            icon={Shield}
-            label="Under review"
-            value={stats.review}
-            hint="Being evaluated"
-            glow="blue"
-          />
-          <StatCard
-            icon={CheckCircle2}
-            label="Approved"
-            value={stats.approved}
-            hint="Ready for release"
-            glow="emerald"
-          />
-          <StatCard
-            icon={FileText}
-            label="Total filed"
-            value={stats.total}
-            hint="Resident-created forms"
-            glow="violet"
-          />
-        </div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          icon={Clock}
+          label="Pending submissions"
+          value={stats.pending}
+          hint="Awaiting your action"
+          glow="amber"
+        />
+        <StatCard
+          icon={Shield}
+          label="Under review"
+          value={stats.review}
+          hint="Being evaluated"
+          glow="blue"
+        />
+        <StatCard
+          icon={CheckCircle2}
+          label="Approved"
+          value={stats.approved}
+          hint="Ready for release"
+          glow="emerald"
+        />
+        <StatCard
+          icon={FileText}
+          label="Total filed"
+          value={stats.total}
+          hint="Resident-created forms"
+          glow="violet"
+        />
+      </div>
 
-        {/* Quick actions */}
-        <section className={cn(glass, "p-5")}>
+      {/* Quick actions */}
+      <section className={cn(glass, "p-5 mt-6")}>
           <p className="mb-4 text-xs font-semibold uppercase tracking-wide text-slate-400">
             Quick actions
           </p>
@@ -436,7 +436,7 @@ export default function OfficialsDashboard() {
         {/* Resident-created submissions */}
         <section
           ref={submissionsRef}
-          className={cn(glass, "flex flex-col gap-4")}
+          className={cn(glass, "mt-6 flex flex-col gap-4 p-6")}
         >
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div className="flex items-center gap-2">
@@ -444,7 +444,7 @@ export default function OfficialsDashboard() {
               <div>
                 <h2 className="text-base font-semibold">Resident submissions</h2>
                 <p className="text-xs text-slate-500 dark:text-slate-400">
-                  Forms created by residents via the portal create forms
+                  Forms filed by residents through the portal, awaiting your review.
                 </p>
               </div>
             </div>
