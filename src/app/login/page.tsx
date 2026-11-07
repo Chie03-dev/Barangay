@@ -1,7 +1,15 @@
-"use client";
+"use client";
+
 import { Suspense, useEffect, useState, type FormEvent } from "react";
   import { useRouter, useSearchParams } from "next/navigation";
-  import { AnimatePresence, motion, useMotionValue, useSpring } from "framer-motion";
+  import {
+  AnimatePresence,
+  animate,
+  motion,
+  useMotionValue,
+  useSpring,
+  useTransform,
+} from "framer-motion";
   import {
     Mail,
     Lock,
@@ -16,16 +24,19 @@ import { Suspense, useEffect, useState, type FormEvent } from "react";
   } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { RESIDENT_SESSION_COOKIE, OFFICIAL_SESSION_COOKIE } from "@/lib/auth";
-import { useCalmMotion } from "@/hooks/useCalmMotion";
+import { useCalmMotion } from "@/hooks/useCalmMotion";
+
 /* ------------------------------------------------------------------ */
 /*  Slideshow                                                          */
-/* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------ */
+
 const SLIDES = [
   "https://images.pexels.com/photos/4673995/pexels-photo-4673995.jpeg",
   "https://images.pexels.com/photos/27429709/pexels-photo-27429709.jpeg",
   "https://images.pexels.com/photos/35642939/pexels-photo-35642939.jpeg",
   "https://images.pexels.com/photos/33072140/pexels-photo-33072140.jpeg",
-];
+];
+
 const SLIDE_MS = 6000;
 
 const LOGIN_ANNOUNCEMENTS = [
@@ -41,7 +52,8 @@ const LOGIN_ANNOUNCEMENTS = [
     text: "Barangay Youth Sports League Registration Open",
     place: "Court A",
   },
-];
+];
+
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -52,7 +64,8 @@ function LoginForm() {
   const [officialId, setOfficialId] = useState("");
   const [officialPassword, setOfficialPassword] = useState("");
   const [isOfficialAuthenticating, setIsOfficialAuthenticating] = useState(false);
-  const calm = useCalmMotion();
+  const calm = useCalmMotion();
+
   // Only allow same-origin relative paths, so `?next=` can't be used to
   // redirect a resident to an external site.
   const rawNext = searchParams.get("next");
@@ -63,30 +76,40 @@ function LoginForm() {
 
   // When middleware bounced an official here from /officials, open the official
   // form of the flip card straight away.
-  const [isFlipped, setIsFlipped] = useState(nextPath === "/officials");
+  const [isFlipped, setIsFlipped] = useState(nextPath === "/officials");
+
   // 3D tilt driven by pointer position.
   const rotateX = useSpring(useMotionValue(0), { stiffness: 220, damping: 20 });
-  const rotateY = useSpring(useMotionValue(0), { stiffness: 220, damping: 20 });
+  const rotateY = useSpring(useMotionValue(0), { stiffness: 220, damping: 20 });
+
+  // Slideshow progress (0 -> 1 over SLIDE_MS, resets on each slide change).
+  const slideProgress = useMotionValue(0);
+  const progressPercent = useTransform(slideProgress, [0, 1], ["0%", "100%"]);
+
   // Advance the slideshow.
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-
-
-
-
     const id = setInterval(
       () => setSlide((s) => (s + 1) % SLIDES.length),
-
-
-
-
-
 
       SLIDE_MS,
     );
     return () => clearInterval(id);
-  }, []);
+  }, []);
+
+  // Animate the progress bar for the active slide; resets on slide change.
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    slideProgress.set(0);
+    const controls = animate(slideProgress, 1, {
+      duration: SLIDE_MS / 1000,
+    });
+    return () => controls.stop();
+  }, [slide]);
+
+
   function handleMove(event: React.MouseEvent<HTMLDivElement>) {
     if (calm) return;
     const rect = event.currentTarget.getBoundingClientRect();
@@ -94,11 +117,13 @@ function LoginForm() {
     const py = (event.clientY - rect.top) / rect.height - 0.5;
     rotateY.set(px * 10);
     rotateX.set(-py * 10);
-  }
+  }
+
   function handleLeave() {
     rotateX.set(0);
     rotateY.set(0);
-  }
+  }
+
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsAuthenticating(true);
@@ -163,7 +188,8 @@ function LoginForm() {
             }}
             className="absolute inset-0 h-full w-full object-cover motion-reduce:transition-none fetchPriority=high"
           />
-        </AnimatePresence>
+        </AnimatePresence>
+
         {/*
           Scrim. In light mode the photography is dimmed less and tinted warm
           so the pale card still reads as sitting on a deliberate surface,
@@ -171,7 +197,8 @@ function LoginForm() {
         */}
         <div className="absolute inset-0 bg-slate-900/45 backdrop-blur-[2px] max-sm:backdrop-blur-none dark:bg-slate-950/60" />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-transparent to-slate-900/30 dark:from-slate-950/80 dark:to-slate-950/40" />
-      </div>
+      </div>
+
       {/* Slide indicators */}
       <div
         aria-hidden
@@ -180,7 +207,8 @@ function LoginForm() {
         {SLIDES.map((_, i) => (
           <button
             key={i}
-            type="button"
+            type="button"
+
             onClick={() => setSlide(i)}
             aria-label={`Show background ${i + 1}`}
             className={cn(
@@ -189,14 +217,13 @@ function LoginForm() {
               )}
           >
             <motion.span
+              style={{ width: i === slide ? progressPercent : "0%" }}
               className="absolute inset-y-0 left-0 rounded-full bg-emerald-400"
-              initial={false}
-              animate={{ width: i === slide ? "100%" : "0%" }}
-              transition={{ duration: i === slide ? SLIDE_MS / 1000 : 0.3 }}
             />
           </button>
         ))}
-      </div>
+      </div>
+
       {/* Slideshow prev / next */}
       <button
         type="button"
@@ -213,7 +240,8 @@ function LoginForm() {
         aria-label="Next background"
       >
         <ChevronRight className="h-5 w-5" aria-hidden />
-      </button>
+      </button>
+
       {/* Horizontal announcements banner */}
       <div className="absolute top-0 left-0 right-0 z-20 overflow-hidden rounded-none bg-emerald-50/80 dark:bg-slate-800/60 px-4 py-2 border-b border-emerald-100/50 dark:border-emerald-900/20 backdrop-blur-sm shadow-sm shadow-slate-200/20 dark:shadow-black/20">
         <motion.div
@@ -432,7 +460,8 @@ function LoginForm() {
 /* ------------------------------------------------------------------ */
 /*  Route entry - Suspense keeps useSearchParams from opting the        */
 /*  page out of static prerendering.                                   */
-/* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------ */
+
 export default function LoginPage() {
   return (
     <Suspense
@@ -448,7 +477,8 @@ export default function LoginPage() {
 }
 /* ------------------------------------------------------------------ */
 /*  Floating-label input with validation state                         */
-/* ------------------------------------------------------------------ */
+/* ------------------------------------------------------------------ */
+
 function FloatingField({
   id,
   name,
@@ -468,7 +498,8 @@ function FloatingField({
   value: string;
   onChange: (v: string) => void;
 }) {
-  const isFloating = value.length > 0;
+  const isFloating = value.length > 0;
+
   return (
     <div>
       <div
@@ -482,7 +513,8 @@ function FloatingField({
         <Icon
           className="pointer-events-none absolute left-4 top-[2.625rem] h-4 w-4 -translate-y-1/2 text-slate-400"
           aria-hidden
-        />
+        />
+
         <label
           htmlFor={id}
           className={cn(
@@ -495,7 +527,8 @@ function FloatingField({
           )}
         >
           {label}
-        </label>
+        </label>
+
         <input
           id={id}
           name={name}
