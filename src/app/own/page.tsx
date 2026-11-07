@@ -631,79 +631,94 @@ function SubmissionCard({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
-      className={cn(glass, "p-5 hover:shadow-md transition-shadow duration-200")}
+      className={cn(
+        glass,
+        "group relative flex flex-col rounded-2xl border border-slate-200/60 p-5 transition-all duration-300 hover:shadow-xl dark:border-slate-800/60",
+      )}
     >
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-start gap-3">
-            <span
-              className={cn(
-                "inline-flex shrink-0 items-center justify-center rounded-xl px-3 py-1.5 text-xs font-semibold",
-                "bg-amber-50 text-amber-600 dark:bg-amber-900/20 dark:text-amber-400"
-              )}
-            >
-              {submission.reference}
-            </span>
-            <span
-              className={cn(
-                "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium",
-                STATUS_CLASS[submission.status]
-              )}
-            >
-              <StatusIcon className="h-3 w-3 shrink-0" aria-hidden />
-              {STATUS_LABEL[submission.status]}
-            </span>
-          </div>
-          <h3 className="mt-2 text-base font-semibold">{submission.type}</h3>
-          <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-            {submission.resident} · {submission.address}
+      {/* Header: reference + status */}
+      <div className="flex items-center justify-between gap-3">
+        <span
+          className={cn(
+            "inline-flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold tabular-nums",
+            "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400",
+          )}
+        >
+          {submission.reference}
+        </span>
+        <span
+          className={cn(
+            "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium",
+            STATUS_CLASS[submission.status],
+          )}
+        >
+          <StatusIcon className="h-3 w-3 shrink-0" aria-hidden />
+          {STATUS_LABEL[submission.status]}
+        </span>
+      </div>
+
+      {/* Body */}
+      <div className="mt-3 flex-1">
+        <h3 className="text-base font-semibold leading-snug">
+          {submission.type}
+        </h3>
+        <div className="mt-2 space-y-1">
+          <p className="text-sm text-slate-600 dark:text-slate-300">
+            {submission.resident}
+          </p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            {submission.address}
           </p>
           {submission.purpose && (
-            <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400">
-              Purpose: {submission.purpose}
+            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
+              <span className="font-medium text-slate-400">Purpose: </span>
+              {submission.purpose}
             </p>
           )}
         </div>
-        <div className="mt-4 sm:mt-0 flex w-full sm:w-auto flex-col sm:flex-row gap-2">
-          <button
-            type="button"
-            onClick={() => onOpen(submission)}
-            disabled={processing}
-            className={cn(
-              "flex h-9 w-full sm:w-auto items-center justify-center gap-2 rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors disabled:opacity-60",
-              "hover:bg-slate-100 dark:hover:bg-slate-800"
-            )}
-          >
-            <ChevronRight className="h-4 w-4" aria-hidden />
-            View details
-          </button>
-          {isPending && (
-            <>
-              <button
-                type="button"
-                onClick={() => onApprove(submission)}
-                disabled={processing}
-                className={cn(
-                  "flex h-9 w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-amber-600 px-3 py-1.5 text-xs font-semibold text-white shadow-lg shadow-amber-600/25 transition-colors disabled:opacity-70 disabled:cursor-not-allowed",
-                  "hover:bg-amber-500"
-                )}
-              >
-                {processing ? "Approving…" : "Approve"}
-              </button>
-              <button
-                type="button"
-                onClick={() => onReject(submission)}
-                disabled={processing}
-                className={cn(
-                  "flex h-9 w-full sm:w-auto items-center justify-center gap-2 rounded-lg border border-rose-200/60 bg-rose-50/60 px-3 py-1.5 text-xs font-semibold text-rose-700 transition-colors disabled:opacity-60",
-                  "hover:bg-rose-100 dark:hover:bg-rose-900/20"
-                )}
-              >
-                Reject
-              </button>
-            </>
+      </div>
+
+      {/* Footer actions */}
+      <div className="mt-4 flex items-center gap-2">
+        <button
+          type="button"
+          onClick={() => onOpen(submission)}
+          disabled={processing}
+          className={cn(
+            "flex h-9 items-center justify-center gap-1.5 rounded-lg border border-slate-200/70 px-3 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 disabled:opacity-60 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800",
           )}
-        </div>
+        >
+          <ChevronRight className="h-4 w-4" aria-hidden />
+          Details
+        </button>
+        {isPending ? (
+          <>
+            <button
+              type="button"
+              onClick={() => onApprove(submission)}
+              disabled={processing}
+              className={cn(
+                "flex h-9 items-center justify-center gap-1.5 rounded-lg bg-amber-600 px-3 text-xs font-semibold text-white shadow-lg shadow-amber-600/25 transition-colors disabled:opacity-70 disabled:cursor-not-allowed hover:bg-amber-500",
+              )}
+            >
+              {processing ? "…" : "Approve"}
+            </button>
+            <button
+              type="button"
+              onClick={() => onReject(submission)}
+              disabled={processing}
+              className={cn(
+                "flex h-9 items-center justify-center gap-1.5 rounded-lg border border-rose-200/60 bg-rose-50/60 px-3 text-xs font-semibold text-rose-700 transition-colors disabled:opacity-60 hover:bg-rose-100 dark:hover:bg-rose-900/20",
+              )}
+            >
+              Reject
+            </button>
+          </>
+        ) : (
+          <span className="ml-auto text-xs text-slate-400 dark:text-slate-500">
+            {submission.createdAt}
+          </span>
+        )}
       </div>
     </motion.div>
   );
