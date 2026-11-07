@@ -6,7 +6,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   ArrowLeft,
-  CheckCircle2,
   ChevronRight,
   Clock,
   FileText,
@@ -15,6 +14,7 @@ import {
   MessageCircle,
   Phone,
   Shield,
+  ShieldCheck,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -23,7 +23,6 @@ import {
   Skeleton,
   SkeletonCard,
   SkeletonCircle,
-  SkeletonHeading,
 } from "@/components/Skeleton";
 import { useAsyncData } from "@/hooks/useAsyncData";
 import { findOfficial, type Official, initials } from "@/lib/officials";
@@ -31,21 +30,6 @@ import { findOfficial, type Official, initials } from "@/lib/officials";
 /* ------------------------------------------------------------------ */
 /*  Style tokens                                                       */
 /* ------------------------------------------------------------------ */
-
-const TIER_LABEL: Record<Official["tier"], string> = {
-  captain: "Punong Barangay",
-  councilors: "Sangguniang Barangay",
-  staff: "Appointed Official",
-};
-
-const TIER_TINT: Record<Official["tier"], string> = {
-  captain:
-    "border border-amber-500/20 bg-amber-50/60 text-amber-700 uppercase tracking-wide dark:border-amber-500/10 dark:bg-amber-900/10 dark:text-amber-400",
-  councilors:
-    "border border-emerald-500/20 bg-emerald-50/60 text-emerald-700 uppercase tracking-wide dark:border-emerald-500/10 dark:bg-emerald-900/10 dark:text-emerald-400",
-  staff:
-    "border border-blue-500/20 bg-blue-50/60 text-blue-700 uppercase tracking-wide dark:border-blue-500/10 dark:bg-blue-900/10 dark:text-blue-400",
-};
 
 const rowHover = "transition-colors hover:bg-slate-200/50 dark:hover:bg-slate-800/40";
 
@@ -57,43 +41,120 @@ const OFFICE_LOCATION = "Barangay Hall, Main Avenue";
 
 export function ProfileSkeleton() {
   return (
-    <main className="mx-auto min-h-screen w-full max-w-6xl px-4 py-10 pb-32" id="main-content">
-      <div className="mb-8 flex items-center gap-2">
-        <ArrowLeft className="h-4 w-4 shrink-0 text-slate-400" aria-hidden />
-        <Skeleton className="h-6 w-24" />
+    <main className="mx-auto min-h-screen w-full max-w-4xl px-4 py-10 pb-32" id="main-content">
+      {/* Header */ }
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <Skeleton className="h-11 w-11 shrink-0" rounded="rounded-xl" />
+          <div className="space-y-2">
+            <Skeleton className="h-6 w-24" rounded="rounded-lg" />
+            <Skeleton className="h-3.5 w-52" rounded="rounded-md" />
+          </div>
+        </div>
+        <Skeleton className="h-11 w-20 shrink-0" rounded="rounded-3xl" />
       </div>
-      <SkeletonCard className="mb-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 p-6 sm:p-8">
-          <div className="lg:col-span-4 flex items-center">
-            <SkeletonCircle className="h-48 w-48 sm:h-56 sm:w-56" />
+
+      {/* ID card */ }
+      <div className="relative overflow-hidden rounded-3xl bg-slate-100 dark:bg-slate-800 p-6 shadow-2xl mb-6">
+        <div className="flex items-start justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <Skeleton className="h-11 w-11 bg-white/20 dark:bg-white/10" rounded="rounded-full" />
+            <div className="space-y-2">
+              <Skeleton className="h-3 w-36 bg-white/20 dark:bg-white/10" rounded="rounded-md" />
+              <Skeleton className="h-3.5 w-32 bg-white/20 dark:bg-white/10" rounded="rounded-md" />
+            </div>
           </div>
-          <div className="lg:col-span-8 space-y-3">
-            <Skeleton className="h-6 w-24" />
-            <Skeleton className="h-4 w-3/4" />
-            <Skeleton className="h-3.5 w-1/2" />
-            <Skeleton className="h-4 w-2/3 sm:w-1/2" />
+          <Skeleton className="h-7 w-32 shrink-0 bg-white/20 dark:bg-white/10" rounded="rounded-full" />
+        </div>
+
+        <div className="mt-6 flex flex-col gap-6 sm:flex-row sm:items-center">
+          <Skeleton className="mx-auto h-24 w-24 shrink-0 bg-white/20 dark:bg-white/10 sm:mx-0" rounded="rounded-2xl" />
+          <div className="flex-1 space-y-3">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="flex items-center justify-between gap-4">
+                <Skeleton className="h-3 w-24 bg-white/20 dark:bg-white/10" rounded="rounded-md" />
+                <Skeleton className="h-3.5 w-36 bg-white/20 dark:bg-white/10" rounded="rounded-md" />
+              </div>
+            ))}
           </div>
         </div>
-      </SkeletonCard>
-      <section className={cn(glass, "p-6 sm:p-8")}>
-        <SkeletonHeading />
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
-          <Skeleton className="h-12 w-full sm:w-48" />
-          <Skeleton className="h-12 w-full sm:w-48" />
-          <Skeleton className="h-12 w-full sm:w-48" />
-          <Skeleton className="h-12 w-full sm:w-48" />
+
+        <div className="mt-6 flex flex-col items-center gap-4 border-t border-white/15 pt-5 sm:flex-row">
+          <Skeleton className="h-16 w-16 bg-white/20 dark:bg-white/10" rounded="rounded-lg" />
+          <div className="flex-1 space-y-2">
+            <Skeleton className="h-3.5 w-40 bg-white/20 dark:bg-white/10" rounded="rounded-md" />
+            <Skeleton className="h-3 w-48 bg-white/20 dark:bg-white/10" rounded="rounded-md" />
+          </div>
+          <Skeleton className="h-11 w-full shrink-0 bg-white/20 dark:bg-white/10 sm:w-40" rounded="rounded-xl" />
         </div>
-      </section>
-      <section className={cn(glass, "p-6 sm:p-8")}>
-        <div className="space-y-3">
-          {[1, 2, 3, 4].map((i) => (
-            <Skeleton key={i} className="h-10 w-full sm:w-3/4" />
+      </div>
+
+      {/* Details section */}
+      <SkeletonCard className="mt-6">
+        <div className="flex items-center gap-2.5">
+          <Skeleton className="h-4 w-4" rounded="rounded-md" />
+          <Skeleton className="h-4 w-56" rounded="rounded-md" />
+        </div>
+        <div className="mt-4 space-y-1">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="flex items-center gap-4 px-3 py-3">
+              <SkeletonCircle className="h-9 w-9" rounded="rounded-lg" />
+              <div className="flex-1 space-y-2">
+                <Skeleton className="h-2.5 w-28" rounded="rounded-md" />
+                <Skeleton className="h-3.5 w-44" rounded="rounded-md" />
+              </div>
+            </div>
           ))}
         </div>
-      </section>
+      </SkeletonCard>
+
+      {/* Committees section */}
+      <SkeletonCard className="mt-6">
+        <div className="flex items-center gap-2.5">
+          <Skeleton className="h-4 w-4" rounded="rounded-md" />
+          <Skeleton className="h-4 w-48" rounded="rounded-md" />
+        </div>
+        <div className="mt-4 space-y-1">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="flex items-center justify-between gap-4 px-3 py-3">
+              <Skeleton className="h-3 w-32" rounded="rounded-full" />
+            </div>
+          ))}
+        </div>
+      </SkeletonCard>
+
+      {/* About section */}
+      <SkeletonCard className="mt-6">
+        <div className="flex items-center gap-2.5">
+          <Skeleton className="h-4 w-4" rounded="rounded-md" />
+          <Skeleton className="h-4 w-48" rounded="rounded-md" />
+        </div>
+        <div className="mt-2">
+          <Skeleton className="h-10 w-full" rounded="rounded-lg" />
+          <Skeleton className="mt-2 h-4 w-3/4" rounded="rounded-md" />
+        </div>
+      </SkeletonCard>
+
+      {/* Quick actions section */}
+      <SkeletonCard className="mt-6">
+        <div className="flex items-center gap-2.5">
+          <Skeleton className="h-4 w-4" rounded="rounded-md" />
+          <Skeleton className="h-4 w-48" rounded="rounded-md" />
+        </div>
+        <div className="mt-4 grid gap-3">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="flex items-center justify-center gap-2 rounded-xl border border-slate-200/60 bg-slate-50/80 px-3 py-3 dark:border-slate-800 dark:bg-slate-800/40">
+              <Skeleton className="h-4 w-4 shrink-0" rounded="rounded-lg" />
+              <Skeleton className="h-4 w-20" rounded="rounded-md" />
+            </div>
+          ))}
+        </div>
+      </SkeletonCard>
     </main>
   );
 }
+
+
 
 /* ------------------------------------------------------------------ */
 /*  Page                                                               */
@@ -106,7 +167,6 @@ export default function OfficialProfilePage() {
     searchParams.get("id") || undefined,
   );
 
-  // Falls back to the Punong Barangay when no `id` (or an unknown one) is given.
   const { isLoading, data: official } = useAsyncData(
     () => findOfficial(queryId),
     { delay: 600, deps: [queryId] },
@@ -116,220 +176,266 @@ export default function OfficialProfilePage() {
     router,
   ]);
 
-  const [photoFailed, setPhotoFailed] = useState(false);
-
   if (isLoading || !official) return <ProfileSkeleton />;
 
+  const [photoFailed, setPhotoFailed] = useState(false);
+
   return (
-    <main className="mx-auto min-h-screen w-full max-w-6xl px-4 py-10 pb-32" id="main-content">
-      <button
-        type="button"
-        onClick={goBack}
-        className="mb-8 inline-flex items-center gap-2 rounded-lg border border-slate-200/60 bg-white px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-200/70 dark:border-slate-800/60 dark:bg-slate-800/40 dark:text-slate-300 dark:hover:bg-slate-800/60 sm:mb-10"
-      >
-        <ArrowLeft className="h-4 w-4 shrink-0" aria-hidden />
-        Back to directory
-      </button>
+    <main className="mx-auto min-h-screen w-full max-w-4xl px-4 py-10 pb-32" id="main-content">
+      {/* Header */}
+      <header className="mb-6 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <motion.button
+            type="button"
+            onClick={goBack}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            aria-label="Back to directory"
+            className="flex items-center justify-center w-11 h-11 rounded-xl bg-slate-100 text-slate-600 transition-colors hover:bg-slate-200/70 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-800/60"
+          >
+            <ArrowLeft className="h-5 w-5" aria-hidden />
+          </motion.button>
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">Official Profile</h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400">
+              Official credentials &amp; office information
+            </p>
+          </div>
+        </div>
+      </header>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
+      {/* Official ID card */}
+      <motion.section
+        initial={{ opacity: 0, y: 25 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4 }}
-        className="space-y-8"
+        transition={{ type: "spring", stiffness: 200, damping: 24 }}
+        className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-600/90 via-emerald-800/90 to-slate-900/90 p-6 text-white shadow-2xl backdrop-blur-xl"
       >
-        {/* Hero: portrait, name, role, bio */}
-        <article className={cn(glass, "p-6 sm:p-8")}>
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <div className="lg:col-span-4 flex flex-col items-center lg:items-start">
-              <div className="relative flex shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-800 h-48 w-48 sm:h-56 sm:w-56 mb-4 sm:mb-0 lg:mb-6">
-                {photoFailed ? (
-                  <span className="text-3xl font-bold text-slate-500 dark:text-slate-400">
-                    {initials(official.name)}
-                  </span>
-                ) : (
-                  /* eslint-disable-next-line @next/next/no-img-element */
-                  <img
-                    src={official.photo}
-                    alt={`Portrait of ${official.name}`}
-                    onError={() => setPhotoFailed(true)}
-                    className="h-full w-full object-cover"
-                  />
-                )}
-              </div>
-              <p className="text-sm text-center text-slate-500 dark:text-slate-400 lg:text-left">
-                {official.hours}
+        {/* Decorative glow */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-white/10 blur-3xl"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -bottom-20 -left-10 h-48 w-48 rounded-full bg-emerald-300/10 blur-3xl"
+        />
+
+        {/* Header */}
+        <div className="relative flex items-start justify-between gap-4">
+          <div className="flex items-center gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo.png"
+              alt="Barangay crest"
+              className="h-11 w-11 rounded-full bg-white/10 p-1 ring-1 ring-white/30"
+            />
+            <div>
+              <p className="text-xs uppercase tracking-[0.2em] text-emerald-100">
+                Barangay Official ID
               </p>
-            </div>
-            <div className="lg:col-span-8 space-y-3">
-              <div className="flex items-center gap-3">
-                <span className={TIER_TINT[official.tier]}>
-                  {TIER_LABEL[official.tier]}
-                </span>
-                {official.tenure && (
-                  <span className="h-9 flex items-center gap-1.5 rounded-lg border border-slate-200/60 bg-slate-100/60 px-3 text-xs font-medium text-slate-500 dark:border-slate-800/60 dark:bg-slate-800/30 dark:text-slate-400">
-                    <Clock className="h-3 w-3 shrink-0" aria-hidden />
-                    Term {official.tenure}
-                  </span>
-                )}
-              </div>
-              <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-                {official.name}
-              </h1>
-              <h2 className="mt-1 text-lg font-medium text-emerald-600 dark:text-emerald-400">
-                {official.role}
-              </h2>
-              <p className="mt-4 text-slate-600 dark:text-slate-300 leading-relaxed sm:text-lg">
-                {official.bio}
-              </p>
+              <p className="mt-0.5 font-mono text-sm font-bold">{official.id}</p>
             </div>
           </div>
-        </article>
+          <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-white/15 px-3 py-1.5 text-[11px] font-semibold ring-1 ring-white/30">
+            <ShieldCheck className="h-3.5 w-3.5" aria-hidden />
+            Verified Official
+          </span>
+        </div>
 
-        {/* Committees & portfolios */}
-        <section className={cn(glass, "p-6 sm:p-8")}>
-          <div className="mb-4 flex items-center gap-2">
-            <Users className="h-4 w-4 shrink-0 text-slate-400" aria-hidden />
-            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">
-              Committees &amp; portfolios
-            </h3>
+        {/* Body */}
+        <div className="relative mt-6 flex flex-col gap-6 sm:flex-row sm:items-center">
+          {/* Avatar */}
+          <div className="relative mx-auto shrink-0 sm:mx-0">
+            <div className="flex h-24 w-24 items-center justify-center rounded-2xl bg-white/15 text-3xl font-bold ring-1 ring-white/30 backdrop-blur-sm">
+              {photoFailed ? (
+                <span className="text-slate-200">{initials(official.name)}</span>
+              ) : (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={official.photo}
+                  alt={`Portrait of ${official.name}`}
+                  onError={() => setPhotoFailed(true)}
+                  className="h-full w-full object-cover"
+                />
+              )}
+            </div>
+            <motion.span
+              animate={{ scale: [1, 1.12, 1] }}
+              transition={{
+                duration: 1.8,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
+              className="absolute -bottom-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full bg-emerald-400 text-emerald-950 shadow-lg ring-2 ring-emerald-800"
+            >
+              <ShieldCheck className="h-4 w-4" aria-hidden />
+              <span className="sr-only">Verified</span>
+            </motion.span>
           </div>
-          <div className="flex flex-wrap gap-3">
-            {official.committees.map((c) => (
-              <span
-                key={c}
-                className="rounded-full border border-slate-200/60 bg-slate-100 px-4 py-1.5 text-xs font-medium text-slate-600 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-300"
-              >
-                {c}
-              </span>
-            ))}
-          </div>
-        </section>
 
-        {/* Office contact */}
-        <section className={cn(glass, "p-6 sm:p-8")}>
-          <div className="mb-4 flex items-center gap-2">
-            <Shield className="h-4 w-4 shrink-0 text-slate-400" aria-hidden />
-            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">
-              Office contact
-            </h3>
-          </div>
-          <dl className="grid gap-3 sm:grid-cols-2 sm:gap-4">
-            <ContactRow
-              icon={Phone}
-              label="Mobile"
-              value={official.contact}
-              href={`tel:${official.contact.replace(/\s/g, "")}`}
-            />
-            <ContactRow
-              icon={Mail}
-              label="Email"
-              value={official.email}
-              href={`mailto:${official.email}`}
-            />
-            <ContactRow
-              icon={MapPin}
-              label="Location"
-              value={OFFICE_LOCATION}
-            />
-            <ContactRow icon={Clock} label="Office hours" value={official.hours} />
+          {/* Details */}
+          <dl className="min-w-0 flex-1 space-y-2.5 text-sm">
+            <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-2.5">
+              <dt className="text-emerald-100/80">Official Name</dt>
+              <dd className="truncate font-bold">{official.name}</dd>
+            </div>
+            <div className="flex items-center justify-between gap-4 border-b border-white/10 pb-2.5">
+              <dt className="text-emerald-100/80">Position</dt>
+              <dd className="font-semibold">{official.role}</dd>
+            </div>
+            {official.tenure && (
+              <div className="flex items-center justify-between gap-4">
+                <dt className="text-emerald-100/80">Term</dt>
+                <dd className="font-mono font-semibold">{official.tenure}</dd>
+              </div>
+            )}
           </dl>
-        </section>
+        </div>
 
-        {/* Quick actions */}
-        <section className={cn(glass, "p-6 sm:p-8")}>
-          <div className="mb-4 flex items-center gap-2">
-            <MessageCircle className="h-4 w-4 shrink-0 text-slate-400" aria-hidden />
-            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">
-              Quick actions
-            </h3>
+        {/* Footer */}
+        <div className="relative mt-6 flex flex-col items-center gap-4 border-t border-white/15 pt-5 sm:flex-row">
+          <div className="flex items-center gap-3">
+            <div className="rounded-lg bg-white p-1.5">
+              <Clock className="h-5 w-5 text-emerald-950" aria-hidden />
+            </div>
+            <div>
+              <p className="text-xs font-semibold">Office Hours</p>
+              <p className="text-[11px] text-emerald-100/70">{official.hours}</p>
+            </div>
           </div>
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <ActionButton
-              href={`tel:${official.contact.replace(/\s/g, "")}`}
-              label="Call office"
-              icon={Phone}
-            />
-            <ActionButton
-              href={`mailto:${official.email}`}
-              label="Send email"
-              icon={Mail}
-            />
-            <ActionButton
-              href={`sms:${official.contact.replace(/\s/g, "")}`}
-              label="Send message"
-              icon={MessageCircle}
-            />
-            <ActionButton
-              href="/officials/directory"
-              label="View directory"
-              icon={Users}
-            />
-          </div>
-        </section>
+        </div>
+      </motion.section>
 
-        {/* Services handled */}
-        <section className={cn(glass, "p-6 sm:p-8")}>
-          <div className="mb-4 flex items-center gap-2">
-            <FileText className="h-4 w-4 shrink-0 text-slate-400" aria-hidden />
-            <h3 className="text-sm font-bold uppercase tracking-wider text-slate-400">
-              Services handled
-            </h3>
-          </div>
-          <div className="grid gap-3">
-            {official.services.map((service) => (
-              <div key={service} className={cn(glass, "flex items-center justify-between p-4")}>
-                <span className="text-sm font-medium">{service}</span>
-                <span className="rounded-full border border-emerald-500/20 bg-emerald-50/60 px-2.5 py-0.5 text-xs font-semibold text-emerald-700 dark:border-emerald-500/10 dark:bg-emerald-900/10 dark:text-emerald-400">
-                  Available
-                  <CheckCircle2 className="ml-1.5 h-3 w-3 shrink-0" aria-hidden />
-                </span>
-              </div>
-            ))}
-          </div>
-        </section>
-      </motion.div>
+      {/* Details */}
+      <SkeletonCard className="mt-6">
+        <CardTitle icon={Shield} title="Office Contact" />
+        <div className="mt-4 space-y-1">
+          <DetailRow
+            icon={Phone}
+            label="Mobile"
+            value={official.contact}
+          />
+          <DetailRow
+            icon={Mail}
+            label="Email"
+            value={official.email}
+          />
+          <DetailRow
+            icon={MapPin}
+            label="Location"
+            value={OFFICE_LOCATION}
+          />
+          <DetailRow
+            icon={Clock}
+            label="Office Hours"
+            value={official.hours}
+          />
+        </div>
+      </SkeletonCard>
+
+      {/* Committees */}
+      <SkeletonCard className="mt-6">
+        <CardTitle icon={Users} title="Committees &amp; Portfolios" />
+        <div className="mt-4 flex flex-wrap gap-3">
+          {official.committees.map((c) => (
+            <span
+              key={c}
+              className="rounded-full border border-slate-200/60 bg-slate-100 px-4 py-1.5 text-xs font-medium text-slate-600 dark:border-slate-800 dark:bg-slate-800 dark:text-slate-300"
+            >
+              {c}
+            </span>
+          ))}
+        </div>
+      </SkeletonCard>
+
+      {/* About */}
+      <SkeletonCard className="mt-6">
+        <CardTitle icon={FileText} title="About the Office" />
+        <p className="mt-2 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+          {official.bio}
+        </p>
+      </SkeletonCard>
+
+      {/* Quick actions */}
+      <SkeletonCard className="mt-6">
+        <CardTitle icon={MessageCircle} title="Quick Actions" />
+        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <ActionButton
+            href={`tel:${official.contact.replace(/\s/g, "")}`}
+            label="Call"
+            icon={Phone}
+          />
+          <ActionButton
+            href={`mailto:${official.email}`}
+            label="Email"
+            icon={Mail}
+          />
+          <ActionButton
+            href={`sms:${official.contact.replace(/\s/g, "")}`}
+            label="Message"
+            icon={MessageCircle}
+          />
+          <ActionButton
+            href="/officials/directory"
+            label="Directory"
+            icon={Users}
+          />
+        </div>
+      </SkeletonCard>
     </main>
   );
 }
 
 /* ------------------------------------------------------------------ */
-/*  Contact row                                                        */
+/*  Card title                                                         */
 /* ------------------------------------------------------------------ */
 
-function ContactRow({
+function CardTitle({
+  icon: Icon,
+  title,
+}: {
+  icon: LucideIcon;
+  title: string;
+}) {
+  return (
+    <div className="flex items-center gap-2.5">
+      <Icon
+        className="h-4 w-4 text-emerald-600 dark:text-emerald-400"
+        aria-hidden
+      />
+      <h2 className="text-base font-semibold">{title}</h2>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/*  Detail row                                                         */
+/* ------------------------------------------------------------------ */
+
+function DetailRow({
   icon: Icon,
   label,
   value,
-  href,
 }: {
   icon: LucideIcon;
   label: string;
   value: string;
-  href?: string;
 }) {
   return (
-    <div className={cn("flex items-center gap-3 rounded-xl px-3 py-3 border border-transparent", rowHover)}>
+    <div className={cn("flex items-center gap-4 rounded-xl px-3 py-3", rowHover)}>
       <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400">
         <Icon className="h-4 w-4" aria-hidden />
       </span>
       <div className="min-w-0 flex-1">
-        <p className="text-xs uppercase tracking-wide text-slate-400">{label}</p>
-        {href ? (
-          <a
-            href={href}
-            className="mt-0.5 block truncate text-sm font-medium text-slate-600 underline underline-offset-4 dark:text-slate-300 hover:text-emerald-600 dark:hover:text-emerald-400"
-          >
-            {value}
-          </a>
-        ) : (
-          <p className="mt-0.5 truncate text-sm font-medium text-slate-600 dark:text-slate-300">
-            {value}
-          </p>
-        )}
+        <p className="text-xs uppercase tracking-wide text-slate-400">
+          {label}
+        </p>
+        <p className="mt-0.5 truncate text-sm font-medium text-slate-600 dark:text-slate-300">
+          {value}
+        </p>
       </div>
-      {href && (
-        <ChevronRight className="shrink-0 text-slate-400 h-4 w-4 motion-safe:transition-transform hover:motion-safe:translate-x-0.5" aria-hidden />
-      )}
     </div>
   );
 }
