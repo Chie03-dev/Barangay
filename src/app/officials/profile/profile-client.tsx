@@ -9,6 +9,7 @@ import {
   ChevronRight,
   Clock,
   FileText,
+  LogOut,
   Mail,
   MapPin,
   MessageCircle,
@@ -26,6 +27,7 @@ import {
 } from "@/components/Skeleton";
 import { useAsyncData } from "@/hooks/useAsyncData";
 import { findOfficial, type Official, initials } from "@/lib/officials";
+import { OFFICIAL_SESSION_COOKIE } from "@/lib/auth";
 
 /* ------------------------------------------------------------------ */
 /*  Style tokens                                                       */
@@ -177,6 +179,14 @@ export default function OfficialProfilePage() {
   ]);
 
   const [photoFailed, setPhotoFailed] = useState(false);
+  const [signedOut, setSignedOut] = useState(false);
+
+  function handleSignOut() {
+    setSignedOut(true);
+    document.cookie = `${OFFICIAL_SESSION_COOKIE}=; path=/; max-age=0; samesite=lax`;
+    router.push("/login");
+    router.refresh();
+  }
 
   if (isLoading || !official) return <ProfileSkeleton />;
 
@@ -384,6 +394,39 @@ export default function OfficialProfilePage() {
           />
         </div>
       </SkeletonCard>
+
+      {/* Sign out */}
+      <section className={cn(glass, "mt-6 p-6")}>
+        <motion.button
+          type="button"
+          onClick={handleSignOut}
+          disabled={signedOut}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          transition={{ type: "spring", stiffness: 400, damping: 20 }}
+          className="flex w-full items-center justify-center gap-2 rounded-xl border border-red-500/40 bg-red-500/10 px-5 py-3 text-sm font-semibold text-red-700 transition-colors hover:bg-red-500/20 disabled:opacity-60 dark:text-red-300"
+        >
+          {signedOut ? (
+            <>
+              <motion.span
+                animate={{ rotate: 360 }}
+                transition={{
+                  repeat: Infinity,
+                  duration: 0.9,
+                  ease: "linear",
+                }}
+                className="h-4 w-4 rounded-full border-2 border-red-400/40 border-t-red-500"
+              />
+              Signing out...
+            </>
+          ) : (
+            <>
+              <LogOut className="h-4 w-4" aria-hidden />
+              Sign Out
+            </>
+          )}
+        </motion.button>
+      </section>
     </main>
   );
 }
