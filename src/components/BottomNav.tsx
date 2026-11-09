@@ -24,6 +24,7 @@ const DEFAULT_NAV_ITEMS: NavItem[] = [
 
 const OFFICIAL_NAV_ITEMS: NavItem[] = [
   { label: "Dashboard", href: "/officials", icon: Home },
+  { label: "Documents", href: "/officials", icon: FileText },
   { label: "Directory", href: "/officials/directory", icon: Users },
   { label: "Reports", href: "/reports", icon: AlertCircle },
   { label: "Services", href: "/services", icon: FileText },
