@@ -23,6 +23,7 @@ import {
   SkeletonCircle,
   SkeletonHeading,
 } from "@/components/Skeleton";
+import { generateDocument, type DocumentData, type DocumentType, type Format } from "@/lib/document-generator";
 
 /* ------------------------------------------------------------------ */
 /*  Mock data — resident-created forms the barangay office acts on    */
@@ -134,6 +135,13 @@ const STATUS_ICON: Record<SubmissionStatus, LucideIcon> = {
   review: Shield,
   approved: CheckCircle2,
   rejected: AlertCircle,
+};
+
+const DOCUMENT_TYPE_MAP: Record<string, DocumentType | null> = {
+  "Barangay Clearance": "clearance",
+  "Certificate of Indigency": "indigency",
+  "Certificate of Residency": "residency",
+  "Business Permit (New)": "business",
 };
 
 const FILTERS: { key: SubmissionStatus | "all"; label: string }[] = [
@@ -302,6 +310,33 @@ export default function OfficialsDashboard() {
       setDetail(null);
     }, 600);
   }, []);
+
+  const handlePrintDocument = useCallback(
+    async (submission: ResidentForm) => {
+      const docType = DOCUMENT_TYPE_MAP[submission.type];
+      if (!docType) return;
+      setProcessing(submission.id);
+      try {
+        const data: DocumentData = {
+          reference: submission.reference,
+          type: docType,
+          residentName: submission.resident,
+          residentAddress: submission.address,
+          issuedDate: submission.createdAt,
+          purpose: submission.purpose,
+          remarks: submission.notes,
+          hasId: false,
+        };
+        const blob = await generateDocument(data, "pdf");
+        const url = URL.createObjectURL(blob);
+        const win = window.open(url, "_blank");
+        if (win) win.focus();
+      } finally {
+        setProcessing(null);
+      }
+    },
+    []
+  );
 
   const dismissToast = useCallback(() => setToast(null), []);
 
@@ -512,14 +547,15 @@ export default function OfficialsDashboard() {
       {/* Submission detail dialog */}
       <AnimatePresence>
         {detail && (
-          <SubmissionDialog
-            submission={detail}
-            onClose={() => setDetail(null)}
-            onApprove={handleApprove}
-            onReject={handleReject}
-            onStatusChange={handleStatusAction}
-            processing={processing === detail.id}
-          />
+            <SubmissionDialog
+              submission={detail}
+              onClose={() => setDetail(null)}
+              onApprove={handleApprove}
+              onReject={handleReject}
+              onStatusChange={handleStatusAction}
+              onPrint={handlePrintDocument}
+              processing={processing === detail.id}
+            />
         )}
       </AnimatePresence>
 
@@ -737,6 +773,7 @@ function SubmissionDialog({
   onApprove,
   onReject,
   onStatusChange,
+  onPrint,
   processing,
 }: {
   submission: ResidentForm;
@@ -744,6 +781,7 @@ function SubmissionDialog({
   onApprove: (s: ResidentForm) => void;
   onReject: (s: ResidentForm) => void;
   onStatusChange: (s: ResidentForm) => void;
+  onPrint: (s: ResidentForm) => void;
   processing: boolean;
 }) {
   const StatusIcon = STATUS_ICON[submission.status];
@@ -861,16 +899,28 @@ function SubmissionDialog({
                   </button>
                 </>
               ) : submission.status === "approved" ? (
-                <button
-                  type="button"
-                  onClick={() => onStatusChange(submission)}
-                  disabled={processing}
-                  className={cn(
-                    "flex-1 h-10 rounded-lg border border-emerald-200/60 bg-emerald-50/60 text-xs font-semibold text-emerald-700 transition-colors disabled:opacity-60 hover:bg-emerald-100 dark:hover:bg-emerald-900/20"
-                  )}
-                >
-                  {processing ? "Releasing…" : "Mark released"}
-                </button>
+                <>
+                  <button
+                    type="button"
+                    onClick={() => onPrint(submission)}
+                    disabled={processing}
+                    className={cn(
+                      "flex-1 h-10 rounded-lg border border-emerald-200/60 bg-emerald-50/60 text-xs font-semibold text-emerald-700 transition-colors disabled:opacity-60 hover:bg-emerald-100 dark:hover:bg-emerald-900/20"
+                    )}
+                  >
+                    {processing ? "Printing…" : "Print Document"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => onStatusChange(submission)}
+                    disabled={processing}
+                    className={cn(
+                      "flex-1 h-10 rounded-lg border border-emerald-200/60 bg-emerald-50/60 text-xs font-semibold text-emerald-700 transition-colors disabled:opacity-60 hover:bg-emerald-100 dark:hover:bg-emerald-900/20"
+                    )}
+                  >
+                    {processing ? "Releasing…" : "Mark released"}
+                  </button>
+                </>
               ) : submission.status === "rejected" ? (
                 <button
                   type="button"

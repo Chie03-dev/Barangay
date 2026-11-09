@@ -15,9 +15,11 @@ import {
   Upload,
   Zap,
   Target,
+  Download,
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { generateDocument, type DocumentData, type Format } from "@/lib/document-generator";
 
 /* ------------------------------------------------------------------ */
 /*  Static data                                                        */
@@ -152,6 +154,7 @@ export default function ServicesPage() {
   const [urgency, setUrgency] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [referenceCode, setReferenceCode] = useState("");
+  const [downloading, setDownloading] = useState<Format | null>(null);
 
   const doc = useMemo(
     () => DOCUMENTS.find((d) => d.id === selectedDoc) ?? null,
@@ -178,6 +181,40 @@ export default function ServicesPage() {
     setReferenceCode(`BRGY-2026-${Math.floor(1000 + Math.random() * 9000)}`);
     setIsSubmitting(false);
     setStep(4);
+  }
+
+  async function handleDownload(format: Format) {
+    if (!doc || !referenceCode) return;
+    setDownloading(format);
+    try {
+      const data: DocumentData = {
+        reference: referenceCode,
+        type: doc.id,
+        residentName: RESIDENT_NAME,
+        residentAddress: "Purok 3, Main Avenue",
+        residentId: "BRGY-ID-2026-9821",
+        issuedDate: new Date().toLocaleDateString("en-PH", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        }),
+        validUntil: getReleaseDate(doc.processing),
+        purpose,
+        remarks,
+        hasId,
+      };
+      const blob = await generateDocument(data, format);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${referenceCode}-${doc.id}.${format}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } finally {
+      setDownloading(null);
+    }
   }
 
   return (
@@ -517,6 +554,44 @@ Additional Remarks or Specific Details
                 <span className="mt-1 font-mono text-xl font-bold text-emerald-700 dark:text-emerald-400">
                   {referenceCode}
                 </span>
+              </motion.div>
+
+              {/* Download options */}
+              <motion.div
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35, duration: 0.35 }}
+                className="mt-8 flex flex-col sm:flex-row gap-3 sm:justify-center"
+              >
+                <motion.button
+                  type="button"
+                  onClick={() => handleDownload("pdf")}
+                  disabled={downloading === "pdf"}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={cn(
+                    "flex items-center justify-center gap-2 rounded-xl border border-slate-200/70 bg-white/80 px-5 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-200 dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed",
+                    downloading === "pdf" && "animate-pulse",
+                  )}
+                >
+                  <Download className="h-4 w-4" aria-hidden />
+                  {downloading === "pdf" ? "Preparing PDF…" : "Download PDF"}
+                </motion.button>
+
+                <motion.button
+                  type="button"
+                  onClick={() => handleDownload("docx")}
+                  disabled={downloading === "docx"}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={cn(
+                    "flex items-center justify-center gap-2 rounded-xl border border-slate-200/70 bg-white/80 px-5 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-200 dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed",
+                    downloading === "docx" && "animate-pulse",
+                  )}
+                >
+                  <Download className="h-4 w-4" aria-hidden />
+                  {downloading === "docx" ? "Preparing DOCX…" : "Download Word"}
+                </motion.button>
               </motion.div>
 
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
