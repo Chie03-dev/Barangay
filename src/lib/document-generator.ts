@@ -57,8 +57,11 @@ const pm = (pdfmake.default ?? pdfmake) as unknown as {
   vfs?: unknown;
 };
 
-if (typeof window !== "undefined") {
-  const vfs_fonts = require("pdfmake/build/vfs_fonts.js");
+let pdfReady = false;
+export async function ensurePdfReady(): Promise<void> {
+  if (pdfReady || typeof window === "undefined") return;
+  pdfReady = true;
+  const vfs_fonts = await import("pdfmake/build/vfs_fonts.js");
   const vfs = (vfs_fonts.default ?? vfs_fonts) as
     | { pdfMake?: { vfs?: unknown } }
     | unknown;
@@ -279,6 +282,7 @@ function buildBusinessPdf(data: DocumentData) {
 /* ============================================================ */
 
 async function renderPdf(data: DocumentData): Promise<Uint8Array> {
+  await ensurePdfReady();
   let docDef;
   switch (data.type) {
     case "clearance":
