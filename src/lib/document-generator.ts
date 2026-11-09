@@ -13,7 +13,7 @@
 
 "use server";
 
-import { createPdfKitDocument } from "pdfmake";
+import pdfmake from "pdfmake";
 import {
   Document as DocxDocument,
   Packer,
@@ -22,6 +22,8 @@ import {
   AlignmentType,
   BorderStyle,
 } from "docx";
+
+const pm = pdfmake as unknown as { createPdfKitDocument: (docDef: unknown) => any };
 
 /* ============================================================ */
 /*  Types                                                     */
@@ -220,7 +222,7 @@ function buildBusinessPdf(data: DocumentData) {
 /*  PDF GENERATOR (returns Buffer for server-side use)        */
 /* ============================================================ */
 
-function renderPdf(data: DocumentData): Buffer {
+async function renderPdf(data: DocumentData): Promise<Buffer> {
   let docDef;
   switch (data.type) {
     case "clearance":
@@ -238,11 +240,14 @@ function renderPdf(data: DocumentData): Buffer {
     default:
       docDef = buildClearancePdf(data);
   }
-  const pdfDoc = createPdfKitDocument(docDef);
-  const chunks: Buffer[] = [];
-  pdfDoc.on("data", (chunk: Buffer) => chunks.push(chunk));
-  pdfDoc.end();
-  return Buffer.concat(chunks);
+  const pdfDoc = await pm.createPdfKitDocument(docDef);
+  return new Promise<Buffer>((resolve, reject) => {
+    const chunks: Buffer[] = [];
+    pdfDoc.on("data", (chunk: Buffer) => chunks.push(chunk));
+    pdfDoc.on("end", () => resolve(Buffer.concat(chunks)));
+    pdfDoc.on("error", reject);
+    pdfDoc.end();
+  });
 }
 
 /* ============================================================ */
