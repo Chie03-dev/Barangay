@@ -55,7 +55,7 @@ const pm = pdfmake.default ?? pdfmake;
 
 if (typeof window !== "undefined") {
   const vfs_fonts = require("pdfmake/build/vfs_fonts.js");
-  pm.vfs = vfs_fonts?.pdfMake?.vfs;
+  pm.vfs = (vfs_fonts.default ?? vfs_fonts) as Record<string, unknown>;
 }
 
 /* ============================================================ */
