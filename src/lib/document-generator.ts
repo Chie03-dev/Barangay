@@ -13,7 +13,7 @@
 
 "use server";
 
-import pdfmake from "pdfmake";
+import PDFDocument from "pdfkit";
 import {
   Document as DocxDocument,
   Packer,
@@ -22,8 +22,6 @@ import {
   AlignmentType,
   BorderStyle,
 } from "docx";
-
-const pm = pdfmake as unknown as { createPdfKitDocument: (docDef: unknown) => any };
 
 /* ============================================================ */
 /*  Types                                                     */
@@ -53,200 +51,98 @@ export type DocumentData = {
 };
 
 /* ============================================================ */
-/*  Helper builders                                           */
+/*  PDF GENERATOR (pdfkit, server-side Node.js)               */
 /* ============================================================ */
 
-/** Simple paragraph with a thin bottom border (used for signature lines). */
-function lineParagraph(text: string, options: Record<string, unknown> = {}) {
-  return {
-    ...options,
-    border: { bottom: { color: "#94a3b8", width: 0.5 } },
-    margin: [0, 2, 0, 6],
-    text,
-    font: "Helvetica",
-    fontSize: 9,
-    color: "#64748b",
-  };
+const PAGE_WIDTH = 612;
+const PAGE_HEIGHT = 792;
+const MARGIN = 54;
+
+function addHeader(doc: any) {
+  doc.fontSize(13).font("Helvetica-Bold").fillColor("#1e293b").text("BARANGAY HALL", { align: "center" });
+  doc.moveDown(0.5);
+  doc.fontSize(8).font("Helvetica").fillColor("#64748b").text("Barangay Main Avenue, Purok 3", { align: "center" });
+  doc.moveDown(0.5);
+  doc.fontSize(7).fillColor("#94a3b8").text("Telephone: +63 45 234 5678  |  secretary@barangay.gov.ph", { align: "center" });
+  doc.moveDown(1);
+  doc.lineWidth(0.5).strokeColor("#cbd5e1").moveTo(MARGIN, doc.y).lineTo(PAGE_WIDTH - MARGIN, doc.y).stroke();
+  doc.moveDown(0.5);
 }
 
-/** Divider line paragraph (used between sections). */
-function divider() {
-  return {
-    margin: [0, 6, 0, 6],
-    border: { bottom: { color: "#cbd5e1", width: 0.5 } },
-    text: "",
-    fontSize: 2,
-  };
+function addField(doc: any, label: string, value: string) {
+  doc.fontSize(10).font("Helvetica-Bold").fillColor("#1e293b").text(`${label}: `, { continued: true });
+  doc.font("Helvetica").fillColor("#334155").text(value);
+  doc.moveDown(0.5);
 }
 
-/** Agency header block rendered at the top of every document. */
-function headerBlock() {
-  return [
-    {
-      alignment: "center",
-      margin: [0, 0, 0, 6],
-      text: "BARANGAY HALL",
-      font: "Helvetica-Bold",
-      fontSize: 13,
-      color: "#1e293b",
-      letterSpacing: 2,
-    },
-    {
-      alignment: "center",
-      margin: [0, 0, 0, 2],
-      text: "Barangay Main Avenue, Purok 3",
-      font: "Helvetica",
-      fontSize: 8,
-      color: "#64748b",
-    },
-    {
-      alignment: "center",
-      margin: [0, 0, 0, 10],
-      text: "Telephone: +63 45 234 5678  |  secretary@barangay.gov.ph",
-      font: "Helvetica",
-      fontSize: 7,
-      color: "#94a3b8",
-    },
-    divider(),
-  ];
+function addDivider(doc: any) {
+  doc.moveDown(0.5);
+  doc.lineWidth(0.5).strokeColor("#cbd5e1").moveTo(MARGIN, doc.y).lineTo(PAGE_WIDTH - MARGIN, doc.y).stroke();
+  doc.moveDown(0.5);
 }
 
-/** Build a label:value paragraph with bold label. */
-function field(label: string, value: string) {
-  return {
-    margin: [0, 2, 0, 8],
-    text: [{ text: `${label}: `, bold: true, fontSize: 10 }, { text: value, fontSize: 10 }],
-  };
+function addSignatureLine(doc: any) {
+  doc.moveDown(0.5);
+  doc.fontSize(9).font("Helvetica").fillColor("#64748b").text("_______________________________", { align: "center" });
+  doc.moveDown(0.5);
+  doc.text("Barangay Secretary", { align: "center" });
+  doc.moveDown(0.5);
+  doc.text("Barangay Hall", { align: "center" });
 }
 
-/* ============================================================ */
-/*  PDF TEMPLATES (pdfmake)                                   */
-/* ============================================================ */
-
-function buildClearancePdf(data: DocumentData) {
-  const { residentName, residentAddress, issuedDate, validUntil, purpose, reference } = data;
-
-  return {
-    content: [
-      ...headerBlock(),
-      { alignment: "center", margin: [0, 8, 0, 14], text: "BARANGAY CLEARANCE", font: "Helvetica-Bold", fontSize: 18, color: "#1e293b" },
-      { alignment: "center", margin: [0, 0, 0, 10], text: "I hereby certify to whom it may concern that the bearer of this document is a resident of this barangay.", font: "Helvetica", fontSize: 10, color: "#334155" },
-      divider(),
-      field("Name", residentName),
-      field("Address", residentAddress),
-      field("Resident ID", data.residentId ?? "—"),
-      field("Purpose", purpose ?? "N/A"),
-      field("Valid Until", validUntil ?? "—"),
-      field("Reference No.", reference),
-      divider(),
-      lineParagraph("_______________________________"),
-      { margin: [0, 2, 0, 2], text: "Barangay Secretary", font: "Helvetica", fontSize: 9, color: "#64748b" },
-      { margin: [0, 0, 0, 6], text: "Barangay Hall", font: "Helvetica", fontSize: 9, color: "#64748b" },
-      { margin: [0, 0, 0, 10], text: `Issued on ${issuedDate}`, font: "Helvetica", fontSize: 9, color: "#64748b" },
-    ],
-    styles: { header: { fontSize: 18, bold: true, color: "#1e293b", alignment: "center" }, body: { fontSize: 10, color: "#334155" }, center: { alignment: "center" } },
-  };
-}
-
-function buildIndigencyPdf(data: DocumentData) {
-  const { residentName, residentAddress, issuedDate, reference } = data;
-
-  return {
-    content: [
-      ...headerBlock(),
-      { alignment: "center", margin: [0, 8, 0, 14], text: "CERTIFICATE OF INDIGENCY", font: "Helvetica-Bold", fontSize: 17, color: "#1e293b" },
-      { alignment: "center", margin: [0, 0, 0, 10], text: "I hereby certify that the person named below is indigent / has very limited income and is unable to meet the basic needs of life.", font: "Helvetica", fontSize: 10, color: "#334155" },
-      divider(),
-      field("Name", residentName),
-      field("Address", residentAddress),
-      field("Resident ID", data.residentId ?? "—"),
-      field("Reference No.", reference),
-      divider(),
-      lineParagraph("_______________________________"),
-      { margin: [0, 2, 0, 2], text: "Barangay Secretary", font: "Helvetica", fontSize: 9, color: "#64748b" },
-      { margin: [0, 0, 0, 10], text: `Issued on ${issuedDate}`, font: "Helvetica", fontSize: 9, color: "#64748b" },
-    ],
-    styles: { header: { fontSize: 17, bold: true, color: "#1e293b", alignment: "center" }, body: { fontSize: 10, color: "#334155" }, center: { alignment: "center" } },
-  };
-}
-
-function buildResidencyPdf(data: DocumentData) {
-  const { residentName, residentAddress, issuedDate, validUntil, reference } = data;
-
-  return {
-    content: [
-      ...headerBlock(),
-      { alignment: "center", margin: [0, 8, 0, 14], text: "CERTIFICATE OF RESIDENCY", font: "Helvetica-Bold", fontSize: 18, color: "#1e293b" },
-      { alignment: "center", margin: [0, 0, 0, 10], text: "I hereby certify that the person named below is a resident of this barangay and has been residing within the jurisdiction for a period of time.", font: "Helvetica", fontSize: 10, color: "#334155" },
-      divider(),
-      field("Name", residentName),
-      field("Address", residentAddress),
-      field("Resident ID", data.residentId ?? "—"),
-      field("Reference No.", reference),
-      field("Valid Until", validUntil ?? "—"),
-      divider(),
-      lineParagraph("_______________________________"),
-      { margin: [0, 2, 0, 2], text: "Barangay Secretary", font: "Helvetica", fontSize: 9, color: "#64748b" },
-      { margin: [0, 0, 0, 10], text: `Issued on ${issuedDate}`, font: "Helvetica", fontSize: 9, color: "#64748b" },
-    ],
-    styles: { header: { fontSize: 18, bold: true, color: "#1e293b", alignment: "center" }, body: { fontSize: 10, color: "#334155" }, center: { alignment: "center" } },
-  };
-}
-
-function buildBusinessPdf(data: DocumentData) {
-  const { residentName, residentAddress, businessName, businessAddress, ownerName, issuedDate, reference } = data;
-
-  return {
-    content: [
-      ...headerBlock(),
-      { alignment: "center", margin: [0, 8, 0, 14], text: "BARANGAY BUSINESS PERMIT", font: "Helvetica-Bold", fontSize: 18, color: "#1e293b" },
-      { alignment: "center", margin: [0, 0, 0, 10], text: "I hereby certify that the business described below is duly registered and in good standing within this barangay.", font: "Helvetica", fontSize: 10, color: "#334155" },
-      divider(),
-      field("Business Name", businessName ?? "—"),
-      field("Business Address", businessAddress ?? "—"),
-      field("Owner / Proprietor", ownerName ?? "—"),
-      field("Applicant", residentName),
-      field("Applicant Address", residentAddress),
-      field("Reference No.", reference),
-      field("Issued on", issuedDate),
-      divider(),
-      lineParagraph("_______________________________"),
-      { margin: [0, 2, 0, 2], text: "Barangay Secretary", font: "Helvetica", fontSize: 9, color: "#64748b" },
-      { margin: [0, 0, 0, 10], text: `Issued on ${issuedDate}`, font: "Helvetica", fontSize: 9, color: "#64748b" },
-    ],
-    styles: { header: { fontSize: 18, bold: true, color: "#1e293b", alignment: "center" }, body: { fontSize: 10, color: "#334155" }, center: { alignment: "center" } },
-  };
-}
-
-/* ============================================================ */
-/*  PDF GENERATOR (returns Buffer for server-side use)        */
-/* ============================================================ */
-
-async function renderPdf(data: DocumentData): Promise<Buffer> {
-  let docDef;
-  switch (data.type) {
-    case "clearance":
-      docDef = buildClearancePdf(data);
-      break;
-    case "indigency":
-      docDef = buildIndigencyPdf(data);
-      break;
-    case "residency":
-      docDef = buildResidencyPdf(data);
-      break;
-    case "business":
-      docDef = buildBusinessPdf(data);
-      break;
-    default:
-      docDef = buildClearancePdf(data);
-  }
-  const pdfDoc = await pm.createPdfKitDocument(docDef);
+function renderPdf(data: DocumentData): Promise<Buffer> {
   return new Promise<Buffer>((resolve, reject) => {
     const chunks: Buffer[] = [];
-    pdfDoc.on("data", (chunk: Buffer) => chunks.push(chunk));
-    pdfDoc.on("end", () => resolve(Buffer.concat(chunks)));
-    pdfDoc.on("error", reject);
-    pdfDoc.end();
+    const doc = new PDFDocument({ size: "LETTER", margin: MARGIN });
+    doc.on("data", (chunk: Buffer) => chunks.push(chunk));
+    doc.on("end", () => resolve(Buffer.concat(chunks)));
+    doc.on("error", reject);
+
+    addHeader(doc);
+
+    // Title
+    const titles: Record<string, string> = {
+      clearance: "BARANGAY CLEARANCE",
+      indigency: "CERTIFICATE OF INDIGENCY",
+      residency: "CERTIFICATE OF RESIDENCY",
+      business: "BARANGAY BUSINESS PERMIT",
+    };
+    doc.fontSize(18).font("Helvetica-Bold").fillColor("#1e293b").text(titles[data.type], { align: "center" });
+    doc.moveDown(0.5);
+
+    // Certification text
+    const certTexts: Record<string, string> = {
+      clearance: "I hereby certify to whom it may concern that the bearer of this document is a resident of this barangay.",
+      indigency: "I hereby certify that the person named below is indigent / has very limited income and is unable to meet the basic needs of life.",
+      residency: "I hereby certify that the person named below is a resident of this barangay and has been residing within the jurisdiction for a period of time.",
+      business: "I hereby certify that the business described below is duly registered and in good standing within this barangay.",
+    };
+    doc.fontSize(10).font("Helvetica").fillColor("#334155").text(certTexts[data.type], { align: "center" });
+    doc.moveDown(0.8);
+
+    addDivider(doc);
+
+    // Fields
+    addField(doc, "Reference No.", data.reference);
+    addField(doc, "Name", data.residentName);
+    addField(doc, "Address", data.residentAddress);
+    addField(doc, "Resident ID", data.residentId ?? "—");
+    if (data.type === "clearance") {
+      addField(doc, "Purpose", data.purpose ?? "N/A");
+      addField(doc, "Valid Until", data.validUntil ?? "—");
+    } else if (data.type === "business") {
+      addField(doc, "Business Name", data.businessName ?? "—");
+      addField(doc, "Business Address", data.businessAddress ?? "—");
+      addField(doc, "Owner / Proprietor", data.ownerName ?? "—");
+      addField(doc, "Applicant", data.residentName);
+      addField(doc, "Applicant Address", data.residentAddress);
+    }
+
+    addDivider(doc);
+    addSignatureLine(doc);
+    doc.fontSize(9).fillColor("#64748b").text(`Issued on ${data.issuedDate}`, { align: "center" });
+
+    doc.end();
   });
 }
 
