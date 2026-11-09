@@ -51,11 +51,23 @@ export type DocumentData = {
 /* ============================================================ */
 
 const pdfmake = require("pdfmake") as typeof import("pdfmake");
-const pm = pdfmake.default ?? pdfmake;
+const pm = (pdfmake.default ?? pdfmake) as unknown as {
+  createPdf: (docDef: unknown) => { getBuffer: (cb: (buf: unknown) => void) => void };
+  addVirtualFileSystem?: (vfs: unknown) => void;
+  vfs?: unknown;
+};
 
 if (typeof window !== "undefined") {
   const vfs_fonts = require("pdfmake/build/vfs_fonts.js");
-  pm.vfs = (vfs_fonts.default ?? vfs_fonts) as Record<string, unknown>;
+  const vfs = (vfs_fonts.default ?? vfs_fonts) as
+    | { pdfMake?: { vfs?: unknown } }
+    | unknown;
+  const fontTable = (vfs as { pdfMake?: { vfs?: unknown } }).pdfMake?.vfs ?? vfs;
+  if (typeof pm.addVirtualFileSystem === "function") {
+    pm.addVirtualFileSystem(fontTable);
+  } else {
+    pm.vfs = fontTable;
+  }
 }
 
 /* ============================================================ */
@@ -287,8 +299,8 @@ async function renderPdf(data: DocumentData): Promise<Uint8Array> {
   return new Promise((resolve, reject) => {
     try {
       const pdfDoc = pm.createPdf(docDef);
-      pdfDoc.getBuffer((buffer: Uint8Array | Buffer) => {
-        resolve(new Uint8Array(buffer));
+      pdfDoc.getBuffer((buffer: unknown) => {
+        resolve(buffer as unknown as Uint8Array);
       });
     } catch (err) {
       reject(err);
