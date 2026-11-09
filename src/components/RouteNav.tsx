@@ -6,7 +6,7 @@ import { Home, Users, User, FileText } from "lucide-react";
 
 const OFFICIAL_NAV_ITEMS = [
   { label: "Dashboard", href: "/officials", icon: Home },
-  { label: "Documents", href: "/officials", icon: FileText },
+  { label: "Documents", href: "/officials/documents", icon: FileText },
   { label: "Directory", href: "/officials/directory", icon: Users },
   { label: "Profile", href: "/officials/profile", icon: User, prefix: true },
 ];
