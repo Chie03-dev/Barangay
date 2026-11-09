@@ -261,7 +261,7 @@ function buildBusinessPdf(data: DocumentData) {
 /*  PDF GENERATOR (returns raw bytes for Blob construction)   */
 /* ============================================================ */
 
-function renderPdf(data: DocumentData): Uint8Array {
+async function renderPdf(data: DocumentData): Promise<Uint8Array> {
   let docDef;
   switch (data.type) {
     case "clearance":
@@ -279,11 +279,16 @@ function renderPdf(data: DocumentData): Uint8Array {
     default:
       docDef = buildClearancePdf(data);
   }
-  const pdfDoc = pm.createPdfKitDocument(docDef);
-  const chunks: Buffer[] = [];
-  pdfDoc.on("data", (chunk: Buffer) => chunks.push(Buffer.from(chunk)));
-  pdfDoc.end();
-  return Buffer.concat(chunks) as unknown as Uint8Array;
+  return new Promise((resolve, reject) => {
+    try {
+      const pdfDoc = pm.createPdf(docDef);
+      pdfDoc.getBuffer((buffer: Uint8Array | Buffer) => {
+        resolve(new Uint8Array(buffer));
+      });
+    } catch (err) {
+      reject(err);
+    }
+  });
 }
 
 /* ============================================================ */
@@ -648,7 +653,7 @@ async function renderDocx(data: DocumentData): Promise<Uint8Array> {
  */
 export async function generateDocument(data: DocumentData, format: Format): Promise<Blob> {
   if (format === "pdf") {
-    const bytes = renderPdf(data);
+    const bytes = await renderPdf(data);
     return new Blob([bytes as unknown as BlobPart], { type: "application/pdf" });
   }
   // docx
