@@ -19,7 +19,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { generateDocument, type DocumentData, type Format } from "@/lib/document-generator";
+import type { DocumentData } from "@/lib/document-generator";
+import { downloadDocument } from "@/lib/document-actions";
 
 /* ------------------------------------------------------------------ */
 /*  Static data                                                        */
@@ -154,7 +155,7 @@ export default function ServicesPage() {
   const [urgency, setUrgency] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [referenceCode, setReferenceCode] = useState("");
-  const [downloading, setDownloading] = useState<Format | null>(null);
+  const [downloading, setDownloading] = useState<"pdf" | "docx" | null>(null);
 
   const doc = useMemo(
     () => DOCUMENTS.find((d) => d.id === selectedDoc) ?? null,
@@ -183,7 +184,7 @@ export default function ServicesPage() {
     setStep(4);
   }
 
-  async function handleDownload(format: Format) {
+  async function handleDownload(format: "pdf" | "docx") {
     if (!doc || !referenceCode) return;
     setDownloading(format);
     try {
@@ -203,15 +204,13 @@ export default function ServicesPage() {
         remarks,
         hasId,
       };
-      const blob = await generateDocument(data, format);
-      const url = URL.createObjectURL(blob);
+      const url = await downloadDocument(data, format);
       const a = document.createElement("a");
       a.href = url;
       a.download = `${referenceCode}-${doc.id}.${format}`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-      URL.revokeObjectURL(url);
     } finally {
       setDownloading(null);
     }

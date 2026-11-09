@@ -23,7 +23,8 @@ import {
   SkeletonCircle,
   SkeletonHeading,
 } from "@/components/Skeleton";
-import { generateDocument, type DocumentData, type DocumentType, type Format } from "@/lib/document-generator";
+import { type DocumentData, type DocumentType } from "@/lib/document-generator";
+import { printDocument } from "@/lib/document-actions";
 
 /* ------------------------------------------------------------------ */
 /*  Mock data — resident-created forms the barangay office acts on    */
@@ -327,8 +328,7 @@ export default function OfficialsDashboard() {
           remarks: submission.notes,
           hasId: false,
         };
-        const blob = await generateDocument(data, "pdf");
-        const url = URL.createObjectURL(blob);
+        const url = await printDocument(data);
         const win = window.open(url, "_blank");
         if (win) win.focus();
       } finally {
