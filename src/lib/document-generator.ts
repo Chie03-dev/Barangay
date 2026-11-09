@@ -8,7 +8,7 @@
  * Uses pdfmake for PDF and docx for Word.
  */
 
-import { Document, StyleSheet, Text, Paragraph } from "pdfmake";
+import { Document, StyleSheet } from "pdfmake";
 import {
   Document as DocxDocument,
   Packer,
@@ -59,42 +59,82 @@ const pm = pdfmake.default ?? pdfmake;
 
 /** Simple paragraph with a thin bottom border (used for signature lines). */
 function lineParagraph(text: string, options: Record<string, unknown> = {}) {
-  return new Paragraph({
+  return {
     ...options,
     border: { bottom: { color: "#94a3b8", width: 0.5 } },
     margin: [0, 2, 0, 6],
-    children: [new Text({ text, font: "Helvetica", size: 9, color: "#64748b" })],
-  });
+    text,
+    font: "Helvetica",
+    fontSize: 9,
+    color: "#64748b",
+  };
 }
 
 /** Divider line paragraph (used between sections). */
 function divider() {
-  return new Paragraph({
+  return {
     margin: [0, 6, 0, 6],
     border: { bottom: { color: "#cbd5e1", width: 0.5 } },
-    children: [new Text({ text: "", fontSize: 2 })],
-  });
+    text: "",
+    fontSize: 2,
+  };
 }
 
 /** Agency header block rendered at the top of every document. */
 function headerBlock() {
   return [
-    new Paragraph({
+    {
       alignment: "center",
       margin: [0, 0, 0, 6],
-      children: [new Text({ text: "BARANGAY HALL", font: "Helvetica-Bold", fontSize: 13, color: "#1e293b", letterSpacing: 2 })],
-    }),
-    new Paragraph({
+      text: "BARANGAY HALL",
+      font: "Helvetica-Bold",
+      fontSize: 13,
+      color: "#1e293b",
+      letterSpacing: 2,
+    },
+    {
       alignment: "center",
       margin: [0, 0, 0, 2],
-      children: [new Text({ text: "Barangay Main Avenue, Purok 3", font: "Helvetica", fontSize: 8, color: "#64748b" })],
-    }),
-    new Paragraph({
+      text: "Barangay Main Avenue, Purok 3",
+      font: "Helvetica",
+      fontSize: 8,
+      color: "#64748b",
+    },
+    {
       alignment: "center",
       margin: [0, 0, 0, 10],
-      children: [new Text({ text: "Telephone: +63 45 234 5678  |  secretary@barangay.gov.ph", font: "Helvetica", fontSize: 7, color: "#94a3b8" })],
-    }),
+      text: "Telephone: +63 45 234 5678  |  secretary@barangay.gov.ph",
+      font: "Helvetica",
+      fontSize: 7,
+      color: "#94a3b8",
+    },
     divider(),
+  ];
+}
+
+/** Agency header block rendered at the top of every DOCX document. */
+function headerBlockDocx() {
+  return [
+    new DocxParagraph({
+      alignment: AlignmentType.CENTER,
+      spacing: { before: 0, after: 60 },
+      children: [new TextRun({ text: "BARANGAY HALL", bold: true, size: 26, font: "Calibri", color: "#1e293b" })],
+    }),
+    new DocxParagraph({
+      alignment: AlignmentType.CENTER,
+      spacing: { before: 0, after: 20 },
+      children: [new TextRun({ text: "Barangay Main Avenue, Purok 3", size: 16, font: "Calibri", color: "#64748b" })],
+    }),
+    new DocxParagraph({
+      alignment: AlignmentType.CENTER,
+      spacing: { before: 0, after: 100 },
+      children: [new TextRun({ text: "Telephone: +63 45 234 5678  |  secretary@barangay.gov.ph", size: 14, font: "Calibri", color: "#94a3b8" })],
+    }),
+    new DocxParagraph({
+      spacing: { before: 60, after: 60 },
+      border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: "#cbd5e1" } },
+      children: [new TextRun({ text: "", size: 2 })],
+    }),
   ];
 }
 
@@ -105,23 +145,28 @@ function headerBlock() {
 function buildClearancePdf(data: DocumentData) {
   const { residentName, residentAddress, issuedDate, validUntil, purpose, reference } = data;
 
+  const field = (label: string, value: string) => ({
+    margin: [0, 2, 0, 8],
+    text: [{ text: `${label}: `, bold: true, fontSize: 10 }, { text: value, fontSize: 10 }],
+  });
+
   return {
     content: [
       ...headerBlock(),
-      new Paragraph({ alignment: "center", margin: [0, 8, 0, 14], children: [new Text({ text: "BARANGAY CLEARANCE", font: "Helvetica-Bold", fontSize: 18, color: "#1e293b" })] }),
-      new Paragraph({ alignment: "center", margin: [0, 0, 0, 10], children: [new Text({ text: "I hereby certify to whom it may concern that the bearer of this document is a resident of this barangay.", font: "Helvetica", fontSize: 10, color: "#334155" })] }),
+      { alignment: "center", margin: [0, 8, 0, 14], text: "BARANGAY CLEARANCE", font: "Helvetica-Bold", fontSize: 18, color: "#1e293b" },
+      { alignment: "center", margin: [0, 0, 0, 10], text: "I hereby certify to whom it may concern that the bearer of this document is a resident of this barangay.", font: "Helvetica", fontSize: 10, color: "#334155" },
       divider(),
-      new Paragraph({ margin: [0, 4, 0, 8], children: [new Text({ text: "Name: ", font: "Helvetica-Bold", fontSize: 10 }), new Text({ text: residentName, font: "Helvetica", fontSize: 10 })] }),
-      new Paragraph({ margin: [0, 2, 0, 8], children: [new Text({ text: "Address: ", font: "Helvetica-Bold", fontSize: 10 }), new Text({ text: residentAddress, font: "Helvetica", fontSize: 10 })] }),
-      new Paragraph({ margin: [0, 2, 0, 8], children: [new Text({ text: "Resident ID: ", font: "Helvetica-Bold", fontSize: 10 }), new Text({ text: data.residentId ?? "—", font: "Helvetica", fontSize: 10 })] }),
-      new Paragraph({ margin: [0, 2, 0, 8], children: [new Text({ text: "Purpose: ", font: "Helvetica-Bold", fontSize: 10 }), new Text({ text: purpose ?? "N/A", font: "Helvetica", fontSize: 10 })] }),
-      new Paragraph({ margin: [0, 2, 0, 8], children: [new Text({ text: "Valid Until: ", font: "Helvetica-Bold", fontSize: 10 }), new Text({ text: validUntil ?? "—", font: "Helvetica", fontSize: 10 })] }),
-      new Paragraph({ margin: [0, 2, 0, 2], children: [new Text({ text: "Reference No.: ", font: "Helvetica-Bold", fontSize: 10 }), new Text({ text: reference, font: "Helvetica", fontSize: 10 })] }),
+      field("Name", residentName),
+      field("Address", residentAddress),
+      field("Resident ID", data.residentId ?? "—"),
+      field("Purpose", purpose ?? "N/A"),
+      field("Valid Until", validUntil ?? "—"),
+      field("Reference No.", reference),
       divider(),
       lineParagraph("_______________________________"),
-      new Paragraph({ margin: [0, 2, 0, 2], children: [new Text({ text: "Barangay Secretary", font: "Helvetica", fontSize: 9, color: "#64748b" })] }),
-      new Paragraph({ margin: [0, 0, 0, 6], children: [new Text({ text: "Barangay Hall", font: "Helvetica", fontSize: 9, color: "#64748b" })] }),
-      new Paragraph({ margin: [0, 0, 0, 10], children: [new Text({ text: `Issued on ${issuedDate}`, font: "Helvetica", fontSize: 9, color: "#64748b" })] }),
+      { margin: [0, 2, 0, 2], text: "Barangay Secretary", font: "Helvetica", fontSize: 9, color: "#64748b" },
+      { margin: [0, 0, 0, 6], text: "Barangay Hall", font: "Helvetica", fontSize: 9, color: "#64748b" },
+      { margin: [0, 0, 0, 10], text: `Issued on ${issuedDate}`, font: "Helvetica", fontSize: 9, color: "#64748b" },
     ],
     styles: { header: { fontSize: 18, bold: true, color: "#1e293b", alignment: "center" }, body: { fontSize: 10, color: "#334155" }, center: { alignment: "center" } },
   };
@@ -130,20 +175,25 @@ function buildClearancePdf(data: DocumentData) {
 function buildIndigencyPdf(data: DocumentData) {
   const { residentName, residentAddress, issuedDate, reference } = data;
 
+  const field = (label: string, value: string) => ({
+    margin: [0, 2, 0, 8],
+    text: [{ text: `${label}: `, bold: true, fontSize: 10 }, { text: value, fontSize: 10 }],
+  });
+
   return {
     content: [
       ...headerBlock(),
-      new Paragraph({ alignment: "center", margin: [0, 8, 0, 14], children: [new Text({ text: "CERTIFICATE OF INDIGENCY", font: "Helvetica-Bold", fontSize: 17, color: "#1e293b" })] }),
-      new Paragraph({ alignment: "center", margin: [0, 0, 0, 10], children: [new Text({ text: "I hereby certify that the person named below is indigent / has very limited income and is unable to meet the basic needs of life.", font: "Helvetica", fontSize: 10, color: "#334155" })] }),
+      { alignment: "center", margin: [0, 8, 0, 14], text: "CERTIFICATE OF INDIGENCY", font: "Helvetica-Bold", fontSize: 17, color: "#1e293b" },
+      { alignment: "center", margin: [0, 0, 0, 10], text: "I hereby certify that the person named below is indigent / has very limited income and is unable to meet the basic needs of life.", font: "Helvetica", fontSize: 10, color: "#334155" },
       divider(),
-      new Paragraph({ margin: [0, 4, 0, 8], children: [new Text({ text: "Name: ", font: "Helvetica-Bold", fontSize: 10 }), new Text({ text: residentName, font: "Helvetica", fontSize: 10 })] }),
-      new Paragraph({ margin: [0, 2, 0, 8], children: [new Text({ text: "Address: ", font: "Helvetica-Bold", fontSize: 10 }), new Text({ text: residentAddress, font: "Helvetica", fontSize: 10 })] }),
-      new Paragraph({ margin: [0, 2, 0, 2], children: [new Text({ text: "Resident ID: ", font: "Helvetica-Bold", fontSize: 10 }), new Text({ text: data.residentId ?? "—", font: "Helvetica", fontSize: 10 })] }),
-      new Paragraph({ margin: [0, 2, 0, 2], children: [new Text({ text: "Reference No.: ", font: "Helvetica-Bold", fontSize: 10 }), new Text({ text: reference, font: "Helvetica", fontSize: 10 })] }),
+      field("Name", residentName),
+      field("Address", residentAddress),
+      field("Resident ID", data.residentId ?? "—"),
+      field("Reference No.", reference),
       divider(),
       lineParagraph("_______________________________"),
-      new Paragraph({ margin: [0, 2, 0, 2], children: [new Text({ text: "Barangay Secretary", font: "Helvetica", fontSize: 9, color: "#64748b" })] }),
-      new Paragraph({ margin: [0, 0, 0, 10], children: [new Text({ text: `Issued on ${issuedDate}`, font: "Helvetica", fontSize: 9, color: "#64748b" })] }),
+      { margin: [0, 2, 0, 2], text: "Barangay Secretary", font: "Helvetica", fontSize: 9, color: "#64748b" },
+      { margin: [0, 0, 0, 10], text: `Issued on ${issuedDate}`, font: "Helvetica", fontSize: 9, color: "#64748b" },
     ],
     styles: { header: { fontSize: 17, bold: true, color: "#1e293b", alignment: "center" }, body: { fontSize: 10, color: "#334155" }, center: { alignment: "center" } },
   };
@@ -152,21 +202,26 @@ function buildIndigencyPdf(data: DocumentData) {
 function buildResidencyPdf(data: DocumentData) {
   const { residentName, residentAddress, issuedDate, validUntil, reference } = data;
 
+  const field = (label: string, value: string) => ({
+    margin: [0, 2, 0, 8],
+    text: [{ text: `${label}: `, bold: true, fontSize: 10 }, { text: value, fontSize: 10 }],
+  });
+
   return {
     content: [
       ...headerBlock(),
-      new Paragraph({ alignment: "center", margin: [0, 8, 0, 14], children: [new Text({ text: "CERTIFICATE OF RESIDENCY", font: "Helvetica-Bold", fontSize: 18, color: "#1e293b" })] }),
-      new Paragraph({ alignment: "center", margin: [0, 0, 0, 10], children: [new Text({ text: "I hereby certify that the person named below is a resident of this barangay and has been residing within the jurisdiction for a period of time.", font: "Helvetica", fontSize: 10, color: "#334155" })] }),
+      { alignment: "center", margin: [0, 8, 0, 14], text: "CERTIFICATE OF RESIDENCY", font: "Helvetica-Bold", fontSize: 18, color: "#1e293b" },
+      { alignment: "center", margin: [0, 0, 0, 10], text: "I hereby certify that the person named below is a resident of this barangay and has been residing within the jurisdiction for a period of time.", font: "Helvetica", fontSize: 10, color: "#334155" },
       divider(),
-      new Paragraph({ margin: [0, 4, 0, 8], children: [new Text({ text: "Name: ", font: "Helvetica-Bold", fontSize: 10 }), new Text({ text: residentName, font: "Helvetica", fontSize: 10 })] }),
-      new Paragraph({ margin: [0, 2, 0, 8], children: [new Text({ text: "Address: ", font: "Helvetica-Bold", fontSize: 10 }), new Text({ text: residentAddress, font: "Helvetica", fontSize: 10 })] }),
-      new Paragraph({ margin: [0, 2, 0, 2], children: [new Text({ text: "Resident ID: ", font: "Helvetica-Bold", fontSize: 10 }), new Text({ text: data.residentId ?? "—", font: "Helvetica", fontSize: 10 })] }),
-      new Paragraph({ margin: [0, 2, 0, 2], children: [new Text({ text: "Reference No.: ", font: "Helvetica-Bold", fontSize: 10 }), new Text({ text: reference, font: "Helvetica", fontSize: 10 })] }),
-      new Paragraph({ margin: [0, 2, 0, 8], children: [new Text({ text: "Valid Until: ", font: "Helvetica-Bold", fontSize: 10 }), new Text({ text: validUntil ?? "—", font: "Helvetica", fontSize: 10 })] }),
+      field("Name", residentName),
+      field("Address", residentAddress),
+      field("Resident ID", data.residentId ?? "—"),
+      field("Reference No.", reference),
+      field("Valid Until", validUntil ?? "—"),
       divider(),
       lineParagraph("_______________________________"),
-      new Paragraph({ margin: [0, 2, 0, 2], children: [new Text({ text: "Barangay Secretary", font: "Helvetica", fontSize: 9, color: "#64748b" })] }),
-      new Paragraph({ margin: [0, 0, 0, 10], children: [new Text({ text: `Issued on ${issuedDate}`, font: "Helvetica", fontSize: 9, color: "#64748b" })] }),
+      { margin: [0, 2, 0, 2], text: "Barangay Secretary", font: "Helvetica", fontSize: 9, color: "#64748b" },
+      { margin: [0, 0, 0, 10], text: `Issued on ${issuedDate}`, font: "Helvetica", fontSize: 9, color: "#64748b" },
     ],
     styles: { header: { fontSize: 18, bold: true, color: "#1e293b", alignment: "center" }, body: { fontSize: 10, color: "#334155" }, center: { alignment: "center" } },
   };
@@ -175,23 +230,28 @@ function buildResidencyPdf(data: DocumentData) {
 function buildBusinessPdf(data: DocumentData) {
   const { residentName, residentAddress, businessName, businessAddress, ownerName, issuedDate, reference } = data;
 
+  const field = (label: string, value: string) => ({
+    margin: [0, 2, 0, 8],
+    text: [{ text: `${label}: `, bold: true, fontSize: 10 }, { text: value, fontSize: 10 }],
+  });
+
   return {
     content: [
       ...headerBlock(),
-      new Paragraph({ alignment: "center", margin: [0, 8, 0, 14], children: [new Text({ text: "BARANGAY BUSINESS PERMIT", font: "Helvetica-Bold", fontSize: 18, color: "#1e293b" })] }),
-      new Paragraph({ alignment: "center", margin: [0, 0, 0, 10], children: [new Text({ text: "I hereby certify that the business described below is duly registered and in good standing within this barangay.", font: "Helvetica", fontSize: 10, color: "#334155" })] }),
+      { alignment: "center", margin: [0, 8, 0, 14], text: "BARANGAY BUSINESS PERMIT", font: "Helvetica-Bold", fontSize: 18, color: "#1e293b" },
+      { alignment: "center", margin: [0, 0, 0, 10], text: "I hereby certify that the business described below is duly registered and in good standing within this barangay.", font: "Helvetica", fontSize: 10, color: "#334155" },
       divider(),
-      new Paragraph({ margin: [0, 4, 0, 8], children: [new Text({ text: "Business Name: ", font: "Helvetica-Bold", fontSize: 10 }), new Text({ text: businessName ?? "—", font: "Helvetica", fontSize: 10 })] }),
-      new Paragraph({ margin: [0, 2, 0, 8], children: [new Text({ text: "Business Address: ", font: "Helvetica-Bold", fontSize: 10 }), new Text({ text: businessAddress ?? "—", font: "Helvetica", fontSize: 10 })] }),
-      new Paragraph({ margin: [0, 2, 0, 8], children: [new Text({ text: "Owner / Proprietor: ", font: "Helvetica-Bold", fontSize: 10 }), new Text({ text: ownerName ?? "—", font: "Helvetica", fontSize: 10 })] }),
-      new Paragraph({ margin: [0, 2, 0, 8], children: [new Text({ text: "Applicant: ", font: "Helvetica-Bold", fontSize: 10 }), new Text({ text: residentName, font: "Helvetica", fontSize: 10 })] }),
-      new Paragraph({ margin: [0, 2, 0, 8], children: [new Text({ text: "Applicant Address: ", font: "Helvetica-Bold", fontSize: 10 }), new Text({ text: residentAddress, font: "Helvetica", fontSize: 10 })] }),
-      new Paragraph({ margin: [0, 2, 0, 2], children: [new Text({ text: "Reference No.: ", font: "Helvetica-Bold", fontSize: 10 }), new Text({ text: reference, font: "Helvetica", fontSize: 10 })] }),
-      new Paragraph({ margin: [0, 2, 0, 8], children: [new Text({ text: "Issued on: ", font: "Helvetica-Bold", fontSize: 10 }), new Text({ text: issuedDate, font: "Helvetica", fontSize: 10 })] }),
+      field("Business Name", businessName ?? "—"),
+      field("Business Address", businessAddress ?? "—"),
+      field("Owner / Proprietor", ownerName ?? "—"),
+      field("Applicant", residentName),
+      field("Applicant Address", residentAddress),
+      field("Reference No.", reference),
+      field("Issued on", issuedDate),
       divider(),
       lineParagraph("_______________________________"),
-      new Paragraph({ margin: [0, 2, 0, 2], children: [new Text({ text: "Barangay Secretary", font: "Helvetica", fontSize: 9, color: "#64748b" })] }),
-      new Paragraph({ margin: [0, 0, 0, 10], children: [new Text({ text: `Issued on ${issuedDate}`, font: "Helvetica", fontSize: 9, color: "#64748b" })] }),
+      { margin: [0, 2, 0, 2], text: "Barangay Secretary", font: "Helvetica", fontSize: 9, color: "#64748b" },
+      { margin: [0, 0, 0, 10], text: `Issued on ${issuedDate}`, font: "Helvetica", fontSize: 9, color: "#64748b" },
     ],
     styles: { header: { fontSize: 18, bold: true, color: "#1e293b", alignment: "center" }, body: { fontSize: 10, color: "#334155" }, center: { alignment: "center" } },
   };
@@ -254,7 +314,7 @@ function buildClearanceDocx(data: DocumentData): DocxDocument {
           },
         },
         children: [
-          ...headerBlock().map((p) => p as DocxParagraph),
+          ...headerBlockDocx(),
           new DocxParagraph({
             alignment: AlignmentType.CENTER,
             spacing: { before: 120, after: 60 },
@@ -334,7 +394,7 @@ function buildIndigencyDocx(data: DocumentData): DocxDocument {
           },
         },
         children: [
-          ...headerBlock().map((p) => p as DocxParagraph),
+          ...headerBlockDocx(),
           new DocxParagraph({
             alignment: AlignmentType.CENTER,
             spacing: { before: 120, after: 60 },
@@ -412,7 +472,7 @@ function buildResidencyDocx(data: DocumentData): DocxDocument {
           },
         },
         children: [
-          ...headerBlock().map((p) => p as DocxParagraph),
+          ...headerBlockDocx(),
           new DocxParagraph({
             alignment: AlignmentType.CENTER,
             spacing: { before: 120, after: 60 },
@@ -491,7 +551,7 @@ function buildBusinessDocx(data: DocumentData): DocxDocument {
           },
         },
         children: [
-          ...headerBlock().map((p) => p as DocxParagraph),
+          ...headerBlockDocx(),
           new DocxParagraph({
             alignment: AlignmentType.CENTER,
             spacing: { before: 120, after: 60 },
