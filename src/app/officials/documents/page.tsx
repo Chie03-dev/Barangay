@@ -596,7 +596,8 @@ function RequestCard({
   onPrint: (s: DocumentRequest) => void;
 }) {
   const StatusIcon = STATUS_ICON[request.status];
-  const DocIcon = DOC_TYPE_ICON[request.document as DocumentType];
+  const docType = DOCUMENT_TYPE_MAP[request.document];
+  const DocIcon = docType ? DOC_TYPE_ICON[docType] : FileText;
   const isPending = request.status === "pending";
   return (
     <motion.div
