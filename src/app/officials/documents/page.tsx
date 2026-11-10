@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import {
   Shield,
   Users,
+  User,
   FileText,
   FileCheck,
   AlertCircle,
@@ -166,6 +167,13 @@ const DOCUMENT_TYPE_MAP: Record<string, DocumentType | null> = {
   "Certificate of Indigency": "indigency",
   "Certificate of Residency": "residency",
   "Business Permit (New)": "business",
+};
+
+const DOC_TYPE_ICON: Record<DocumentType, LucideIcon> = {
+  clearance: FileCheck,
+  indigency: FileText,
+  residency: FileText,
+  business: Users,
 };
 
 /* ------------------------------------------------------------------ */
@@ -332,28 +340,30 @@ export default function OfficialsDocumentsPage() {
   return (
     <main className="mx-auto min-h-screen w-full max-w-6xl px-4 py-10 pb-32" id="main-content">
       {/* Hero banner */}
-      <section className={cn(glass, "relative overflow-hidden p-8 mb-6")}>
+      <section className={cn(glass, "relative overflow-hidden p-8 mb-8")}>
         <div
           aria-hidden
-          className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-emerald-500/10 blur-3xl"
+          className="pointer-events-none absolute -right-24 -top-24 h-80 w-80 rounded-full bg-emerald-500/20 blur-3xl"
+        />
+        <div
+          aria-hidden
+          className="pointer-events-none absolute -left-24 -bottom-24 h-64 w-64 rounded-full bg-blue-500/15 blur-3xl"
         />
         <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
               <FileText className="h-3.5 w-3.5" aria-hidden />
               Document Requests
-            </span>
+            </div>
             <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">
               Resident Documents
             </h1>
             <p className="mt-2 text-sm text-slate-500 dark:text-slate-400">
-              Review and print resident document requests from one place.
+              Review, approve, and print resident document requests from one place.
             </p>
           </div>
-          <div className="flex items-center gap-3">
-            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-              <FileText className="h-7 w-7" aria-hidden />
-            </div>
+          <div className="flex h-18 w-18 items-center justify-center rounded-2xl bg-white/60 dark:bg-slate-900/60 shadow-xl backdrop-blur-md border border-white/40 dark:border-slate-800/40">
+            <FileText className="h-8 w-8 text-emerald-600 dark:text-emerald-400" aria-hidden />
           </div>
         </div>
       </section>
@@ -542,24 +552,24 @@ function StatCard({
 }) {
   const GLOW: Record<string, string> = {
     emerald:
-      "text-emerald-600 dark:text-emerald-400 bg-emerald-50/60 border-emerald-200/50 dark:bg-emerald-900/20 dark:border-emerald-800/30",
+      "text-emerald-600 dark:text-emerald-400 bg-emerald-50/70 border-emerald-200/60 dark:bg-emerald-900/30 dark:border-emerald-800/50 shadow-lg shadow-emerald-500/20 dark:shadow-emerald-900/30",
     amber:
-      "text-amber-600 dark:text-amber-400 bg-amber-50/60 border-amber-200/50 dark:bg-amber-900/20 dark:border-amber-800/30",
+      "text-amber-600 dark:text-amber-400 bg-amber-50/70 border-amber-200/60 dark:bg-amber-900/30 dark:border-amber-800/50 shadow-lg shadow-amber-500/20 dark:shadow-amber-900/30",
     blue:
-      "text-blue-600 dark:text-blue-400 bg-blue-50/60 border-blue-200/50 dark:bg-blue-900/20 dark:border-blue-800/30",
+      "text-blue-600 dark:text-blue-400 bg-blue-50/70 border-blue-200/60 dark:bg-blue-900/30 dark:border-blue-800/50 shadow-lg shadow-blue-500/20 dark:shadow-blue-900/30",
     violet:
-      "text-violet-600 dark:text-violet-400 bg-violet-50/60 border-violet-200/50 dark:bg-violet-900/20 dark:border-violet-800/30",
+      "text-violet-600 dark:text-violet-400 bg-violet-50/70 border-violet-200/60 dark:bg-violet-900/30 dark:border-violet-800/50 shadow-lg shadow-violet-500/20 dark:shadow-violet-900/30",
   };
   return (
-    <div className={cn(glass, "p-5")}>
+    <div className={cn(glass, "p-6")}>
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-sm font-semibold text-slate-500 dark:text-slate-400">{label}</p>
-          <p className="mt-1 text-2xl font-bold tracking-tight">{value}</p>
-          <p className="mt-0.5 text-xs text-slate-400 dark:text-slate-500">{hint}</p>
+          <p className="mt-1.5 text-3xl font-bold tracking-tight">{value}</p>
+          <p className="mt-1 text-xs text-slate-400 dark:text-slate-500">{hint}</p>
         </div>
-        <div className={cn("flex h-10 w-10 items-center justify-center rounded-xl border", GLOW[glow])}>
-          <Icon className="h-5 w-5 shrink-0" aria-hidden />
+        <div className={cn("flex h-12 w-12 items-center justify-center rounded-2xl border", GLOW[glow])}>
+          <Icon className="h-6 w-6 shrink-0" aria-hidden />
         </div>
       </div>
     </div>
@@ -586,6 +596,7 @@ function RequestCard({
   onPrint: (s: DocumentRequest) => void;
 }) {
   const StatusIcon = STATUS_ICON[request.status];
+  const DocIcon = DOC_TYPE_ICON[request.document as DocumentType];
   const isPending = request.status === "pending";
   return (
     <motion.div
@@ -594,19 +605,24 @@ function RequestCard({
       transition={{ type: "spring", stiffness: 400, damping: 25 }}
       className={cn(
         glass,
-        "group relative flex flex-col rounded-2xl border border-slate-200/60 p-5 transition-all duration-300 hover:shadow-xl dark:border-slate-800/60",
+        "group relative flex flex-col rounded-3xl border border-slate-200/70 p-6 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 dark:border-slate-800/70",
       )}
     >
-      {/* Header: reference + status */}
+      {/* Header: document icon + reference */}
       <div className="flex items-center justify-between gap-3">
-        <span
-          className={cn(
-            "inline-flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold tabular-nums",
-            "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400",
-          )}
-        >
-          {request.reference}
-        </span>
+        <div className="flex items-center gap-2.5">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50/60 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400 group-hover:bg-emerald-100 dark:group-hover:bg-emerald-900/50 transition-colors">
+            <DocIcon className="h-4 w-4" aria-hidden />
+          </div>
+          <span
+            className={cn(
+              "inline-flex shrink-0 items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold tabular-nums",
+              "bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400",
+            )}
+          >
+            {request.reference}
+          </span>
+        </div>
         <span
           className={cn(
             "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-medium",
@@ -619,28 +635,37 @@ function RequestCard({
       </div>
 
       {/* Body */}
-      <div className="mt-3 flex-1">
-        <h3 className="text-base font-semibold leading-snug">{request.document}</h3>
-        <div className="mt-2 space-y-1">
-          <p className="text-sm text-slate-600 dark:text-slate-300">{request.resident}</p>
-          <p className="text-xs text-slate-500 dark:text-slate-400">{request.address}</p>
+      <div className="mt-4 flex-1">
+        <h3 className="text-lg font-bold leading-snug">{request.document}</h3>
+        <div className="mt-3 space-y-1.5">
+          <div className="flex items-center gap-2">
+            <User className="h-4 w-4 text-slate-400 shrink-0" aria-hidden />
+            <p className="text-sm text-slate-600 dark:text-slate-300">{request.resident}</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <FileText className="h-4 w-4 text-slate-400 shrink-0" aria-hidden />
+            <p className="text-xs text-slate-500 dark:text-slate-400">{request.address}</p>
+          </div>
           {request.purpose && (
-            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              <span className="font-medium text-slate-400">Purpose: </span>
-              {request.purpose}
-            </p>
+            <div className="mt-2 flex items-start gap-2">
+              <span className="h-3 w-3 text-slate-400 shrink-0" aria-hidden>▪</span>
+              <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                <span className="font-medium text-slate-400">Purpose: </span>
+                {request.purpose}
+              </p>
+            </div>
           )}
         </div>
       </div>
 
       {/* Footer actions */}
-      <div className="mt-4 flex items-center gap-2">
+      <div className="mt-5 flex items-center gap-2 pt-4 border-t border-slate-100/60 dark:border-slate-800/40">
         <button
           type="button"
           onClick={() => onOpen(request)}
           disabled={processing}
           className={cn(
-            "flex h-9 items-center justify-center gap-1.5 rounded-lg border border-slate-200/70 px-3 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 disabled:opacity-60 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800",
+            "flex h-10 items-center justify-center gap-2 rounded-xl border border-slate-200/70 px-3 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 disabled:opacity-60 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-slate-100",
           )}
         >
           <ChevronRight className="h-4 w-4" aria-hidden />
@@ -653,7 +678,7 @@ function RequestCard({
               onClick={() => onPrint(request)}
               disabled={processing}
               className={cn(
-                "flex h-9 items-center justify-center gap-1.5 rounded-lg bg-emerald-600 px-3 text-xs font-semibold text-white shadow-lg shadow-emerald-600/25 transition-colors disabled:opacity-70 disabled:cursor-not-allowed hover:bg-emerald-500",
+                "flex h-10 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-3 text-xs font-semibold text-white shadow-lg shadow-emerald-600/25 transition-colors disabled:opacity-70 disabled:cursor-not-allowed hover:bg-emerald-500",
               )}
             >
               {processing ? "…" : (
@@ -670,7 +695,7 @@ function RequestCard({
               onClick={() => onApprove(request)}
               disabled={processing}
               className={cn(
-                "flex h-9 items-center justify-center gap-1.5 rounded-lg bg-amber-600 px-3 text-xs font-semibold text-white shadow-lg shadow-amber-600/25 transition-colors disabled:opacity-70 disabled:cursor-not-allowed hover:bg-amber-500",
+                "flex h-10 items-center justify-center gap-2 rounded-xl bg-amber-600 px-3 text-xs font-semibold text-white shadow-lg shadow-amber-600/25 transition-colors disabled:opacity-70 disabled:cursor-not-allowed hover:bg-amber-500",
               )}
             >
               {processing ? "…" : "Approve"}
@@ -680,7 +705,7 @@ function RequestCard({
               onClick={() => onReject(request)}
               disabled={processing}
               className={cn(
-                "flex h-9 items-center justify-center gap-1.5 rounded-lg border border-rose-200/60 bg-rose-50/60 px-3 text-xs font-semibold text-rose-700 transition-colors disabled:opacity-60 hover:bg-rose-100 dark:hover:bg-rose-900/20",
+                "flex h-10 items-center justify-center gap-2 rounded-xl border border-rose-200/60 bg-rose-50/60 px-3 text-xs font-semibold text-rose-700 transition-colors disabled:opacity-60 hover:bg-rose-100 dark:hover:bg-rose-900/20",
               )}
             >
               Reject

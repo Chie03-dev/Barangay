@@ -15,45 +15,58 @@ const certTexts: Record<string, string> = {
 };
 
 export function DocumentHTML({ data }: { data: DocumentData }) {
+  const isDark = false; // print is always light
   return (
-    <div style={{ margin: 0, padding: 0, fontFamily: '"Helvetica", "Arial", sans-serif', fontSize: "12px", color: "#1e293b", lineHeight: 1.4, background: "#ffffff" }}>
-      <div style={{ width: "8.5in", minHeight: "11in", margin: "0 auto", padding: "72px 54px", background: "#ffffff" }}>
-          <div style={{ textAlign: "center", marginBottom: "30px" }}>
-            <div style={{ fontSize: "16px", fontWeight: "bold", letterSpacing: "2px", color: "#1e293b" }}>BARANGAY HALL</div>
-            <div style={{ fontSize: "10px", color: "#64748b", marginTop: "4px" }}>Barangay Main Avenue, Purok 3</div>
-            <div style={{ fontSize: "9px", color: "#94a3b8", marginTop: "4px" }}>Telephone: +63 45 234 5678  |  secretary@barangay.gov.ph</div>
-            <div style={{ borderBottom: "1px solid #cbd5e1", margin: "16px 0" }}></div>
+    <div style={{ margin: 0, padding: 0, fontFamily: '"Helvetica", "Arial", sans-serif', fontSize: "11px", color: "#1e293b", lineHeight: 1.4, background: "#ffffff" }}>
+      <div style={{ width: "8.5in", minHeight: "11in", margin: "0 auto", padding: "70px 50px", background: "#ffffff", position: "relative" }}>
+        {/* Barangay seal badge */}
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: "14px" }}>
+          <div style={{ width: "72px", height: "72px", borderRadius: "50%", border: "2px solid #1e293b", display: "flex", alignItems: "center", justifyContent: "center", background: "#f8fafc", boxShadow: "0 4px 12px rgba(30,41,59,0.15)" }}>
+            <div style={{ fontSize: "28px" }}>🏛️</div>
           </div>
-          <div style={{ fontSize: "20px", fontWeight: "bold", textAlign: "center", color: "#1e293b", marginBottom: "12px" }}>{titles[data.type]}</div>
-          <div style={{ fontSize: "11px", textAlign: "center", color: "#334155", marginBottom: "18px" }}>{certTexts[data.type]}</div>
-          <div style={{ borderBottom: "1px solid #cbd5e1", margin: "16px 0" }}></div>
-          <div style={{ marginBottom: "10px" }}><span style={{ fontWeight: "bold", display: "inline-block", minWidth: "140px" }}>Reference No.:</span> {data.reference}</div>
-          <div style={{ marginBottom: "10px" }}><span style={{ fontWeight: "bold", display: "inline-block", minWidth: "140px" }}>Name:</span> {data.residentName}</div>
-          <div style={{ marginBottom: "10px" }}><span style={{ fontWeight: "bold", display: "inline-block", minWidth: "140px" }}>Address:</span> {data.residentAddress}</div>
-          <div style={{ marginBottom: "10px" }}><span style={{ fontWeight: "bold", display: "inline-block", minWidth: "140px" }}>Resident ID:</span> {data.residentId ?? "—"}</div>
+        </div>
+        <div style={{ textAlign: "center", marginBottom: "18px" }}>
+          <div style={{ fontSize: "17px", fontWeight: "800", letterSpacing: "3px", color: "#1e293b", textTransform: "uppercase" }}>Republic of the Philippines</div>
+          <div style={{ fontSize: "15px", fontWeight: "bold", color: "#1e293b", marginTop: "2px" }}>Barangay Main Avenue, Purok 3</div>
+          <div style={{ fontSize: "10px", color: "#64748b", marginTop: "4px" }}>Telephone: +63 45 234 5678  |  secretary@barangay.gov.ph</div>
+          <div style={{ borderBottom: "2px solid #1e293b", margin: "20px 0" }}></div>
+        </div>
+        <div style={{ fontSize: "22px", fontWeight: "800", textAlign: "center", color: "#1e293b", marginBottom: "14px", letterSpacing: "1px" }}>{titles[data.type]}</div>
+        <div style={{ fontSize: "11.5px", textAlign: "center", color: "#475569", marginBottom: "20px", lineHeight: 1.5 }}>{certTexts[data.type]}</div>
+        <div style={{ borderBottom: "1px solid #cbd5e1", margin: "20px 0" }}></div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "18px 30px", marginBottom: "22px" }}>
+          <div style={{ marginBottom: "10px" }}><span style={{ fontWeight: "bold", color: "#334155", display: "inline-block", minWidth: "150px" }}>Reference No.:</span> {data.reference}</div>
+          <div style={{ marginBottom: "10px" }}><span style={{ fontWeight: "bold", color: "#334155", display: "inline-block", minWidth: "150px" }}>Name:</span> {data.residentName}</div>
+          <div style={{ marginBottom: "10px" }}><span style={{ fontWeight: "bold", color: "#334155", display: "inline-block", minWidth: "150px" }}>Address:</span> {data.residentAddress}</div>
+          <div style={{ marginBottom: "10px" }}><span style={{ fontWeight: "bold", color: "#334155", display: "inline-block", minWidth: "150px" }}>Resident ID:</span> {data.residentId ?? "—"}</div>
           {data.type === "clearance" && (
             <>
-              <div style={{ marginBottom: "10px" }}><span style={{ fontWeight: "bold", display: "inline-block", minWidth: "140px" }}>Purpose:</span> {data.purpose ?? "N/A"}</div>
-              <div style={{ marginBottom: "10px" }}><span style={{ fontWeight: "bold", display: "inline-block", minWidth: "140px" }}>Valid Until:</span> {data.validUntil ?? "—"}</div>
+              <div style={{ marginBottom: "10px" }}><span style={{ fontWeight: "bold", color: "#334155", display: "inline-block", minWidth: "150px" }}>Purpose:</span> {data.purpose ?? "N/A"}</div>
+              <div style={{ marginBottom: "10px" }}><span style={{ fontWeight: "bold", color: "#334155", display: "inline-block", minWidth: "150px" }}>Valid Until:</span> {data.validUntil ?? "—"}</div>
             </>
           )}
           {data.type === "business" && (
             <>
-              <div style={{ marginBottom: "10px" }}><span style={{ fontWeight: "bold", display: "inline-block", minWidth: "140px" }}>Business Name:</span> {data.businessName ?? "—"}</div>
-              <div style={{ marginBottom: "10px" }}><span style={{ fontWeight: "bold", display: "inline-block", minWidth: "140px" }}>Business Address:</span> {data.businessAddress ?? "—"}</div>
-              <div style={{ marginBottom: "10px" }}><span style={{ fontWeight: "bold", display: "inline-block", minWidth: "140px" }}>Owner / Proprietor:</span> {data.ownerName ?? "—"}</div>
-              <div style={{ marginBottom: "10px" }}><span style={{ fontWeight: "bold", display: "inline-block", minWidth: "140px" }}>Applicant:</span> {data.residentName}</div>
-              <div style={{ marginBottom: "10px" }}><span style={{ fontWeight: "bold", display: "inline-block", minWidth: "140px" }}>Applicant Address:</span> {data.residentAddress}</div>
+              <div style={{ marginBottom: "10px" }}><span style={{ fontWeight: "bold", color: "#334155", display: "inline-block", minWidth: "150px" }}>Business Name:</span> {data.businessName ?? "—"}</div>
+              <div style={{ marginBottom: "10px" }}><span style={{ fontWeight: "bold", color: "#334155", display: "inline-block", minWidth: "150px" }}>Business Address:</span> {data.businessAddress ?? "—"}</div>
+              <div style={{ marginBottom: "10px" }}><span style={{ fontWeight: "bold", color: "#334155", display: "inline-block", minWidth: "150px" }}>Owner / Proprietor:</span> {data.ownerName ?? "—"}</div>
+              <div style={{ marginBottom: "10px" }}><span style={{ fontWeight: "bold", color: "#334155", display: "inline-block", minWidth: "150px" }}>Applicant:</span> {data.residentName}</div>
+              <div style={{ marginBottom: "10px" }}><span style={{ fontWeight: "bold", color: "#334155", display: "inline-block", minWidth: "150px" }}>Applicant Address:</span> {data.residentAddress}</div>
             </>
           )}
-          <div style={{ borderBottom: "1px solid #cbd5e1", margin: "16px 0" }}></div>
-          <div style={{ marginTop: "30px" }}>
-            <div style={{ borderBottom: "1px solid #94a3b8", width: "250px", margin: "0 auto 8px" }}></div>
-            <div style={{ fontSize: "11px", color: "#64748b", textAlign: "center" }}>Barangay Secretary</div>
-            <div style={{ fontSize: "11px", color: "#64748b", textAlign: "center" }}>Barangay Hall</div>
-            <div style={{ fontSize: "11px", color: "#64748b", textAlign: "center", marginTop: "12px" }}>Issued on {data.issuedDate}</div>
-          </div>
+        </div>
+        <div style={{ borderBottom: "1px solid #cbd5e1", margin: "26px 0" }}></div>
+        <div style={{ marginTop: "34px", display: "flex", flexDirection: "column", alignItems: "center", gap: "10px" }}>
+          <div style={{ borderBottom: "1px solid #94a3b8", width: "260px", marginBottom: "10px" }}></div>
+          <div style={{ fontSize: "11px", fontWeight: "600", color: "#475569", textAlign: "center" }}>Barangay Secretary</div>
+          <div style={{ fontSize: "10px", color: "#64748b", textAlign: "center" }}>Barangay Hall</div>
+          <div style={{ fontSize: "10px", color: "#64748b", textAlign: "center", marginTop: "14px" }}>Issued on {data.issuedDate}</div>
+        </div>
+        {/* Footer */}
+        <div style={{ position: "absolute", bottom: "40px", left: "50px", right: "50px", fontSize: "8.5px", color: "#94a3b8", textAlign: "center", borderTop: "1px solid #e2e8f0", paddingTop: "8px" }}>
+          Barangay Main Avenue, Purok 3  •  Telephone: +63 45 234 5678  •  secretary@barangay.gov.ph
         </div>
       </div>
-    );
+    </div>
+  );
 }
