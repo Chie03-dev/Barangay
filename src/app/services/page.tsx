@@ -155,7 +155,7 @@ export default function ServicesPage() {
   const [urgency, setUrgency] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [referenceCode, setReferenceCode] = useState("");
-  const [downloading, setDownloading] = useState<"pdf" | "docx" | null>(null);
+  const [downloading, setDownloading] = useState<boolean>(false);
 
   const doc = useMemo(
     () => DOCUMENTS.find((d) => d.id === selectedDoc) ?? null,
@@ -184,9 +184,9 @@ export default function ServicesPage() {
     setStep(4);
   }
 
-  async function handleDownload(format: "pdf" | "docx") {
+  async function handleDownload() {
     if (!doc || !referenceCode) return;
-    setDownloading(format);
+    setDownloading(true);
     try {
       const data: DocumentData = {
         reference: referenceCode,
@@ -204,15 +204,15 @@ export default function ServicesPage() {
         remarks,
         hasId,
       };
-      const url = await downloadDocument(data, format);
+      const url = await downloadDocument(data);
       const a = document.createElement("a");
       a.href = url;
-      a.download = `${referenceCode}-${doc.id}.${format}`;
+      a.download = `${referenceCode}-${doc.id}.docx`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
     } finally {
-      setDownloading(null);
+      setDownloading(false);
     }
   }
 
@@ -564,32 +564,17 @@ Additional Remarks or Specific Details
               >
                 <motion.button
                   type="button"
-                  onClick={() => handleDownload("pdf")}
-                  disabled={downloading === "pdf"}
+                  onClick={() => handleDownload()}
+                  disabled={downloading}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   className={cn(
                     "flex items-center justify-center gap-2 rounded-xl border border-slate-200/70 bg-white/80 px-5 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-200 dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed",
-                    downloading === "pdf" && "animate-pulse",
+                    downloading && "animate-pulse",
                   )}
                 >
                   <Download className="h-4 w-4" aria-hidden />
-                  {downloading === "pdf" ? "Preparing PDF…" : "Download PDF"}
-                </motion.button>
-
-                <motion.button
-                  type="button"
-                  onClick={() => handleDownload("docx")}
-                  disabled={downloading === "docx"}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={cn(
-                    "flex items-center justify-center gap-2 rounded-xl border border-slate-200/70 bg-white/80 px-5 py-3 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-200 dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed",
-                    downloading === "docx" && "animate-pulse",
-                  )}
-                >
-                  <Download className="h-4 w-4" aria-hidden />
-                  {downloading === "docx" ? "Preparing DOCX…" : "Download Word"}
+                  {downloading ? "Preparing Document…" : "Download Word Document"}
                 </motion.button>
               </motion.div>
 

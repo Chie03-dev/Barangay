@@ -29,7 +29,6 @@ import {
   type DocumentData,
   type DocumentType,
 } from "@/lib/document-generator";
-import { printDocument } from "@/lib/document-actions";
 
 /* ------------------------------------------------------------------ */
 /*  Mock data — resident-created document requests                    */
@@ -286,23 +285,22 @@ export default function OfficialsDocumentsPage() {
   }, []);
 
   const handlePrintDocument = useCallback(
-    async (submission: DocumentRequest) => {
+    (submission: DocumentRequest) => {
       const docType = DOCUMENT_TYPE_MAP[submission.document];
       if (!docType) return;
       setProcessing(submission.id);
       try {
-        const data: DocumentData = {
+        const params = new URLSearchParams({
           reference: submission.reference,
           type: docType,
           residentName: submission.resident,
           residentAddress: submission.address,
           issuedDate: submission.createdAt,
-          purpose: submission.purpose,
-          remarks: submission.notes,
-          hasId: false,
-        };
-        const url = await printDocument(data);
-        const win = window.open(url, "_blank");
+          purpose: submission.purpose ?? "",
+          remarks: submission.notes ?? "",
+          hasId: "false",
+        });
+        const win = window.open(`/documents/print?${params.toString()}`, "_blank");
         if (win) win.focus();
       } finally {
         setProcessing(null);
